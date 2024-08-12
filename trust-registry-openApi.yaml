@@ -1,0 +1,448 @@
+openapi: 3.0.3
+info:
+  title: EBSI-like Trusted Registry API
+  version: 4.0.1
+  description: |
+    This OpenAPI specification defines the REST API endpoints for interacting with the DOME EBSI-like Trusted Registry, including adapted JSON-RPC methods for blockchain transactions as REST API endpoints.
+
+servers:
+  - url: http://localhost/v4
+    description: Edit me to point to the correct server URL
+
+paths:
+  /issuers:
+    get:
+      summary: List all trusted issuers
+      operationId: listIssuers
+      parameters:
+        - name: page[after]
+          in: query
+          required: false
+          description: Cursor for pagination (starting point)
+          schema:
+            type: integer
+            example: 1
+        - name: page[size]
+          in: query
+          required: false
+          description: Number of items per page
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: A list of trusted issuers with pagination details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    description: The URL of the current page of results.
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IssuerSummary'
+                  total:
+                    type: integer
+                    description: The total number of issuers in the registry.
+                  pageSize:
+                    type: integer
+                    description: The number of items per page.
+                  links:
+                    type: object
+                    description: Links to other pages of results.
+                    properties:
+                      first:
+                        type: string
+                      prev:
+                        type: string
+                      next:
+                        type: string
+                      last:
+                        type: string
+
+  /issuers/{issuerId}:
+    get:
+      summary: Get details of a specific issuer
+      operationId: getIssuer
+      parameters:
+        - name: issuerId
+          in: path
+          required: true
+          description: The DID of the issuer to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Issuer details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuerDetails'
+
+  /issuers/insert:
+    post:
+      summary: Insert a new issuer
+      description: |
+        This method is restricted to RootTAOs, TAOs. This is a method extracted from EBSI's JSON RPC API. This method is not exactly the one from EBSI since this registry is a bit different.
+      operationId: insertIssuer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertIssuerRequest'
+      responses:
+        '200':
+          description: Transaction built successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /issuers/{issuerId}/update:
+    post:
+      summary: Update an existing issuer
+      operationId: updateIssuer
+      parameters:
+        - name: issuerId
+          in: path
+          required: true
+          description: The DID of the issuer to update.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIssuerRequest'
+      responses:
+        '200':
+          description: Transaction built successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /issuers/{issuerId}/set-metadata:
+    post:
+      summary: Set metadata for an issuer attribute
+      operationId: setAttributeMetadata
+      parameters:
+        - name: issuerId
+          in: path
+          required: true
+          description: The DID of the issuer.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetAttributeMetadataRequest'
+      responses:
+        '200':
+          description: Transaction built successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /issuers/{issuerId}/set-attribute:
+    post:
+      summary: Set an attribute for an issuer
+      operationId: setAttributeData
+      parameters:
+        - name: issuerId
+          in: path
+          required: true
+          description: The DID of the issuer.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetAttributeDataRequest'
+      responses:
+        '200':
+          description: Transaction built successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /issuers/{issuerId}/add-proxy:
+    post:
+      summary: Add a proxy for an issuer
+      operationId: addIssuerProxy
+      parameters:
+        - name: issuerId
+          in: path
+          required: true
+          description: The DID of the issuer.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddIssuerProxyRequest'
+      responses:
+        '200':
+          description: Transaction built successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /issuers/{issuerId}/update-proxy:
+    post:
+      summary: Update an existing proxy for an issuer
+      operationId: updateIssuerProxy
+      parameters:
+        - name: issuerId
+          in: path
+          required: true
+          description: The DID of the issuer.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIssuerProxyRequest'
+      responses:
+        '200':
+          description: Transaction built successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /transactions/send:
+    post:
+      summary: Send a signed transaction to the blockchain
+      operationId: sendSignedTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendSignedTransactionRequest'
+      responses:
+        '200':
+          description: Transaction sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+components:
+  schemas:
+    IssuerSummary:
+      type: object
+      properties:
+        did:
+          type: string
+          description: The Decentralized Identifier (DID) of the issuer.
+        href:
+          type: string
+          description: The link to the details of the issuer.
+
+    IssuerDetails:
+      type: object
+      properties:
+        did:
+          type: string
+          description: The Decentralized Identifier (DID) of the issuer.
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+
+    Attribute:
+      type: object
+      properties:
+        hash:
+          type: string
+          description: Hash of the attribute.
+        body:
+          type: string
+          description: The attribute data as a JSON string.
+        issuerType:
+          type: string
+          description: The type of issuer (e.g., RootTAO, TAO, TI, Revoked).
+        tao:
+          type: string
+          description: The DID of the TAO accrediting the issuer.
+        rootTao:
+          type: string
+          description: The DID of the RootTAO accrediting the issuer.
+
+    InsertIssuerRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Ethereum address of the signer
+        did:
+          type: string
+          description: DID of the issuer to insert
+        attributeData:
+          type: string
+          description: Verifiable credential converted to hex string
+        issuerType:
+          type: integer
+          description: Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked
+        taoDid:
+          type: string
+          description: DID of the TAO accrediting the issuer
+        taoAttributeId:
+          type: string
+          description: Attribute ID that accredits taoDid as TAO or RootTAO
+
+    UpdateIssuerRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Ethereum address of the signer
+        did:
+          type: string
+          description: DID of the issuer
+        prevAttributeHash:
+          type: string
+          description: Attribute ID to update
+        attributeData:
+          type: string
+          description: Verifiable credential converted to hex string
+        issuerType:
+          type: integer
+          description: Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked
+        taoDid:
+          type: string
+          description: DID of the TAO accrediting the issuer
+        taoAttributeId:
+          type: string
+          description: Attribute ID that accredits taoDid as TAO or RootTAO
+
+    SetAttributeMetadataRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Ethereum address of the signer
+        did:
+          type: string
+          description: DID of the issuer
+        attributeId:
+          type: string
+          description: Attribute ID
+        issuerType:
+          type: integer
+          description: Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked
+        taoDid:
+          type: string
+          description: DID of the TAO accrediting the issuer
+        taoAttributeId:
+          type: string
+          description: Attribute ID that accredits taoDid as TAO or RootTAO
+
+    SetAttributeDataRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Ethereum address of the signer
+        did:
+          type: string
+          description: DID of the issuer
+        attributeId:
+          type: string
+          description: ID of the attribute to set
+        attributeData:
+          type: string
+          description: Verifiable credential converted to hex string
+
+    AddIssuerProxyRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Ethereum address of the signer
+        did:
+          type: string
+          description: DID of the issuer
+        proxyData:
+          type: string
+          description: Proxy configuration as a JSON object string.
+
+    UpdateIssuerProxyRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Ethereum address of the signer
+        did:
+          type: string
+          description: DID of the issuer
+        proxyId:
+          type: string
+          description: ID of the existing proxy
+        proxyData:
+          type: string
+          description: Proxy configuration as a JSON object string.
+
+    SendSignedTransactionRequest:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+          description: JSON-RPC version, must be "2.0"
+        method:
+          type: string
+          description: Method to invoke
+          enum:
+            - insertIssuer
+            - updateIssuer
+            - setAttributeMetadata
+            - setAttributeData
+            - addIssuerProxy
+            - updateIssuerProxy
+            - sendSignedTransaction
+        params:
+          type: array
+          description: Parameters for the method call
+          items:
+            type: object
+        id:
+          type: integer
+          description: Identifier for the client request
+
+    TransactionResponse:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+          description: JSON-RPC version, must be "2.0"
+        id:
+          type: integer
+          description: Same identifier established by the client in the call
+        result:
+          type: object
+          description: The result of the RPC method
+
+
+
+security:
+  - bearerAuth: []
