@@ -11,19 +11,19 @@ servers:
 tags:
   - name: Trusted Issuers Registry
     description: Operations related to the Issuers Registry
-  - name: Trusted Participants Registry 
+  - name: Trusted Participants Registry
     description: Operations related to the Participants Registry
-  - name: Trusted Schemas Registry 
+  - name: Trusted Schemas Registry
     description: Operations related to the Schemas Registry
-  - name: Trusted Certifications Issuer's Registry 
+  - name: Trusted Certifications Issuer's Registry
     description: Operations related to the Certifications Issuer Registry
-  - name: Trusted Replication Registry 
+  - name: Trusted Replication Registry
     description: Operations related to the Replication Registry
-  - name: Trusted LEARCredential Issuer's Registry 
+  - name: Trusted LEARCredential Issuer's Registry
     description: Operations related to the LEARCredential Issuer List Registry
 
-
 paths:
+  # Issuers Registry Endpoints
   /issuers:
     get:
       tags:
@@ -142,6 +142,125 @@ paths:
         '200':
           description: Transaction built successfully.
 
+  # Participants Registry Endpoints
+  /participants:
+    get:
+      tags:
+        - Trusted Participants Registry
+      summary: List all trusted participants
+      operationId: listParticipants
+      parameters:
+        - name: page[after]
+          in: query
+          required: false
+          description: Cursor for pagination (starting point)
+          schema:
+            type: integer
+            example: 1
+        - name: page[size]
+          in: query
+          required: false
+          description: Number of items per page
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: A list of trusted participants with pagination details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    description: The URL of the current page of results.
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ParticipantSummary'
+                  total:
+                    type: integer
+                    description: The total number of participants in the registry.
+                  pageSize:
+                    type: integer
+                    description: The number of items per page.
+                  links:
+                    type: object
+                    description: Links to other pages of results.
+                    properties:
+                      first:
+                        type: string
+                      prev:
+                        type: string
+                      next:
+                        type: string
+                      last:
+                        type: string
+
+  /participants/{participantId}:
+    get:
+      tags:
+        - Trusted Participants Registry
+      summary: Get details of a specific participant
+      operationId: getParticipant
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          description: The DID of the participant to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Participant details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantDetails'
+
+  /participants/insert:
+    post:
+      tags:
+        - Trusted Participants Registry
+      summary: Insert a new participant
+      description: |
+        This method is restricted to authorized registrars. This is a method adapted from EBSI's JSON RPC API.
+      operationId: insertParticipant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertParticipantRequest'
+      responses:
+        '200':
+          description: Transaction executed successfully.
+
+
+  /participants/{participantId}/update:
+    post:
+      tags:
+        - Trusted Participants Registry
+      summary: Update an existing participant
+      operationId: updateParticipant
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          description: The DID of the participant to update.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateParticipantRequest'
+      responses:
+        '200':
+          description: Transaction built successfully.
+
 components:
   schemas:
     IssuerSummary:
@@ -165,6 +284,27 @@ components:
           items:
             $ref: '#/components/schemas/Attribute'
 
+    ParticipantSummary:
+      type: object
+      properties:
+        did:
+          type: string
+          description: The Decentralized Identifier (DID) of the participant.
+        href:
+          type: string
+          description: The link to the details of the participant.
+
+    ParticipantDetails:
+      type: object
+      properties:
+        did:
+          type: string
+          description: The Decentralized Identifier (DID) of the participant.
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParticipantAttribute'
+
     Attribute:
       type: object
       properties:
@@ -184,6 +324,19 @@ components:
           type: string
           description: The DID of the RootTAO accrediting the issuer.
 
+    ParticipantAttribute:
+      type: object
+      properties:
+        hash:
+          type: string
+          description: Hash of the attribute.
+        body:
+          type: string
+          description: The attribute data as a JSON string.
+        participantType:
+          type: string
+          description: The type of participant (e.g. Active, Revoked).
+
     InsertIssuerRequest:
       type: object
       properties:
@@ -196,7 +349,6 @@ components:
         taoDid:
           type: string
           description: DID of the TAO accrediting the issuer
-        
 
     UpdateIssuerRequest:
       type: object
@@ -211,7 +363,22 @@ components:
           type: string
           description: DID of the TAO accrediting the issuer
 
+    InsertParticipantRequest:
+      type: object
+      properties:
+        did:
+          type: string
+          description: DID of the participant to insert
 
+    UpdateParticipantRequest:
+      type: object
+      properties:
+        did:
+          type: string
+          description: DID of the participant
+        participantType:
+          type: integer
+          description: Participant type (e.g., Active, Revoked)
 
 security:
   - bearerAuth: []
