@@ -96,11 +96,8 @@ paths:
               $ref: '#/components/schemas/InsertIssuerRequest'
       responses:
         '200':
-          description: Transaction built successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
+          description: Transaction executed successfully.
+
 
   /issuers/{issuerId}/update:
     post:
@@ -122,128 +119,6 @@ paths:
       responses:
         '200':
           description: Transaction built successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-
-  /issuers/{issuerId}/set-metadata:
-    post:
-      summary: Set metadata for an issuer attribute
-      operationId: setAttributeMetadata
-      parameters:
-        - name: issuerId
-          in: path
-          required: true
-          description: The DID of the issuer.
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SetAttributeMetadataRequest'
-      responses:
-        '200':
-          description: Transaction built successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-
-  /issuers/{issuerId}/set-attribute:
-    post:
-      summary: Set an attribute for an issuer
-      operationId: setAttributeData
-      parameters:
-        - name: issuerId
-          in: path
-          required: true
-          description: The DID of the issuer.
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SetAttributeDataRequest'
-      responses:
-        '200':
-          description: Transaction built successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-
-  /issuers/{issuerId}/add-proxy:
-    post:
-      summary: Add a proxy for an issuer
-      operationId: addIssuerProxy
-      parameters:
-        - name: issuerId
-          in: path
-          required: true
-          description: The DID of the issuer.
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AddIssuerProxyRequest'
-      responses:
-        '200':
-          description: Transaction built successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-
-  /issuers/{issuerId}/update-proxy:
-    post:
-      summary: Update an existing proxy for an issuer
-      operationId: updateIssuerProxy
-      parameters:
-        - name: issuerId
-          in: path
-          required: true
-          description: The DID of the issuer.
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateIssuerProxyRequest'
-      responses:
-        '200':
-          description: Transaction built successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
-
-  /transactions/send:
-    post:
-      summary: Send a signed transaction to the blockchain
-      operationId: sendSignedTransaction
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SendSignedTransactionRequest'
-      responses:
-        '200':
-          description: Transaction sent successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionResponse'
 
 components:
   schemas:
@@ -290,157 +165,29 @@ components:
     InsertIssuerRequest:
       type: object
       properties:
-        from:
-          type: string
-          description: Ethereum address of the signer
         did:
           type: string
           description: DID of the issuer to insert
-        attributeData:
-          type: string
-          description: Verifiable credential converted to hex string
         issuerType:
           type: integer
           description: Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked
         taoDid:
           type: string
           description: DID of the TAO accrediting the issuer
-        taoAttributeId:
-          type: string
-          description: Attribute ID that accredits taoDid as TAO or RootTAO
+        
 
     UpdateIssuerRequest:
       type: object
       properties:
-        from:
-          type: string
-          description: Ethereum address of the signer
         did:
           type: string
           description: DID of the issuer
-        prevAttributeHash:
-          type: string
-          description: Attribute ID to update
-        attributeData:
-          type: string
-          description: Verifiable credential converted to hex string
         issuerType:
           type: integer
           description: Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked
         taoDid:
           type: string
           description: DID of the TAO accrediting the issuer
-        taoAttributeId:
-          type: string
-          description: Attribute ID that accredits taoDid as TAO or RootTAO
-
-    SetAttributeMetadataRequest:
-      type: object
-      properties:
-        from:
-          type: string
-          description: Ethereum address of the signer
-        did:
-          type: string
-          description: DID of the issuer
-        attributeId:
-          type: string
-          description: Attribute ID
-        issuerType:
-          type: integer
-          description: Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked
-        taoDid:
-          type: string
-          description: DID of the TAO accrediting the issuer
-        taoAttributeId:
-          type: string
-          description: Attribute ID that accredits taoDid as TAO or RootTAO
-
-    SetAttributeDataRequest:
-      type: object
-      properties:
-        from:
-          type: string
-          description: Ethereum address of the signer
-        did:
-          type: string
-          description: DID of the issuer
-        attributeId:
-          type: string
-          description: ID of the attribute to set
-        attributeData:
-          type: string
-          description: Verifiable credential converted to hex string
-
-    AddIssuerProxyRequest:
-      type: object
-      properties:
-        from:
-          type: string
-          description: Ethereum address of the signer
-        did:
-          type: string
-          description: DID of the issuer
-        proxyData:
-          type: string
-          description: Proxy configuration as a JSON object string.
-
-    UpdateIssuerProxyRequest:
-      type: object
-      properties:
-        from:
-          type: string
-          description: Ethereum address of the signer
-        did:
-          type: string
-          description: DID of the issuer
-        proxyId:
-          type: string
-          description: ID of the existing proxy
-        proxyData:
-          type: string
-          description: Proxy configuration as a JSON object string.
-
-    SendSignedTransactionRequest:
-      type: object
-      properties:
-        jsonrpc:
-          type: string
-          enum: ["2.0"]
-          description: JSON-RPC version, must be "2.0"
-        method:
-          type: string
-          description: Method to invoke
-          enum:
-            - insertIssuer
-            - updateIssuer
-            - setAttributeMetadata
-            - setAttributeData
-            - addIssuerProxy
-            - updateIssuerProxy
-            - sendSignedTransaction
-        params:
-          type: array
-          description: Parameters for the method call
-          items:
-            type: object
-        id:
-          type: integer
-          description: Identifier for the client request
-
-    TransactionResponse:
-      type: object
-      properties:
-        jsonrpc:
-          type: string
-          enum: ["2.0"]
-          description: JSON-RPC version, must be "2.0"
-        id:
-          type: integer
-          description: Same identifier established by the client in the call
-        result:
-          type: object
-          description: The result of the RPC method
 
 
 
