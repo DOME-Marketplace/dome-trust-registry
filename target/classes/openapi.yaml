@@ -1,0 +1,492 @@
+openapi: 3.0.3
+info:
+  description: |
+    This OpenAPI specification defines the REST API endpoints for interacting with the DOME EBSI-like Trusted Registry, including adapted JSON-RPC methods for blockchain transactions as REST API endpoints.
+  title: EBSI-like Trusted Registry API
+  version: 4.0.1
+servers:
+- description: Edit me to point to the correct server URL
+  url: http://localhost/v4
+security:
+- bearerAuth: []
+tags:
+- description: Operations related to the Issuers Registry
+  name: Trusted Issuers Registry
+- description: Operations related to the Participants Registry
+  name: Trusted Participants Registry
+- description: Operations related to the Schemas Registry
+  name: Trusted Schemas Registry
+- description: Operations related to the Certifications Issuer Registry
+  name: Trusted Certifications Issuer's Registry
+- description: Operations related to the Replication Registry
+  name: Trusted Replication Registry
+- description: Operations related to the LEARCredential Issuer List Registry
+  name: Trusted LEARCredential Issuer's Registry
+paths:
+  /issuers:
+    get:
+      operationId: listIssuers
+      parameters:
+      - description: Cursor for pagination (starting point)
+        explode: true
+        in: query
+        name: "page[after]"
+        required: false
+        schema:
+          example: 1
+          type: integer
+        style: form
+      - description: Number of items per page
+        explode: true
+        in: query
+        name: "page[size]"
+        required: false
+        schema:
+          example: 10
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listIssuers_200_response'
+          description: A list of trusted issuers with pagination details.
+      summary: List all trusted issuers
+      tags:
+      - Trusted Issuers Registry
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Issuers Registry
+  /issuers/{issuerId}:
+    get:
+      operationId: getIssuer
+      parameters:
+      - description: The DID of the issuer to retrieve.
+        explode: false
+        in: path
+        name: issuerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuerDetails'
+          description: Issuer details retrieved successfully.
+      summary: Get details of a specific issuer
+      tags:
+      - Trusted Issuers Registry
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Issuers Registry
+  /issuers/insert:
+    post:
+      description: |
+        This method is restricted to RootTAOs, TAOs. This is a method extracted from EBSI's JSON RPC API. This method is not exactly the one from EBSI since this registry is a bit different.
+      operationId: insertIssuer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertIssuerRequest'
+        required: true
+      responses:
+        "200":
+          description: Transaction executed successfully.
+      summary: Insert a new issuer
+      tags:
+      - Trusted Issuers Registry
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Issuers Registry
+  /issuers/{issuerId}/update:
+    post:
+      operationId: updateIssuer
+      parameters:
+      - description: The DID of the issuer to update.
+        explode: false
+        in: path
+        name: issuerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIssuerRequest'
+        required: true
+      responses:
+        "200":
+          description: Transaction built successfully.
+      summary: Update an existing issuer
+      tags:
+      - Trusted Issuers Registry
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Issuers Registry
+  /participants:
+    get:
+      operationId: listParticipants
+      parameters:
+      - description: Cursor for pagination (starting point)
+        explode: true
+        in: query
+        name: "page[after]"
+        required: false
+        schema:
+          example: 1
+          type: integer
+        style: form
+      - description: Number of items per page
+        explode: true
+        in: query
+        name: "page[size]"
+        required: false
+        schema:
+          example: 10
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listParticipants_200_response'
+          description: A list of trusted participants with pagination details.
+      summary: List all trusted participants
+      tags:
+      - Trusted Participants Registry
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Participants Registry
+  /participants/{participantId}:
+    get:
+      operationId: getParticipant
+      parameters:
+      - description: The DID of the participant to retrieve.
+        explode: false
+        in: path
+        name: participantId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantDetails'
+          description: Participant details retrieved successfully.
+      summary: Get details of a specific participant
+      tags:
+      - Trusted Participants Registry
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Participants Registry
+  /participants/insert:
+    post:
+      description: |
+        This method is restricted to authorized registrars. This is a method adapted from EBSI's JSON RPC API.
+      operationId: insertParticipant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertParticipantRequest'
+        required: true
+      responses:
+        "200":
+          description: Transaction executed successfully.
+      summary: Insert a new participant
+      tags:
+      - Trusted Participants Registry
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Participants Registry
+  /participants/{participantId}/update:
+    post:
+      operationId: updateParticipant
+      parameters:
+      - description: The DID of the participant to update.
+        explode: false
+        in: path
+        name: participantId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateParticipantRequest'
+        required: true
+      responses:
+        "200":
+          description: Transaction built successfully.
+      summary: Update an existing participant
+      tags:
+      - Trusted Participants Registry
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Trusted Participants Registry
+components:
+  schemas:
+    IssuerSummary:
+      example:
+        href: href
+        did: did
+      properties:
+        did:
+          description: The Decentralized Identifier (DID) of the issuer.
+          type: string
+        href:
+          description: The link to the details of the issuer.
+          type: string
+      type: object
+    IssuerDetails:
+      example:
+        attributes:
+        - rootTao: rootTao
+          tao: tao
+          issuerType: issuerType
+          body: body
+          hash: hash
+        - rootTao: rootTao
+          tao: tao
+          issuerType: issuerType
+          body: body
+          hash: hash
+        did: did
+      properties:
+        did:
+          description: The Decentralized Identifier (DID) of the issuer.
+          type: string
+        attributes:
+          items:
+            $ref: '#/components/schemas/Attribute'
+          type: array
+      type: object
+    ParticipantSummary:
+      example:
+        href: href
+        did: did
+      properties:
+        did:
+          description: The Decentralized Identifier (DID) of the participant.
+          type: string
+        href:
+          description: The link to the details of the participant.
+          type: string
+      type: object
+    ParticipantDetails:
+      example:
+        attributes:
+        - participantType: participantType
+          body: body
+          hash: hash
+        - participantType: participantType
+          body: body
+          hash: hash
+        did: did
+      properties:
+        did:
+          description: The Decentralized Identifier (DID) of the participant.
+          type: string
+        attributes:
+          items:
+            $ref: '#/components/schemas/ParticipantAttribute'
+          type: array
+      type: object
+    Attribute:
+      example:
+        rootTao: rootTao
+        tao: tao
+        issuerType: issuerType
+        body: body
+        hash: hash
+      properties:
+        hash:
+          description: Hash of the attribute.
+          type: string
+        body:
+          description: The attribute data as a JSON string.
+          type: string
+        issuerType:
+          description: "The type of issuer (e.g., RootTAO, TAO, TI, Revoked)."
+          type: string
+        tao:
+          description: The DID of the TAO accrediting the issuer.
+          type: string
+        rootTao:
+          description: The DID of the RootTAO accrediting the issuer.
+          type: string
+      type: object
+    ParticipantAttribute:
+      example:
+        participantType: participantType
+        body: body
+        hash: hash
+      properties:
+        hash:
+          description: Hash of the attribute.
+          type: string
+        body:
+          description: The attribute data as a JSON string.
+          type: string
+        participantType:
+          description: "The type of participant (e.g. Active, Revoked)."
+          type: string
+      type: object
+    InsertIssuerRequest:
+      example:
+        taoDid: taoDid
+        issuerType: 0
+        did: did
+      properties:
+        did:
+          description: DID of the issuer to insert
+          type: string
+        issuerType:
+          description: "Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked"
+          type: integer
+        taoDid:
+          description: DID of the TAO accrediting the issuer
+          type: string
+      type: object
+    UpdateIssuerRequest:
+      example:
+        taoDid: taoDid
+        issuerType: 0
+        did: did
+      properties:
+        did:
+          description: DID of the issuer
+          type: string
+        issuerType:
+          description: "Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked"
+          type: integer
+        taoDid:
+          description: DID of the TAO accrediting the issuer
+          type: string
+      type: object
+    InsertParticipantRequest:
+      example:
+        did: did
+      properties:
+        did:
+          description: DID of the participant to insert
+          type: string
+      type: object
+    UpdateParticipantRequest:
+      example:
+        participantType: 0
+        did: did
+      properties:
+        did:
+          description: DID of the participant
+          type: string
+        participantType:
+          description: "Participant type (e.g., Active, Revoked)"
+          type: integer
+      type: object
+    listIssuers_200_response_links:
+      description: Links to other pages of results.
+      example:
+        next: next
+        last: last
+        prev: prev
+        first: first
+      properties:
+        first:
+          type: string
+        prev:
+          type: string
+        next:
+          type: string
+        last:
+          type: string
+      type: object
+    listIssuers_200_response:
+      example:
+        total: 0
+        self: self
+        pageSize: 6
+        links:
+          next: next
+          last: last
+          prev: prev
+          first: first
+        items:
+        - href: href
+          did: did
+        - href: href
+          did: did
+      properties:
+        self:
+          description: The URL of the current page of results.
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/IssuerSummary'
+          type: array
+        total:
+          description: The total number of issuers in the registry.
+          type: integer
+        pageSize:
+          description: The number of items per page.
+          type: integer
+        links:
+          $ref: '#/components/schemas/listIssuers_200_response_links'
+      type: object
+    listParticipants_200_response:
+      example:
+        total: 0
+        self: self
+        pageSize: 6
+        links:
+          next: next
+          last: last
+          prev: prev
+          first: first
+        items:
+        - href: href
+          did: did
+        - href: href
+          did: did
+      properties:
+        self:
+          description: The URL of the current page of results.
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/ParticipantSummary'
+          type: array
+        total:
+          description: The total number of participants in the registry.
+          type: integer
+        pageSize:
+          description: The number of items per page.
+          type: integer
+        links:
+          $ref: '#/components/schemas/listIssuers_200_response_links'
+      type: object
