@@ -271,11 +271,6 @@ components:
           issuerType: issuerType
           body: body
           hash: hash
-        - rootTao: rootTao
-          tao: tao
-          issuerType: issuerType
-          body: body
-          hash: hash
         did: did
       properties:
         did:
@@ -301,9 +296,6 @@ components:
     ParticipantDetails:
       example:
         attributes:
-        - participantType: participantType
-          body: body
-          hash: hash
         - participantType: participantType
           body: body
           hash: hash

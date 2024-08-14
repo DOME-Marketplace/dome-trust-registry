@@ -16,10 +16,10 @@ import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGe
     basePackages = {"com.digitelts.dome.trust.registry.invoker", "com.digitelts.dome.trust.registry.api" , "org.openapitools.configuration"},
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
-public class OpenApiGeneratorApplication {
+public class TrustRegistryApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OpenApiGeneratorApplication.class, args);
+        SpringApplication.run(TrustRegistryApplication.class, args);
     }
 
     @Bean(name = "com.digitelts.dome.trust.registry.invoker.OpenApiGeneratorApplication.jsonNullableModule")
