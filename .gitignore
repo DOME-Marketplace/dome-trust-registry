@@ -1,4 +1,1 @@
-//ignore all files in the target directory and all of its subdirectories
-
 target/
-target/classes/*
