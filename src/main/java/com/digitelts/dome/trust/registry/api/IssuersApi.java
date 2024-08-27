@@ -39,12 +39,6 @@ public interface IssuersApi {
         return Optional.empty();
     }
 
-    /**
-     * GET /issuers/{issuerId} : Get details of a specific issuer
-     *
-     * @param issuerId The DID of the issuer to retrieve. (required)
-     * @return Issuer details retrieved successfully. (status code 200)
-     */
     @Operation(
         operationId = "getIssuer",
         summary = "Get details of a specific issuer",
@@ -78,13 +72,6 @@ public interface IssuersApi {
     }
 
 
-    /**
-     * POST /issuers/insert : Insert a new issuer
-     * This method is restricted to RootTAOs, TAOs. This is a method extracted from EBSI&#39;s JSON RPC API. This method is not exactly the one from EBSI since this registry is a bit different. 
-     *
-     * @param insertIssuerRequest  (required)
-     * @return Transaction executed successfully. (status code 200)
-     */
     @Operation(
         operationId = "insertIssuer",
         summary = "Insert a new issuer",
@@ -96,7 +83,7 @@ public interface IssuersApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/issuers/insert",
+        value = "/issuers",
         consumes = { "application/json" }
     )
     
@@ -108,13 +95,6 @@ public interface IssuersApi {
     }
 
 
-    /**
-     * GET /issuers : List all trusted issuers
-     *
-     * @param pageAfter Cursor for pagination (starting point) (optional)
-     * @param pageSize Number of items per page (optional)
-     * @return A list of trusted issuers with pagination details. (status code 200)
-     */
     @Operation(
         operationId = "listIssuers",
         summary = "List all trusted issuers",
@@ -149,13 +129,6 @@ public interface IssuersApi {
     }
 
 
-    /**
-     * POST /issuers/{issuerId}/update : Update an existing issuer
-     *
-     * @param issuerId The DID of the issuer to update. (required)
-     * @param updateIssuerRequest  (required)
-     * @return Transaction built successfully. (status code 200)
-     */
     @Operation(
         operationId = "updateIssuer",
         summary = "Update an existing issuer",
@@ -165,14 +138,14 @@ public interface IssuersApi {
         }
     )
     @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/issuers/{issuerId}/update",
+        method = RequestMethod.PUT,
+        value = "/issuers/{issuerId}",
         consumes = { "application/json" }
     )
     
     default ResponseEntity<Void> updateIssuer(
         @Parameter(name = "issuerId", description = "The DID of the issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
-        @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody UpdateIssuerRequest updateIssuerRequest
+        @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody InsertIssuerRequest updateIssuerRequest
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 

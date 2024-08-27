@@ -14,29 +14,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.*;
 import javax.annotation.Generated;
 
-/**
- * InsertIssuerRequest
- */
-
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class InsertIssuerRequest {
 
   private String did;
-
   private Integer issuerType;
-
+  private String issuerSpecificType;
   private String taoDid;
 
-  public InsertIssuerRequest did(String did) {
-    this.did = did;
-    return this;
-  }
-
-  /**
-   * DID of the issuer to insert
-   * @return did
-   */
-  
   @Schema(name = "did", description = "DID of the issuer to insert", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("did")
   public String getDid() {
@@ -45,11 +30,6 @@ public class InsertIssuerRequest {
 
   public void setDid(String did) {
     this.did = did;
-  }
-
-  public InsertIssuerRequest issuerType(Integer issuerType) {
-    this.issuerType = issuerType;
-    return this;
   }
 
   /**
@@ -65,6 +45,16 @@ public class InsertIssuerRequest {
 
   public void setIssuerType(Integer issuerType) {
     this.issuerType = issuerType;
+  }
+
+  @Schema(name = "issuerSpecificType", description = "Specific type of the issuer", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("issuerSpecificType")
+  public String getSpecificIssuerType() {
+    return issuerSpecificType;
+  }
+  
+  public void setSpecificIssuerType(String issuerSpecificType) {
+    this.issuerSpecificType = issuerSpecificType;
   }
 
   public InsertIssuerRequest taoDid(String taoDid) {
@@ -104,17 +94,6 @@ public class InsertIssuerRequest {
   @Override
   public int hashCode() {
     return Objects.hash(did, issuerType, taoDid);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class InsertIssuerRequest {\n");
-    sb.append("    did: ").append(toIndentedString(did)).append("\n");
-    sb.append("    issuerType: ").append(toIndentedString(issuerType)).append("\n");
-    sb.append("    taoDid: ").append(toIndentedString(taoDid)).append("\n");
-    sb.append("}");
-    return sb.toString();
   }
 
   /**

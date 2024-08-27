@@ -26,20 +26,9 @@ import javax.annotation.Generated;
 public class IssuerDetails {
 
   private String did;
-
   @Valid
   private List<@Valid Attribute> attributes = new ArrayList<>();
 
-  public IssuerDetails did(String did) {
-    this.did = did;
-    return this;
-  }
-
-  /**
-   * The Decentralized Identifier (DID) of the issuer.
-   * @return did
-   */
-  
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of the issuer.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("did")
   public String getDid() {
@@ -50,23 +39,6 @@ public class IssuerDetails {
     this.did = did;
   }
 
-  public IssuerDetails attributes(List<@Valid Attribute> attributes) {
-    this.attributes = attributes;
-    return this;
-  }
-
-  public IssuerDetails addAttributesItem(Attribute attributesItem) {
-    if (this.attributes == null) {
-      this.attributes = new ArrayList<>();
-    }
-    this.attributes.add(attributesItem);
-    return this;
-  }
-
-  /**
-   * Get attributes
-   * @return attributes
-   */
   @Valid 
   @Schema(name = "attributes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("attributes")
@@ -94,16 +66,6 @@ public class IssuerDetails {
   @Override
   public int hashCode() {
     return Objects.hash(did, attributes);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class IssuerDetails {\n");
-    sb.append("    did: ").append(toIndentedString(did)).append("\n");
-    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
-    sb.append("}");
-    return sb.toString();
   }
 
   /**
