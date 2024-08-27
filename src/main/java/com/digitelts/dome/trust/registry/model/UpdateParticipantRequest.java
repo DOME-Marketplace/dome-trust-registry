@@ -1,17 +1,9 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
 
 /**
@@ -22,20 +14,14 @@ import javax.annotation.Generated;
 public class UpdateParticipantRequest {
 
   private String did;
-
   private Integer participantType;
-
   public UpdateParticipantRequest did(String did) {
     this.did = did;
     return this;
   }
 
-  /**
-   * DID of the participant
-   * @return did
-   */
-  
-  @Schema(name = "did", description = "DID of the participant", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+
+  @Schema(name = "did", description = "DID of the participant", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("did")
   public String getDid() {
     return did;
@@ -50,12 +36,8 @@ public class UpdateParticipantRequest {
     return this;
   }
 
-  /**
-   * Participant type (e.g., Active, Revoked)
-   * @return participantType
-   */
   
-  @Schema(name = "participantType", description = "Participant type (e.g., Active, Revoked)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "participantType", description = "Participant type 1 Active, 2 Revoked)", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("participantType")
   public Integer getParticipantType() {
     return participantType;

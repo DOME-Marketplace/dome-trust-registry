@@ -39,12 +39,6 @@ public interface ParticipantsApi {
         return Optional.empty();
     }
 
-    /**
-     * GET /participants/{participantId} : Get details of a specific participant
-     *
-     * @param participantId The DID of the participant to retrieve. (required)
-     * @return Participant details retrieved successfully. (status code 200)
-     */
     @Operation(
         operationId = "getParticipant",
         summary = "Get details of a specific participant",
@@ -78,13 +72,6 @@ public interface ParticipantsApi {
     }
 
 
-    /**
-     * POST /participants/insert : Insert a new participant
-     * This method is restricted to authorized registrars. This is a method adapted from EBSI&#39;s JSON RPC API. 
-     *
-     * @param insertParticipantRequest  (required)
-     * @return Transaction executed successfully. (status code 200)
-     */
     @Operation(
         operationId = "insertParticipant",
         summary = "Insert a new participant",
@@ -96,7 +83,7 @@ public interface ParticipantsApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/participants/insert",
+        value = "/participants",
         consumes = { "application/json" }
     )
     
@@ -108,13 +95,6 @@ public interface ParticipantsApi {
     }
 
 
-    /**
-     * GET /participants : List all trusted participants
-     *
-     * @param pageAfter Cursor for pagination (starting point) (optional)
-     * @param pageSize Number of items per page (optional)
-     * @return A list of trusted participants with pagination details. (status code 200)
-     */
     @Operation(
         operationId = "listParticipants",
         summary = "List all trusted participants",
@@ -149,13 +129,6 @@ public interface ParticipantsApi {
     }
 
 
-    /**
-     * POST /participants/{participantId}/update : Update an existing participant
-     *
-     * @param participantId The DID of the participant to update. (required)
-     * @param updateParticipantRequest  (required)
-     * @return Transaction built successfully. (status code 200)
-     */
     @Operation(
         operationId = "updateParticipant",
         summary = "Update an existing participant",
@@ -165,8 +138,8 @@ public interface ParticipantsApi {
         }
     )
     @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/participants/{participantId}/update",
+        method = RequestMethod.PUT,
+        value = "/participants/{participantId}",
         consumes = { "application/json" }
     )
     
