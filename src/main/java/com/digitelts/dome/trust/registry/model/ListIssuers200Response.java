@@ -1,143 +1,84 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.net.URI;
 import java.util.Objects;
-import com.digitelts.dome.trust.registry.model.IssuerSummary;
-import com.digitelts.dome.trust.registry.model.ListIssuers200ResponseLinks;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
-
-/**
- * ListIssuers200Response
- */
 
 @JsonTypeName("listIssuers_200_response")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class ListIssuers200Response {
 
   private String self;
-
   @Valid
   private List<@Valid IssuerSummary> items = new ArrayList<>();
-
   private Integer total;
-
   private Integer pageSize;
-
   private ListIssuers200ResponseLinks links;
 
-  public ListIssuers200Response self(String self) {
-    this.self = self;
-    return this;
-  }
 
-  /**
-   * The URL of the current page of results.
-   * @return self
-   */
-  
-  @Schema(name = "self", description = "The URL of the current page of results.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "self", description = "The URL of the current page of results.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("self")
   public String getSelf() {
     return self;
   }
 
+
   public void setSelf(String self) {
     this.self = self;
   }
 
-  public ListIssuers200Response items(List<@Valid IssuerSummary> items) {
-    this.items = items;
-    return this;
-  }
 
-  public ListIssuers200Response addItemsItem(IssuerSummary itemsItem) {
-    if (this.items == null) {
-      this.items = new ArrayList<>();
-    }
-    this.items.add(itemsItem);
-    return this;
-  }
-
-  /**
-   * Get items
-   * @return items
-   */
   @Valid 
-  @Schema(name = "items", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("items")
   public List<@Valid IssuerSummary> getItems() {
     return items;
   }
 
+
   public void setItems(List<@Valid IssuerSummary> items) {
     this.items = items;
   }
+
 
   public ListIssuers200Response total(Integer total) {
     this.total = total;
     return this;
   }
 
-  /**
-   * The total number of issuers in the registry.
-   * @return total
-   */
-  
-  @Schema(name = "total", description = "The total number of issuers in the registry.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+
+  @Schema(name = "total", description = "The total number of issuers in the registry.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("total")
   public Integer getTotal() {
     return total;
   }
 
+
   public void setTotal(Integer total) {
     this.total = total;
   }
 
-  public ListIssuers200Response pageSize(Integer pageSize) {
-    this.pageSize = pageSize;
-    return this;
-  }
 
-  /**
-   * The number of items per page.
-   * @return pageSize
-   */
-  
-  @Schema(name = "pageSize", description = "The number of items per page.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "pageSize", description = "The number of items per page.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("pageSize")
   public Integer getPageSize() {
     return pageSize;
   }
 
+
   public void setPageSize(Integer pageSize) {
     this.pageSize = pageSize;
   }
 
-  public ListIssuers200Response links(ListIssuers200ResponseLinks links) {
-    this.links = links;
-    return this;
-  }
 
-  /**
-   * Get links
-   * @return links
-   */
   @Valid 
-  @Schema(name = "links", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "links", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("links")
   public ListIssuers200ResponseLinks getLinks() {
     return links;
