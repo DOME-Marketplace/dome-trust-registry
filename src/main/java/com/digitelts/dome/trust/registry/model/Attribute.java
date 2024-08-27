@@ -1,135 +1,111 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
-
-/**
- * Attribute
- */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class Attribute {
 
   private String hash;
-
   private String body;
-
   private String issuerType;
-
+  private String issuerSpecificType;
   private String tao;
-
   private String rootTao;
 
-  public Attribute hash(String hash) {
-    this.hash = hash;
-    return this;
-  }
 
-  /**
-   * Hash of the attribute.
-   * @return hash
-   */
-  
   @Schema(name = "hash", description = "Hash of the attribute.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("hash")
   public String getHash() {
     return hash;
   }
 
+
   public void setHash(String hash) {
     this.hash = hash;
   }
 
-  public Attribute body(String body) {
-    this.body = body;
-    return this;
-  }
 
-  /**
-   * The attribute data as a JSON string.
-   * @return body
-   */
-  
-  @Schema(name = "body", description = "The attribute data as a JSON string.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "body", description = "Base64 encoded content", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("body")
   public String getBody() {
     return body;
   }
 
+
   public void setBody(String body) {
     this.body = body;
   }
+
 
   public Attribute issuerType(String issuerType) {
     this.issuerType = issuerType;
     return this;
   }
 
-  /**
-   * The type of issuer (e.g., RootTAO, TAO, TI, Revoked).
-   * @return issuerType
-   */
-  
-  @Schema(name = "issuerType", description = "The type of issuer (e.g., RootTAO, TAO, TI, Revoked).", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+
+  @Schema(name = "issuerSpecificType", description = "Specific type of the issuer", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("issuerSpecificType")
+  public String getIssuerSpecificType() {
+    return issuerSpecificType;
+  }
+
+
+  public void setIssuerSpecificType(String issuerSpecificType) {
+    this.issuerSpecificType = issuerSpecificType;
+  }
+
+
+  @Schema(name = "issuerType", description = "Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("issuerType")
   public String getIssuerType() {
     return issuerType;
   }
 
+
   public void setIssuerType(String issuerType) {
     this.issuerType = issuerType;
   }
+
 
   public Attribute tao(String tao) {
     this.tao = tao;
     return this;
   }
 
-  /**
-   * The DID of the TAO accrediting the issuer.
-   * @return tao
-   */
   
-  @Schema(name = "tao", description = "The DID of the TAO accrediting the issuer.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "tao", description = "The DID of the TAO accrediting the issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tao")
   public String getTao() {
     return tao;
   }
 
+
   public void setTao(String tao) {
     this.tao = tao;
   }
+
 
   public Attribute rootTao(String rootTao) {
     this.rootTao = rootTao;
     return this;
   }
 
-  /**
-   * The DID of the RootTAO accrediting the issuer.
-   * @return rootTao
-   */
-  
-  @Schema(name = "rootTao", description = "The DID of the RootTAO accrediting the issuer.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+
+  @Schema(name = "rootTao", description = "The DID of the RootTAO accrediting the issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("rootTao")
   public String getRootTao() {
     return rootTao;
   }
 
+
   public void setRootTao(String rootTao) {
     this.rootTao = rootTao;
   }
+
 
   @Override
   public boolean equals(Object o) {
@@ -147,10 +123,12 @@ public class Attribute {
         Objects.equals(this.rootTao, attribute.rootTao);
   }
 
+
   @Override
   public int hashCode() {
     return Objects.hash(hash, body, issuerType, tao, rootTao);
   }
+
 
   @Override
   public String toString() {
@@ -164,6 +142,7 @@ public class Attribute {
     sb.append("}");
     return sb.toString();
   }
+
 
   /**
    * Convert the given object to string with each line indented by 4 spaces

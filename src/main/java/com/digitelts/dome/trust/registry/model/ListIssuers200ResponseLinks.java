@@ -1,23 +1,11 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
-
-/**
- * Links to other pages of results.
- */
 
 @Schema(name = "listIssuers_200_response_links", description = "Links to other pages of results.")
 @JsonTypeName("listIssuers_200_response_links")
@@ -25,24 +13,11 @@ import javax.annotation.Generated;
 public class ListIssuers200ResponseLinks {
 
   private String first;
-
   private String prev;
-
   private String next;
-
   private String last;
 
-  public ListIssuers200ResponseLinks first(String first) {
-    this.first = first;
-    return this;
-  }
-
-  /**
-   * Get first
-   * @return first
-   */
-  
-  @Schema(name = "first", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "first", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("first")
   public String getFirst() {
     return first;
@@ -52,37 +27,20 @@ public class ListIssuers200ResponseLinks {
     this.first = first;
   }
 
-  public ListIssuers200ResponseLinks prev(String prev) {
-    this.prev = prev;
-    return this;
-  }
 
-  /**
-   * Get prev
-   * @return prev
-   */
-  
-  @Schema(name = "prev", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prev", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("prev")
   public String getPrev() {
     return prev;
   }
 
+
   public void setPrev(String prev) {
     this.prev = prev;
   }
 
-  public ListIssuers200ResponseLinks next(String next) {
-    this.next = next;
-    return this;
-  }
 
-  /**
-   * Get next
-   * @return next
-   */
-  
-  @Schema(name = "next", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "next", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("next")
   public String getNext() {
     return next;
@@ -92,21 +50,13 @@ public class ListIssuers200ResponseLinks {
     this.next = next;
   }
 
-  public ListIssuers200ResponseLinks last(String last) {
-    this.last = last;
-    return this;
-  }
 
-  /**
-   * Get last
-   * @return last
-   */
-  
-  @Schema(name = "last", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "last", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("last")
   public String getLast() {
     return last;
   }
+
 
   public void setLast(String last) {
     this.last = last;
