@@ -1,28 +1,15 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
-
-/**
- * IssuerSummary
- */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class IssuerSummary {
 
   private String did;
-
   private String href;
 
   public IssuerSummary did(String did) {
@@ -30,10 +17,6 @@ public class IssuerSummary {
     return this;
   }
 
-  /**
-   * The Decentralized Identifier (DID) of the issuer.
-   * @return did
-   */
   
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of the issuer.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("did")
@@ -45,15 +28,6 @@ public class IssuerSummary {
     this.did = did;
   }
 
-  public IssuerSummary href(String href) {
-    this.href = href;
-    return this;
-  }
-
-  /**
-   * The link to the details of the issuer.
-   * @return href
-   */
   
   @Schema(name = "href", description = "The link to the details of the issuer.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("href")

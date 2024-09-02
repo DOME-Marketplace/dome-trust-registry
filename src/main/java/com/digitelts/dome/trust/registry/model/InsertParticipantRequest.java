@@ -1,46 +1,40 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
 
-/**
- * InsertParticipantRequest
- */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class InsertParticipantRequest {
 
   private String did;
+  private Integer participantType;
 
-  public InsertParticipantRequest did(String did) {
-    this.did = did;
-    return this;
-  }
 
-  /**
-   * DID of the participant to insert
-   * @return did
-   */
-  
-  @Schema(name = "did", description = "DID of the participant to insert", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "did", description = "DID of the participant to insert", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("did")
   public String getDid() {
     return did;
   }
 
+
   public void setDid(String did) {
     this.did = did;
+  }
+
+
+  @Schema(name = "participantType", description = "Participant type 1 Active, 2 Revoked)", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("participantType")
+  public Integer getParticipantType() {
+    return participantType;
+  }
+
+
+  public void setParticipantType(Integer participantType) {
+    this.participantType = participantType;
   }
 
   @Override
