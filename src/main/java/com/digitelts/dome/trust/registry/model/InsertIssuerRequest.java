@@ -13,6 +13,9 @@ public class InsertIssuerRequest {
   private Integer issuerType;
   private String issuerSpecificType;
   private String taoDid;
+  private String rootTaoDid;
+  private String attributeData;
+
 
   @Schema(name = "did", description = "DID of the issuer to insert", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("did")
@@ -59,6 +62,27 @@ public class InsertIssuerRequest {
 
   public void setTaoDid(String taoDid) {
     this.taoDid = taoDid;
+  }
+
+  @Schema(name = "rootTaoDid", description = "DID of the Root TAO accrediting the issuer", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("rootTaoDid")
+  public String getRootTaoDid() {
+    return rootTaoDid;
+  }
+
+  public void setRootTaoDid(String rootTaoDid) {
+    this.rootTaoDid = rootTaoDid;
+  }
+
+
+  @Schema(name = "attributeData", description = "Attribute data of the issuer", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("attributeData")
+  public String getAttributeData() {
+    return attributeData;
+  }
+
+  public void setAttributeData(String attributeData) {
+    this.attributeData = attributeData;
   }
 
 
