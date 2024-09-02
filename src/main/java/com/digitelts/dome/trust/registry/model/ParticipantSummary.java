@@ -10,6 +10,7 @@ import javax.annotation.Generated;
 public class ParticipantSummary {
 
   private String did;
+  private String href;
 
   
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of the participant.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -20,6 +21,16 @@ public class ParticipantSummary {
 
   public void setDid(String did) {
     this.did = did;
+  }
+
+  @Schema(name = "href", description = "The link to the details of the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("href")
+  public String getHref() {
+    return href;
+  }
+
+  public void setHref(String href) {
+    this.href = href;
   }
 
 
