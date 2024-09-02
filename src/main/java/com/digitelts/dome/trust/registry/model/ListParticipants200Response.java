@@ -1,55 +1,29 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.net.URI;
 import java.util.Objects;
-import com.digitelts.dome.trust.registry.model.ListIssuers200ResponseLinks;
-import com.digitelts.dome.trust.registry.model.ParticipantSummary;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
 
-/**
- * ListParticipants200Response
- */
 
 @JsonTypeName("listParticipants_200_response")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class ListParticipants200Response {
 
   private String self;
-
   @Valid
   private List<@Valid ParticipantSummary> items = new ArrayList<>();
-
   private Integer total;
-
   private Integer pageSize;
-
   private ListIssuers200ResponseLinks links;
 
-  public ListParticipants200Response self(String self) {
-    this.self = self;
-    return this;
-  }
 
-  /**
-   * The URL of the current page of results.
-   * @return self
-   */
-  
-  @Schema(name = "self", description = "The URL of the current page of results.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "self", description = "The URL of the current page of results.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("self")
   public String getSelf() {
     return self;
@@ -59,93 +33,56 @@ public class ListParticipants200Response {
     this.self = self;
   }
 
-  public ListParticipants200Response items(List<@Valid ParticipantSummary> items) {
-    this.items = items;
-    return this;
-  }
 
-  public ListParticipants200Response addItemsItem(ParticipantSummary itemsItem) {
-    if (this.items == null) {
-      this.items = new ArrayList<>();
-    }
-    this.items.add(itemsItem);
-    return this;
-  }
-
-  /**
-   * Get items
-   * @return items
-   */
   @Valid 
-  @Schema(name = "items", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("items")
   public List<@Valid ParticipantSummary> getItems() {
     return items;
   }
 
+
   public void setItems(List<@Valid ParticipantSummary> items) {
     this.items = items;
   }
 
-  public ListParticipants200Response total(Integer total) {
-    this.total = total;
-    return this;
-  }
-
-  /**
-   * The total number of participants in the registry.
-   * @return total
-   */
   
-  @Schema(name = "total", description = "The total number of participants in the registry.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "total", description = "The total number of participants in the registry.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("total")
   public Integer getTotal() {
     return total;
   }
 
+
   public void setTotal(Integer total) {
     this.total = total;
   }
 
-  public ListParticipants200Response pageSize(Integer pageSize) {
-    this.pageSize = pageSize;
-    return this;
-  }
 
-  /**
-   * The number of items per page.
-   * @return pageSize
-   */
-  
-  @Schema(name = "pageSize", description = "The number of items per page.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "pageSize", description = "The number of items per page.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("pageSize")
   public Integer getPageSize() {
     return pageSize;
   }
 
+
   public void setPageSize(Integer pageSize) {
     this.pageSize = pageSize;
   }
 
-  public ListParticipants200Response links(ListIssuers200ResponseLinks links) {
-    this.links = links;
-    return this;
-  }
 
-  /**
-   * Get links
-   * @return links
-   */
   @Valid 
-  @Schema(name = "links", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "links", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("links")
   public ListIssuers200ResponseLinks getLinks() {
     return links;
   }
 
+
   public void setLinks(ListIssuers200ResponseLinks links) {
     this.links = links;
   }
+
 
   @Override
   public boolean equals(Object o) {
@@ -163,10 +100,12 @@ public class ListParticipants200Response {
         Objects.equals(this.links, listParticipants200Response.links);
   }
 
+
   @Override
   public int hashCode() {
     return Objects.hash(self, items, total, pageSize, links);
   }
+
 
   @Override
   public String toString() {

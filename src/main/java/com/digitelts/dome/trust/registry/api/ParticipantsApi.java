@@ -3,7 +3,6 @@ package com.digitelts.dome.trust.registry.api;
 import com.digitelts.dome.trust.registry.model.InsertParticipantRequest;
 import com.digitelts.dome.trust.registry.model.ListParticipants200Response;
 import com.digitelts.dome.trust.registry.model.ParticipantDetails;
-import com.digitelts.dome.trust.registry.model.UpdateParticipantRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -137,7 +136,7 @@ public interface ParticipantsApi {
     
     default ResponseEntity<Void> updateParticipant(
         @Parameter(name = "participantId", description = "The DID of the participant to update.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId,
-        @Parameter(name = "UpdateParticipantRequest", description = "", required = true) @Valid @RequestBody UpdateParticipantRequest updateParticipantRequest
+        @Parameter(name = "UpdateParticipantRequest", description = "", required = true) @Valid @RequestBody InsertParticipantRequest updateParticipantRequest
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
