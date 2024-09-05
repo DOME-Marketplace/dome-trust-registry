@@ -66,7 +66,6 @@ public interface IssuersApi {
     @Operation(
         operationId = "insertIssuer",
         summary = "Insert a new issuer",
-        description = "This method is restricted to RootTAOs, TAOs. This is a method extracted from EBSI's JSON RPC API. This method is not exactly the one from EBSI since this registry is a bit different. ",
         tags = { "Trusted Issuers Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Transaction executed successfully.")
