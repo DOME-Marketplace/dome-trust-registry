@@ -11,13 +11,13 @@ public class Attribute {
 
   private String hash;
   private String body;
-  private String issuerType;
+  private Integer issuerType;
   private String issuerSpecificType;
   private String tao;
   private String rootTao;
 
 
-  @Schema(name = "hash", description = "Hash of the attribute.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "hash", description = "Hash of the payload.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("hash")
   public String getHash() {
     return hash;
@@ -29,7 +29,7 @@ public class Attribute {
   }
 
 
-  @Schema(name = "body", description = "Base64 encoded content", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "body", description = "Base64 encoded content", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("body")
   public String getBody() {
     return body;
@@ -38,12 +38,6 @@ public class Attribute {
 
   public void setBody(String body) {
     this.body = body;
-  }
-
-
-  public Attribute issuerType(String issuerType) {
-    this.issuerType = issuerType;
-    return this;
   }
 
 
@@ -61,22 +55,16 @@ public class Attribute {
 
   @Schema(name = "issuerType", description = "Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("issuerType")
-  public String getIssuerType() {
+  public Integer getIssuerType() {
     return issuerType;
   }
 
 
-  public void setIssuerType(String issuerType) {
+  public void setIssuerType(Integer issuerType) {
     this.issuerType = issuerType;
   }
 
 
-  public Attribute tao(String tao) {
-    this.tao = tao;
-    return this;
-  }
-
-  
   @Schema(name = "tao", description = "The DID of the TAO accrediting the issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tao")
   public String getTao() {
@@ -86,12 +74,6 @@ public class Attribute {
 
   public void setTao(String tao) {
     this.tao = tao;
-  }
-
-
-  public Attribute rootTao(String rootTao) {
-    this.rootTao = rootTao;
-    return this;
   }
 
 

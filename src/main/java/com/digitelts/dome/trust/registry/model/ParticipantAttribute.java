@@ -10,18 +10,56 @@ import javax.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class ParticipantAttribute {
 
-  private String participantType;
+  private String hash;
+  private String body;
+  private Integer participantType;
+  private String registrar;
+
+  @Schema(name = "hash", description = "Hash of the payload.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("hash")
+  public String getHash() {
+    return hash;
+  }
+
+
+  public void setHash(String hash) {
+    this.hash = hash;
+  }
+
+
+  @Schema(name = "body", description = "Base64 encoded content", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("body")
+  public String getBody() {
+    return body;
+  }
+
+
+  public void setBody(String body) {
+    this.body = body;
+  }
 
 
   @Schema(name = "participantType", description = "The type of participant (1 Active, 2 Revoked).", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("participantType")
-  public String getParticipantType() {
+  public Integer getParticipantType() {
     return participantType;
   }
 
 
-  public void setParticipantType(String participantType) {
+  public void setParticipantType(Integer participantType) {
     this.participantType = participantType;
+  }
+
+
+ @Schema(name = "registrar", description = "The DID of the registrar registering the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("registrar")
+  public String getRegistrar() {
+    return registrar;
+  }
+
+
+  public void setRegistrar(String registrar) {
+    this.registrar = registrar;
   }
 
 

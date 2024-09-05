@@ -66,7 +66,6 @@ public interface ParticipantsApi {
     @Operation(
         operationId = "insertParticipant",
         summary = "Insert a new participant",
-        description = "This method is restricted to authorized registrars. This is a method adapted from EBSI's JSON RPC API. ",
         tags = { "Trusted Participants Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Transaction executed successfully.")

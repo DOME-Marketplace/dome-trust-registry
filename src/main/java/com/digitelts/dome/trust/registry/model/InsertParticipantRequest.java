@@ -12,6 +12,8 @@ public class InsertParticipantRequest {
 
   private String did;
   private Integer participantType;
+  private String registrar;
+  private String attributeData;
 
 
   @Schema(name = "did", description = "DID of the participant to insert", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -36,6 +38,31 @@ public class InsertParticipantRequest {
   public void setParticipantType(Integer participantType) {
     this.participantType = participantType;
   }
+
+  @Schema(name = "registrar", description = "The DID of the registrar registering the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("registrar")
+  public String getRegistrar() {
+    return registrar;
+  }
+
+
+  public void setRegistrar(String registrar) {
+    this.registrar = registrar;
+  }
+
+
+  @Schema(name = "attributeData", description = "Base64 encoded content", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("attributeData")
+  public String getAttributeData() {
+    return attributeData;
+  }
+
+
+  public void setAttributeData(String attributeData) {
+    this.attributeData = attributeData;
+  }
+
+
 
   @Override
   public boolean equals(Object o) {
