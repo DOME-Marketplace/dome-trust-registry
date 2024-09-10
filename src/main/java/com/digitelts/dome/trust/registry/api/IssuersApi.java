@@ -1,6 +1,5 @@
 package com.digitelts.dome.trust.registry.api;
 
-import com.digitelts.dome.trust.registry.model.InsertIssuerRequest;
 import com.digitelts.dome.trust.registry.model.IssuerDetails;
 import com.digitelts.dome.trust.registry.model.ListIssuers200Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,7 +77,7 @@ public interface IssuersApi {
     )
     
     default ResponseEntity<Void> insertIssuer(
-        @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody InsertIssuerRequest insertIssuerRequest
+        @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody IssuerDetails insertIssuerRequest
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
@@ -134,7 +133,7 @@ public interface IssuersApi {
     
     default ResponseEntity<Void> updateIssuer(
         @Parameter(name = "issuerId", description = "The DID of the issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
-        @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody InsertIssuerRequest updateIssuerRequest
+        @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody IssuerDetails updateIssuerRequest
     ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 

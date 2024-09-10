@@ -14,7 +14,12 @@ public class IssuerDetails {
 
   private String did;
   @Valid
-  private List<@Valid Attribute> attributes = new ArrayList<>();
+  private Integer issuerType;
+  private String issuerSpecificType;
+  private String tao;
+  private String rootTao;
+  private String validFrom;
+  private String validTo;
 
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of the issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("did")
@@ -28,36 +33,75 @@ public class IssuerDetails {
   }
 
 
-  @Valid 
-  @Schema(name = "attributes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("attributes")
-  public List<@Valid Attribute> getAttributes() {
-    return attributes;
+ @Schema(name = "issuerSpecificType", description = "Specific type of the issuer", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("issuerSpecificType")
+  public String getIssuerSpecificType() {
+    return issuerSpecificType;
   }
 
 
-  public void setAttributes(List<@Valid Attribute> attributes) {
-    this.attributes = attributes;
+  public void setIssuerSpecificType(String issuerSpecificType) {
+    this.issuerSpecificType = issuerSpecificType;
   }
 
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    IssuerDetails issuerDetails = (IssuerDetails) o;
-    return Objects.equals(this.did, issuerDetails.did) &&
-        Objects.equals(this.attributes, issuerDetails.attributes);
+  @Schema(name = "issuerType", description = "Issuer type 1 RootTAO, 2 TAO, 3 TI, 4 Revoked", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("issuerType")
+  public Integer getIssuerType() {
+    return issuerType;
   }
 
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(did, attributes);
+  public void setIssuerType(Integer issuerType) {
+    this.issuerType = issuerType;
+  }
+
+
+  @Schema(name = "tao", description = "The DID of the TAO accrediting the issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("tao")
+  public String getTao() {
+    return tao;
+  }
+
+
+  public void setTao(String tao) {
+    this.tao = tao;
+  }
+
+
+  @Schema(name = "rootTao", description = "The DID of the RootTAO accrediting the issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("rootTao")
+  public String getRootTao() {
+    return rootTao;
+  }
+
+
+  public void setRootTao(String rootTao) {
+    this.rootTao = rootTao;
+  }
+
+
+  @Schema(name = "validFrom", description = "The date from which the issuer is valid in ISO 8601", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("validFrom")
+  public String getValidFrom() {
+    return validFrom;
+  }
+
+
+  public void setValidFrom(String validFrom) {
+    this.validFrom = validFrom;
+  }
+
+
+  @Schema(name = "validTo", description = "The date to which the issuer is valid in ISO 8601", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("validTo")
+  public String getValidTo() {
+    return validTo;
+  }
+
+
+  public void setValidTo(String validTo) {
+    this.validTo = validTo;
   }
 }
 
