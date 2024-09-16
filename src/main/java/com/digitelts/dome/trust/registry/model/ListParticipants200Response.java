@@ -1,14 +1,16 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
+
 import javax.annotation.Generated;
+import javax.validation.Valid;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 
 @JsonTypeName("listParticipants_200_response")
@@ -20,7 +22,7 @@ public class ListParticipants200Response {
   private List<@Valid ParticipantSummary> items = new ArrayList<>();
   private Integer total;
   private Integer pageSize;
-  private ListIssuers200ResponseLinks links;
+  private ListParticipants200ResponseLinks links;
 
 
   @Schema(name = "self", description = "The URL of the current page of results.", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -74,12 +76,12 @@ public class ListParticipants200Response {
   @Valid 
   @Schema(name = "links", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("links")
-  public ListIssuers200ResponseLinks getLinks() {
+  public ListParticipants200ResponseLinks getLinks() {
     return links;
   }
 
 
-  public void setLinks(ListIssuers200ResponseLinks links) {
+  public void setLinks(ListParticipants200ResponseLinks links) {
     this.links = links;
   }
 

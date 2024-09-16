@@ -1,22 +1,22 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
+
 import javax.annotation.Generated;
+import javax.validation.Valid;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class ParticipantDetails {
 
-  private String did;
-  private String registrar;
-  private String validFrom;
-  private String validTo;
-
+ private String did;
+  @Valid
+  private List<@Valid ParticipantAttribute> attributes = new ArrayList<>();
 
   
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -31,50 +31,59 @@ public class ParticipantDetails {
   }
 
 
-@Schema(name = "participantType", description = "The type of participant (1 Active, 2 Revoked).", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("participantType")
-  public Integer getParticipantType() {
-    return participantType;
+  @Valid 
+  @Schema(name = "attributes", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("attributes")
+  public List<@Valid ParticipantAttribute> getAttributes() {
+    return attributes;
   }
 
 
-  public void setParticipantType(Integer participantType) {
-    this.participantType = participantType;
+  public void setAttributes(List<@Valid ParticipantAttribute> attributes) {
+    this.attributes = attributes;
   }
 
 
- @Schema(name = "registrar", description = "The DID of the registrar registering the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("registrar")
-  public String getRegistrar() {
-    return registrar;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ParticipantDetails participantDetails = (ParticipantDetails) o;
+    return Objects.equals(this.did, participantDetails.did) &&
+        Objects.equals(this.attributes, participantDetails.attributes);
   }
 
 
-  public void setRegistrar(String registrar) {
-    this.registrar = registrar;
-  }
-
- @Schema(name = "validFrom", description = "The date from which the issuer is valid in ISO 8601", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("validFrom")
-  public String getValidFrom() {
-    return validFrom;
+  @Override
+  public int hashCode() {
+    return Objects.hash(did, attributes);
   }
 
 
-  public void setValidFrom(String validFrom) {
-    this.validFrom = validFrom;
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ParticipantDetails {\n");
+    sb.append("    did: ").append(toIndentedString(did)).append("\n");
+    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
+    sb.append("}");
+    return sb.toString();
   }
 
 
-  @Schema(name = "validTo", description = "The date to which the issuer is valid in ISO 8601", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("validTo")
-  public String getValidTo() {
-    return validTo;
-  }
-
-
-  public void setValidTo(String validTo) {
-    this.validTo = validTo;
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
   }
 }
 

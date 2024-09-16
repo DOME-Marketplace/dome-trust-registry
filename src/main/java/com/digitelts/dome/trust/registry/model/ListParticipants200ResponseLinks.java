@@ -9,12 +9,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(name = "listIssuers_200_response_links", description = "Links to other pages of results.")
-@JsonTypeName("listIssuers_200_response_links")
+@Schema(name = "listParticipants_200_response_links", description = "Links to other pages of results.")
+@JsonTypeName("listParticipants_200_response_links")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
-public class ListIssuers200ResponseLinks {
-
-  private String first;
+public class ListParticipants200ResponseLinks {
+     private String first;
   private String prev;
   private String next;
   private String last;
@@ -72,11 +71,11 @@ public class ListIssuers200ResponseLinks {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ListIssuers200ResponseLinks listIssuers200ResponseLinks = (ListIssuers200ResponseLinks) o;
-    return Objects.equals(this.first, listIssuers200ResponseLinks.first) &&
-        Objects.equals(this.next, listIssuers200ResponseLinks.next) &&
-        Objects.equals(this.prev, listIssuers200ResponseLinks.prev) &&
-        Objects.equals(this.last, listIssuers200ResponseLinks.last);
+    ListParticipants200ResponseLinks listParticipants200ResponseLinks = (ListParticipants200ResponseLinks) o;
+    return Objects.equals(this.first, listParticipants200ResponseLinks.first) &&
+        Objects.equals(this.prev, listParticipants200ResponseLinks.prev) &&
+        Objects.equals(this.next, listParticipants200ResponseLinks.next) &&
+        Objects.equals(this.last, listParticipants200ResponseLinks.last);
   }
 
   @Override
@@ -87,10 +86,10 @@ public class ListIssuers200ResponseLinks {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ListIssuers200ResponseLinks {\n");
+    sb.append("class ListParticipants200ResponseLinks {\n");
     sb.append("    first: ").append(toIndentedString(first)).append("\n");
-    sb.append("    next: ").append(toIndentedString(next)).append("\n");
     sb.append("    prev: ").append(toIndentedString(prev)).append("\n");
+    sb.append("    next: ").append(toIndentedString(next)).append("\n");
     sb.append("    last: ").append(toIndentedString(last)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -107,4 +106,3 @@ public class ListIssuers200ResponseLinks {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

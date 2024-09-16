@@ -1,16 +1,22 @@
 package com.digitelts.dome.trust.registry.model;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.annotation.Generated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class IssuerSummary {
 
   private String did;
   private String href;
+
+  public IssuerSummary(String did1, String href1) {
+  }
+
 
   public IssuerSummary did(String did) {
     this.did = did;
