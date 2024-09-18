@@ -31,18 +31,6 @@ public class ParticipantDetails {
   }
 
 
-@Schema(name = "participantType", description = "The type of participant (1 Active, 2 Revoked).", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("participantType")
-  public Integer getParticipantType() {
-    return participantType;
-  }
-
-
-  public void setParticipantType(Integer participantType) {
-    this.participantType = participantType;
-  }
-
-
  @Schema(name = "registrar", description = "The DID of the registrar registering the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("registrar")
   public String getRegistrar() {
