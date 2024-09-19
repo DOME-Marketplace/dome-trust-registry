@@ -30,7 +30,7 @@ public class ParticipantDetails {
     this.did = did;
   }
 
-
+  
   @Valid 
   @Schema(name = "attributes", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("attributes")
@@ -55,6 +55,7 @@ public class ParticipantDetails {
     ParticipantDetails participantDetails = (ParticipantDetails) o;
     return Objects.equals(this.did, participantDetails.did) &&
         Objects.equals(this.attributes, participantDetails.attributes);
+
   }
 
 
