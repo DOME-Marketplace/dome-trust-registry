@@ -1,10 +1,12 @@
 package com.digitelts.dome.trust.registry.model;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.annotation.Generated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class IssuerSummary {
@@ -17,7 +19,12 @@ public class IssuerSummary {
     return this;
   }
 
-  
+  // Page simulation builder
+  public IssuerSummary(String did, String href) {
+    this.did = did;
+    this.href = href;
+  }
+
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of the issuer.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("did")
   public String getDid() {
@@ -28,7 +35,6 @@ public class IssuerSummary {
     this.did = did;
   }
 
-  
   @Schema(name = "href", description = "The link to the details of the issuer.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("href")
   public String getHref() {
@@ -78,4 +84,3 @@ public class IssuerSummary {
     return o.toString().replace("\n", "\n    ");
   }
 }
-
