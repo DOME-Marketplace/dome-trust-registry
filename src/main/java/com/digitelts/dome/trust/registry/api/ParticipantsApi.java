@@ -85,83 +85,58 @@ public interface ParticipantsApi {
         @RequestMapping(method = RequestMethod.GET, value = "/participants", produces = { "application/json" })
 
         default ResponseEntity<ListParticipants200Response> listParticipants(
-                        @RequestParam(value = "pageAfter", required = false) Integer pageAfter,
-                        @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                        @RequestParam(value = "pageBefore", required = false) Integer pageBefore,
-                        @RequestParam(value = "first", required = false) Boolean first,
-                        @RequestParam(value = "last", required = false) Boolean last) {
+                @Parameter(name = "page[after]", description = "Cursor for pagination (starting point)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page[after]", required = false) Integer pageAfter,
+                @Parameter(name = "page[size]", description = "Number of items per page", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page[size]", required = false) Integer pageSize) {
 
-                // Set default page size if not provided or invalid
                 if (pageSize == null || pageSize <= 0) {
                         pageSize = 10;
                 }
 
-                // Simulation of a fictitious list of participants
+                int currentPage = (pageAfter != null) ? pageAfter : 0;
+
                 List<ParticipantSummary> allParticipants = new ArrayList<>();
                 for (int i = 1; i <= 40; i++) {
                         allParticipants.add(new ParticipantSummary("did" + i, "href" + i));
                 }
 
-                // Create fictitious emitter outside the loop
-                allParticipants.add(new ParticipantSummary("did Fprueba", "href FHprueba"));
+                allParticipants.add(new ParticipantSummary("didPrueba", "hrefPrueba"));
 
                 int totalItems = allParticipants.size();
                 int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
-                // Determine the current page
-                int currentPage = 0;
-
-                if (Boolean.TRUE.equals(first)) {
-                        // Go to the first page if 'first' is present
-                        currentPage = 0;
-                } else if (Boolean.TRUE.equals(last)) {
-                        // Go to last page if 'last' is present
-                        currentPage = totalPages - 1;
-                } else if (pageBefore != null) {
-                        // If pageBefore is specified, we calculate the previous page
-                        currentPage = (pageBefore > 0) ? pageBefore - 1 : 0;
-                } else if (pageAfter != null) {
-                        // If pageAfter is specified, we advance to the next page
-                        currentPage = pageAfter;
-                }
-
-                // Calculate start and end indexes for pagination
                 int startIndex = currentPage * pageSize;
                 int endIndex = Math.min(startIndex + pageSize, allParticipants.size());
 
-                // Obtain the sub-list of participants to be returned
                 List<ParticipantSummary> paginatedParticipants = allParticipants.subList(startIndex, endIndex);
 
-                // Building the paging response
                 ListParticipants200Response response = new ListParticipants200Response();
+
                 ListParticipants200ResponseLinks links = new ListParticipants200ResponseLinks();
 
-                // Link to first page
-                links.setFirst("http://localhost:8080/v4/participants?first=true&pageSize=" + pageSize);
+                links.setFirst("http://localhost:8080/v4/participants?page%5Bafter%5D=0&page%5Bsize%5D=" + pageSize);
 
-                // Link to next page
                 links.setNext((currentPage + 1) < totalPages
-                                ? "http://localhost:8080/v4/participants?pageAfter=" + (currentPage + 1)
-                                                + "&pageSize=" + pageSize
-                                : null);
-
-                // Link to previous page (only if we are not on the first page)
-                links.setPrev(currentPage > 0
-                                ? "http://localhost:8080/v4/participants?pageBefore=" + currentPage + "&pageSize="
+                                ? "http://localhost:8080/v4/participants?page%5Bafter%5D=" + (currentPage + 1)
+                                                + "&page%5Bsize%5D="
                                                 + pageSize
                                 : null);
 
-                // Link to last page
-                links.setLast("http://localhost:8080/v4/participants?last=true&pageSize=" + pageSize);
+                links.setPrev(currentPage > 0
+                                ? "http://localhost:8080/v4/participants?page%5Bafter%5D=" + (currentPage - 1)
+                                                + "&page%5Bsize%5D="
+                                                + pageSize
+                                : null);
 
-                // Assign the links, total quantity and paged elements to the
-                // reply
+                links.setLast("http://localhost:8080/v4/participants?page%5Bafter%5D=" + (totalPages - 1)
+                                + "&page%5Bsize%5D="
+                                + pageSize);
+
                 response.setLinks(links);
+
                 response.setTotal(totalItems);
                 response.setPageSize(pageSize);
                 response.setItems(paginatedParticipants);
 
-                // Return response with HTTP 200 OK status
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 

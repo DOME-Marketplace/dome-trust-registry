@@ -84,80 +84,55 @@ public interface IssuersApi {
     @RequestMapping(method = RequestMethod.GET, value = "/issuers", produces = { "application/json" })
 
     default ResponseEntity<ListIssuers200Response> listIssuers(
-            @RequestParam(value = "pageAfter", required = false) Integer pageAfter,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize,
-            @RequestParam(value = "pageBefore", required = false) Integer pageBefore,
-            @RequestParam(value = "first", required = false) Boolean first,
-            @RequestParam(value = "last", required = false) Boolean last) {
+            @Parameter(name = "page[after]", description = "Cursor for pagination (starting point)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page[after]", required = false) Integer pageAfter,
+            @Parameter(name = "page[size]", description = "Number of items per page", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page[size]", required = false) Integer pageSize) {
 
-        // If a valid pageSize is not specified, we assign 10 by default
         if (pageSize == null || pageSize <= 0) {
             pageSize = 10;
         }
 
-        // Create the list of fictitious senders
+        int currentPage = (pageAfter != null) ? pageAfter : 0;
+
         List<IssuerSummary> allIssuers = new ArrayList<>();
         for (int i = 1; i <= 40; i++) {
             allIssuers.add(new IssuerSummary("did" + i, "href" + i));
         }
 
-        // Create fictitious emitter outside the loop
-        allIssuers.add(new IssuerSummary("did Fprueba", "href FHprueba"));
+        allIssuers.add(new IssuerSummary("didPrueba", "hrefPrueba"));
 
         int totalItems = allIssuers.size();
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
 
-        // Define the current page based on the parameters
-        int currentPage = 0;
-
-        if (Boolean.TRUE.equals(first)) {
-            // Go to the first page if 'first' is present
-            currentPage = 0;
-        } else if (Boolean.TRUE.equals(last)) {
-            // Go to last page if 'last' is present
-            currentPage = totalPages - 1;
-        } else if (pageBefore != null) {
-            // If pageBefore is specified, we calculate the previous page
-            currentPage = (pageBefore > 0) ? pageBefore - 1 : 0;
-        } else if (pageAfter != null) {
-            // If pageAfter is specified, we advance to the next page
-            currentPage = pageAfter;
-        }
-
-        // Calculate start and end indexes for paginated sublist
         int startIndex = currentPage * pageSize;
         int endIndex = Math.min(startIndex + pageSize, allIssuers.size());
 
-        // Sublist paged issuers
         List<IssuerSummary> paginatedIssuers = allIssuers.subList(startIndex, endIndex);
 
-        // Response construction
         ListIssuers200Response response = new ListIssuers200Response();
+
         ListIssuers200ResponseLinks links = new ListIssuers200ResponseLinks();
 
-        // Generate links for pagination
-        links.setFirst("http://localhost:8080/v4/issuers?first=true&pageSize=" + pageSize);
+        links.setFirst("http://localhost:8080/v4/issuers?page%5Bafter%5D=0&page%5Bsize%5D=" + pageSize);
 
-        // Link to next page
         links.setNext((currentPage + 1) < totalPages
-                ? "http://localhost:8080/v4/issuers?pageAfter=" + (currentPage + 1) + "&pageSize=" + pageSize
+                ? "http://localhost:8080/v4/issuers?page%5Bafter%5D=" + (currentPage + 1)
+                        + "&page%5Bsize%5D=" + pageSize
                 : null);
 
-        // Link to previous page
         links.setPrev(currentPage > 0
-                ? "http://localhost:8080/v4/issuers?pageBefore=" + currentPage + "&pageSize=" + pageSize
+                ? "http://localhost:8080/v4/issuers?page%5Bafter%5D=" + (currentPage - 1)
+                        + "&page%5Bsize%5D=" + pageSize
                 : null);
 
-        // Link to last page
-        links.setLast("http://localhost:8080/v4/issuers?last=true&pageSize=&pageSize=" + pageSize);
+        links.setLast("http://localhost:8080/v4/issuers?page%5Bafter%5D=" + (totalPages - 1)
+                + "&page%5Bsize%5D=" + pageSize);
 
-        // Assign links and results to the response
         response.setLinks(links);
+
         response.setTotal(totalItems);
         response.setPageSize(pageSize);
         response.setItems(paginatedIssuers);
 
-        // Return response with HTTP 200 OK status
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
