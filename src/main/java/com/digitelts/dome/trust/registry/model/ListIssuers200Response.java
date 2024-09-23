@@ -21,7 +21,7 @@ public class ListIssuers200Response {
   private Integer pageSize;
   private ListIssuers200ResponseLinks links;
 
-
+  
   @Schema(name = "self", description = "The URL of the current page of results.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("self")
   public String getSelf() {
