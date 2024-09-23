@@ -1,15 +1,16 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-import javax.annotation.Generated;
+import java.util.Objects;
 
+import javax.annotation.Generated;
+import javax.validation.Valid;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonTypeName("listParticipants_200_response")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
@@ -20,8 +21,7 @@ public class ListParticipants200Response {
   private List<@Valid ParticipantSummary> items = new ArrayList<>();
   private Integer total;
   private Integer pageSize;
-  private ListIssuers200ResponseLinks links;
-
+  private ListParticipants200ResponseLinks links;
 
   @Schema(name = "self", description = "The URL of the current page of results.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("self")
@@ -33,31 +33,26 @@ public class ListParticipants200Response {
     this.self = self;
   }
 
-
-  @Valid 
+  @Valid
   @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("items")
   public List<@Valid ParticipantSummary> getItems() {
     return items;
   }
 
-
   public void setItems(List<@Valid ParticipantSummary> items) {
     this.items = items;
   }
 
-  
   @Schema(name = "total", description = "The total number of participants in the registry.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("total")
   public Integer getTotal() {
     return total;
   }
 
-
   public void setTotal(Integer total) {
     this.total = total;
   }
-
 
   @Schema(name = "pageSize", description = "The number of items per page.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("pageSize")
@@ -65,24 +60,20 @@ public class ListParticipants200Response {
     return pageSize;
   }
 
-
   public void setPageSize(Integer pageSize) {
     this.pageSize = pageSize;
   }
 
-
-  @Valid 
+  @Valid
   @Schema(name = "links", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("links")
-  public ListIssuers200ResponseLinks getLinks() {
+  public ListParticipants200ResponseLinks getLinks() {
     return links;
   }
 
-
-  public void setLinks(ListIssuers200ResponseLinks links) {
+  public void setLinks(ListParticipants200ResponseLinks links) {
     this.links = links;
   }
-
 
   @Override
   public boolean equals(Object o) {
@@ -100,12 +91,10 @@ public class ListParticipants200Response {
         Objects.equals(this.links, listParticipants200Response.links);
   }
 
-
   @Override
   public int hashCode() {
     return Objects.hash(self, items, total, pageSize, links);
   }
-
 
   @Override
   public String toString() {
@@ -131,4 +120,3 @@ public class ListParticipants200Response {
     return o.toString().replace("\n", "\n    ");
   }
 }
-
