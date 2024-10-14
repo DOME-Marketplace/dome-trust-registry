@@ -1,0 +1,63 @@
+@startuml useCaseDiagram
+left to right direction
+!define RECTANGLE class
+
+
+
+actor "DOME Support" as domeSupport 
+actor "DOME Master Registrar" <<Root TAO>> as  domeMasterResgistrar
+actor "DOME Operator" as domeOp
+actor "Registrar of Registrars" <<TAO>> as registrarOfRegistrars
+actor "Trusted Participant List Registrar of Registrars" as tplRegistrarOfRegistrars
+actor "Trusted Access Nodes List Registrar of Registrars" as tanlRegistrarOfRegistrars
+actor "Trusted Services List Registrar of Registrars" as tslRegistrarOfRegistrars
+actor "Trusted Schemas List Registrar of Registrars" as tschemaslRegistrarOfRegistrars
+tplRegistrarOfRegistrars <|-- registrarOfRegistrars
+tanlRegistrarOfRegistrars <|-- registrarOfRegistrars
+tslRegistrarOfRegistrars <|-- registrarOfRegistrars
+tschemaslRegistrarOfRegistrars <|-- registrarOfRegistrars
+actor "Trusted Issuer Registrar" <<TAO>> as tiRegistrar
+actor "LEAR Credential Issuers Registrar" as lcilRegistrar
+tiRegistrar <|-- lcilRegistrar 
+
+actor "Registrar" as registrar 
+actor "Trusted Participant List Registrar" as tplRegistrar 
+actor "Trusted Access Nodes List Registrar" as tanlRegistrar 
+actor "Trusted Services List Registrar" as tslRegistrar 
+actor "Trusted Schemas List Registrar" as tschemaslRegistrar
+registrar <|-- tplRegistrar 
+registrar <|-- tanlRegistrar 
+registrar <|-- tslRegistrar 
+registrar <|-- tschemaslRegistrar
+actor "Trusted Issuer" as ti
+actor "LEAR Credential Issuer" as learCredentialIssuer 
+ti <|-- learCredentialIssuer 
+
+actor "Trusted Registries Authorities" as tra
+tra <|-- registrar
+tra <|-- tiRegistrar
+
+
+
+domeMasterResgistrar <|-- domeOp
+registrarOfRegistrars <|-- domeMasterResgistrar
+tiRegistrar <|-- domeMasterResgistrar
+
+usecase "Register DOME Master Registrar at TIR" as registerRootTAO
+usecase "Register specific Registrar of Registrars at TIR" as registerTAO 
+usecase "Register specific Registrar of Issuers at TIR" as registerTAOIssuers
+usecase "Register specific Registrar at TIR" as registerRegistrar
+usecase "Register specific Issuer at TIR" as registerIssuer
+
+domeSupport --> registerRootTAO
+domeMasterResgistrar --> registerTAO
+domeMasterResgistrar --> registerTAOIssuers
+
+registrarOfRegistrars --> registerRegistrar 
+tiRegistrar --> registerIssuer
+
+
+
+
+
+@enduml
