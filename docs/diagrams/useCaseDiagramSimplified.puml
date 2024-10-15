@@ -1,0 +1,37 @@
+@startuml useCaseDiagram
+left to right direction
+!define RECTANGLE class
+
+actor "DOME Operator" as domeOp
+
+actor "Registrar" as registrar 
+actor "Trusted Participant List Registrar" as tplRegistrar 
+actor "Trusted Access Nodes List Registrar" as tanlRegistrar 
+actor "Trusted Services List Registrar" as tslRegistrar 
+actor "Trusted Schemas List Registrar" as tschemaslRegistrar
+registrar <|-- tplRegistrar 
+registrar <|-- tanlRegistrar 
+registrar <|-- tslRegistrar 
+registrar <|-- tschemaslRegistrar
+actor "Trusted Issuer" as ti
+actor "LEAR Credential Issuer" as learCredentialIssuer 
+ti <|-- learCredentialIssuer 
+
+
+
+
+
+usecase "Register Trusted Participant" as registerParticipant
+usecase "Register Trusted Access Node" as registerAccessNode
+usecase "Register Trusted Service" as registerService
+usecase "Register Trusted Schema" as registerSchema
+
+tplRegistrar --> registerParticipant
+tanlRegistrar --> registerAccessNode
+tslRegistrar --> registerSchema
+tschemaslRegistrar --> registerService
+
+
+
+
+@enduml
