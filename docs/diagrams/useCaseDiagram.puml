@@ -33,6 +33,7 @@ ti <|-- learCredentialIssuer
 
 domeMasterResgistrar <|-- domeOp
 registrarOfRegistrars <|-- domeMasterResgistrar
+registrar <|-- domeMasterResgistrar
 tiRegistrar <|-- domeMasterResgistrar
 
 usecase "Register DOME Master Registrar at TIR" as registerRootTAO
