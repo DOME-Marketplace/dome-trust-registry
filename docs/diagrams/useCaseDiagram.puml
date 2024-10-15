@@ -59,8 +59,8 @@ usecase "Register Trusted Schema" as registerSchema
 
 tplRegistrar --> registerParticipant
 tanlRegistrar --> registerAccessNode
-tslRegistrar --> registerSchema
-tschemaslRegistrar --> registerService
+tslRegistrar --> registerService
+tschemaslRegistrar --> registerSchema
 
 
 

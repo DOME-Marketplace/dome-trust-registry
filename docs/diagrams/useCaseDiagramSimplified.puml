@@ -2,6 +2,8 @@
 left to right direction
 !define RECTANGLE class
 
+
+actor "DOME Master Registrar" <<Root TAO>> as  domeMasterResgistrar
 actor "DOME Operator" as domeOp
 
 actor "Registrar" as registrar 
@@ -18,6 +20,8 @@ actor "LEAR Credential Issuer" as learCredentialIssuer
 ti <|-- learCredentialIssuer 
 
 
+domeMasterResgistrar <|-- domeOp
+registrar <|-- domeMasterResgistrar
 
 
 
@@ -28,8 +32,8 @@ usecase "Register Trusted Schema" as registerSchema
 
 tplRegistrar --> registerParticipant
 tanlRegistrar --> registerAccessNode
-tslRegistrar --> registerSchema
-tschemaslRegistrar --> registerService
+tslRegistrar --> registerService
+tschemaslRegistrar --> registerSchema
 
 
 
