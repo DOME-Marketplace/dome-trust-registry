@@ -2,17 +2,21 @@
 left to right direction
 !define RECTANGLE class
 
-actor "DOME Support" as domeSupport 
 actor "DOME Operator" <<Root TAO>> as  domeOperator
 actor "Registrar of Registrars" <<TAO>> as registrarOfRegistrars
 actor "Trusted Participant List Registrar of Registrars" as tplRegistrarOfRegistrars
 actor "Trusted Access Nodes List Registrar of Registrars" as tanlRegistrarOfRegistrars
 actor "Trusted Services List Registrar of Registrars" as tslRegistrarOfRegistrars
 actor "Trusted Schemas List Registrar of Registrars" as tschemaslRegistrarOfRegistrars
+actor "Trusted Revoked Credentials List Registrar of Registrars" as trCredentialsListRegistrarOfRegistrars
+actor "Trusted Invalid Credentials List Registrar of Registrars" as tiCredentialsListRegistrarOfRegistrars
+
 tplRegistrarOfRegistrars <|-- registrarOfRegistrars
 tanlRegistrarOfRegistrars <|-- registrarOfRegistrars
 tslRegistrarOfRegistrars <|-- registrarOfRegistrars
 tschemaslRegistrarOfRegistrars <|-- registrarOfRegistrars
+trCredentialsListRegistrarOfRegistrars <|-- registrarOfRegistrars
+tiCredentialsListRegistrarOfRegistrars <|-- registrarOfRegistrars
 actor "Trusted Issuer Registrar" <<TAO>> as tiRegistrar
 actor "LEAR Credential Issuers Registrar" as lcilRegistrar
 tiRegistrar <|-- lcilRegistrar 
@@ -22,11 +26,24 @@ actor "Trusted Participant List Registrar" as tplRegistrar
 actor "Trusted Access Nodes List Registrar" as tanlRegistrar 
 actor "Trusted Services List Registrar" as tslRegistrar 
 actor "Trusted Schemas List Registrar" as tschemaslRegistrar
+actor "Trusted Revoked Credentials List Registrar" as trCredentialsListRegistrar
+actor "Trusted Invalid Credentials List Registrar" as tiCredentialsListRegistrar
 
+registrar <|-- tplRegistrar 
+registrar <|-- tanlRegistrar 
+registrar <|-- tslRegistrar 
+registrar <|-- tschemaslRegistrar
+registrar <|-- trCredentialsListRegistrar
+registrar <|-- tiCredentialsListRegistrar
 tplRegistrar <|-- domeOperator
 tanlRegistrar <|-- domeOperator
 tslRegistrar <|-- domeOperator
 tschemaslRegistrar <|-- domeOperator
+trCredentialsListRegistrar <|-- domeOperator
+tiCredentialsListRegistrar <|-- domeOperator
+
+actor "Trusted Issuer" as ti
+actor "Trusted Issuer" as ti
 actor "Trusted Issuer" as ti
 actor "LEAR Credential Issuer" as learCredentialIssuer 
 ti <|-- learCredentialIssuer 
@@ -36,13 +53,11 @@ registrar <|-- domeOperator
 tiRegistrar <|-- domeOperator
 ti <|-- domeOperator
 
-usecase "Register DOME Master Registrar at TIR" as registerRootTAO
 usecase "Register specific Registrar of Registrars at TIR" as registerTAO 
 usecase "Register specific Registrar of Issuers at TIR" as registerTAOIssuers
 usecase "Register specific Registrar at TIR" as registerRegistrar
 usecase "Register specific Issuer at TIR" as registerIssuer
 
-domeSupport --> registerRootTAO
 domeOperator --> registerTAO
 domeOperator --> registerTAOIssuers
 
