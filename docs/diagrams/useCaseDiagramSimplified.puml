@@ -2,13 +2,15 @@
 left to right direction
 !define RECTANGLE class
 
-
-actor "DOME Master Registrar" <<Root TAO>> as  domeMasterResgistrar
+actor "DOME Master Registrar" <<Root TAO>> as  domeOp
 actor "DOME Operator" as domeOp
+actor "Trusted Issuer Registrar" <<TAO>> as tiRegistrar
+actor "LEAR Credential Issuers Registrar" as lcilRegistrar
+tiRegistrar <|-- lcilRegistrar 
 
 actor "Registrar" as registrar 
 actor "Trusted Participant List Registrar" as tplRegistrar 
-actor "Trusted Access Nodes List Registrar" as tanlRegistrar 
+actor "Trusted Access Nodes Operators List Registrar" as tanlRegistrar 
 actor "Trusted Services List Registrar" as tslRegistrar 
 actor "Trusted Schemas List Registrar" as tschemaslRegistrar
 registrar <|-- tplRegistrar 
@@ -19,21 +21,46 @@ actor "Trusted Issuer" as ti
 actor "LEAR Credential Issuer" as learCredentialIssuer 
 ti <|-- learCredentialIssuer 
 
+registrar <|-- domeOp
+tiRegistrar <|-- domeOp
 
-domeMasterResgistrar <|-- domeOp
-registrar <|-- domeMasterResgistrar
 
 
 
 usecase "Register Trusted Participant" as registerParticipant
-usecase "Register Trusted Access Node" as registerAccessNode
+usecase "Register Trusted Access Node Operator" as registerAccessNode
 usecase "Register Trusted Service" as registerService
 usecase "Register Trusted Schema" as registerSchema
+usecase "Register Trusted Issuer" as registerIssuer
+usecase "Invalidate credential" as invalidateCredential 
+usecase "Revoke credential" as revokeCredential
 
 tplRegistrar --> registerParticipant
 tanlRegistrar --> registerAccessNode
 tslRegistrar --> registerService
 tschemaslRegistrar --> registerSchema
+tiRegistrar --> registerIssuer
+
+ti --> revokeCredential
+ti --> invalidateCredential 
+
+actor "Verifier" as verifier
+
+usecase "Verify that a did key is registered in the Trusted Participant List" as verifyTrustedParticipant 
+usecase "Onboarding to DOME Marketplace" as onboarding 
+usecase "Emit LEAR Credential" as emitLEARCredential
+usecase "Check that issuer is a LEARCredential Issuer at the TIR" as checkLEARCredentialIssuer
+
+domeOp --> onboarding
+onboarding <.. registerParticipant: <<include>> 
+onboarding <.. registerAccessNode: <<include>> 
+onboarding ..> emitLEARCredential: <<extends>> 
+learCredentialIssuer --> emitLEARCredential
+emitLEARCredential <.. checkLEARCredentialIssuer: <<include>> 
+checkLEARCredentialIssuer --> verifier
+verifier --> verifyTrustedParticipant
+
+
 
 
 
