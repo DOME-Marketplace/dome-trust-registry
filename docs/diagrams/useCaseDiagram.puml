@@ -3,8 +3,7 @@ left to right direction
 !define RECTANGLE class
 
 actor "DOME Support" as domeSupport 
-actor "DOME Master Registrar" <<Root TAO>> as  domeMasterResgistrar
-actor "DOME Operator" as domeOp
+actor "DOME Operator" <<Root TAO>> as  domeOperator
 actor "Registrar of Registrars" <<TAO>> as registrarOfRegistrars
 actor "Trusted Participant List Registrar of Registrars" as tplRegistrarOfRegistrars
 actor "Trusted Access Nodes List Registrar of Registrars" as tanlRegistrarOfRegistrars
@@ -23,18 +22,19 @@ actor "Trusted Participant List Registrar" as tplRegistrar
 actor "Trusted Access Nodes List Registrar" as tanlRegistrar 
 actor "Trusted Services List Registrar" as tslRegistrar 
 actor "Trusted Schemas List Registrar" as tschemaslRegistrar
-registrar <|-- tplRegistrar 
-registrar <|-- tanlRegistrar 
-registrar <|-- tslRegistrar 
-registrar <|-- tschemaslRegistrar
+
+tplRegistrar <|-- domeOperator
+tanlRegistrar <|-- domeOperator
+tslRegistrar <|-- domeOperator
+tschemaslRegistrar <|-- domeOperator
 actor "Trusted Issuer" as ti
 actor "LEAR Credential Issuer" as learCredentialIssuer 
 ti <|-- learCredentialIssuer 
 
-domeMasterResgistrar <|-- domeOp
-registrarOfRegistrars <|-- domeMasterResgistrar
-registrar <|-- domeMasterResgistrar
-tiRegistrar <|-- domeMasterResgistrar
+registrarOfRegistrars <|-- domeOperator
+registrar <|-- domeOperator
+tiRegistrar <|-- domeOperator
+ti <|-- domeOperator
 
 usecase "Register DOME Master Registrar at TIR" as registerRootTAO
 usecase "Register specific Registrar of Registrars at TIR" as registerTAO 
@@ -43,8 +43,8 @@ usecase "Register specific Registrar at TIR" as registerRegistrar
 usecase "Register specific Issuer at TIR" as registerIssuer
 
 domeSupport --> registerRootTAO
-domeMasterResgistrar --> registerTAO
-domeMasterResgistrar --> registerTAOIssuers
+domeOperator --> registerTAO
+domeOperator --> registerTAOIssuers
 
 registrarOfRegistrars --> registerRegistrar 
 tiRegistrar --> registerIssuer
