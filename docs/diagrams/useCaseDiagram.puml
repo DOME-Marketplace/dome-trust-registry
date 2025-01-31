@@ -57,6 +57,7 @@ usecase "Register specific Registrar of Registrars at TIR" as registerTAO
 usecase "Register specific Registrar of Issuers at TIR" as registerTAOIssuers
 usecase "Register specific Registrar at TIR" as registerRegistrar
 usecase "Register specific Issuer at TIR" as registerIssuer
+usecase "Register specific Issuer at TIR" as registerIssuer
 
 domeOperator --> registerTAO
 domeOperator --> registerTAOIssuers
@@ -68,14 +69,18 @@ tiRegistrar --> registerIssuer
 
 
 usecase "Register Trusted Participant" as registerParticipant
-usecase "Register Trusted Access Node" as registerAccessNode
+usecase "Register Trusted Access Node Operator" as registerAccessNode
 usecase "Register Trusted Service" as registerService
 usecase "Register Trusted Schema" as registerSchema
+usecase "Invalidate credential" as invalidateCredential 
+usecase "Revoke credential" as revokeCredential
 
 tplRegistrar --> registerParticipant
 tanlRegistrar --> registerAccessNode
 tslRegistrar --> registerService
 tschemaslRegistrar --> registerSchema
+trCredentialsListRegistrar --> revokeCredential
+tiCredentialsListRegistrar --> invalidateCredential
 
 
 
