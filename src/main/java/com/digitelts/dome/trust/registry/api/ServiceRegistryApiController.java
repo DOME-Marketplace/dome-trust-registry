@@ -31,7 +31,8 @@ public class ServiceRegistryApiController extends ApiController implements Servi
     }
 
     @Override
-    public ResponseEntity<Void> registerService(@Valid ServiceDetails serviceDetails) {
+    public ResponseEntity<WrongRequest> registerService(@Valid ServiceDetails serviceDetails) {
+        if(this.detailsList.contains(serviceDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Service"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(serviceDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -60,5 +61,11 @@ public class ServiceRegistryApiController extends ApiController implements Servi
         );
 
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> deleteService(String serviceId) {
+        if(deleteFromId(serviceId)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"),HttpStatus.NOT_FOUND);
     }
 }

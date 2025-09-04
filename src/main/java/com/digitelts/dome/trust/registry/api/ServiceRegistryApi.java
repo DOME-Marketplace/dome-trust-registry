@@ -14,7 +14,7 @@ import java.util.Optional;
 import org.springframework.web.context.request.NativeWebRequest;
 
 @Validated
-@Tag(name = "Trusted Service Registry", description = "Accepted Service DIDs and their associations with public keys")
+@Tag(name = "Trusted Services Registry", description = "Operations related to the Services Registry")
 public interface ServiceRegistryApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -25,7 +25,7 @@ public interface ServiceRegistryApi {
      @Operation(
         operationId = "getService",
         summary = "Get details of a specific registered Service",
-        tags = { "Trusted Service Registry" },
+        tags = { "Trusted Services Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Details of the Service", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDetails.class))
@@ -47,7 +47,7 @@ public interface ServiceRegistryApi {
     @Operation(
         operationId = "registerService",
         summary = "Register a new Service associated with a public key",
-        tags = { "Trusted Service Registry" },
+        tags = { "Trusted Services Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Service registered successfully.")
         }
@@ -57,7 +57,7 @@ public interface ServiceRegistryApi {
         value = "/services",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<Void> registerService(
+    abstract ResponseEntity<WrongRequest> registerService(
         @Parameter(name = "ServiceDetails", description = "DID registration request", required = true)
         @Valid @RequestBody ServiceDetails ServiceDetails 
     );
@@ -66,7 +66,7 @@ public interface ServiceRegistryApi {
     @Operation(
         operationId = "listServices",
         summary = "List all registered Services",
-        tags = { "Trusted Service Registry" },
+        tags = { "Trusted Services Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of registered Services", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ListServices200Response.class))
@@ -89,7 +89,7 @@ public interface ServiceRegistryApi {
     @Operation(
         operationId = "updateService",
         summary = "Update an already registered Service",
-        tags = { "Trusted Service Registry" },
+        tags = { "Trusted Services Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Service updated successfully."),
             @ApiResponse(responseCode = "404", description = "No Service has the requested ID", content = {
@@ -107,5 +107,27 @@ public interface ServiceRegistryApi {
         @PathVariable("ServiceId") String did,
         @Parameter(name = "UpdateDidRequest", description = "DID update request", required = true)
         @Valid @RequestBody ServiceDetails updateDidRequest
+    );
+
+
+    @Operation(
+        operationId = "deleteService",
+        summary = "Deletes a specific registered Service",
+        tags = { "Trusted Services Registry" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The Service was deleted succesfully", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDetails.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No Service has the requested ID", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            })
+        }
+    )@RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/services/{serviceId}",
+        produces = { "application/json" }
+    )    
+    abstract ResponseEntity<WrongRequest> deleteService(
+        @Parameter(name = "serviceId", description = "The DID of the service to delete.", required = true, in = ParameterIn.PATH) @PathVariable("serviceId") String serviceId
     );
 }

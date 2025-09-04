@@ -14,7 +14,7 @@ import java.util.Optional;
 import org.springframework.web.context.request.NativeWebRequest;
 
 @Validated
-@Tag(name = "Trusted Schema Registry", description = "Accepted Schema DIDs and their associations with public keys")
+@Tag(name = "Trusted Schemas Registry", description = "Operations related to the Schemas Registry")
 public interface SchemaRegistryApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -25,7 +25,7 @@ public interface SchemaRegistryApi {
      @Operation(
         operationId = "getSchema",
         summary = "Get details of a specific registered Schema",
-        tags = { "Trusted Schema Registry" },
+        tags = { "Trusted Schemas Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Details of the Schema", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDetails.class))
@@ -47,7 +47,7 @@ public interface SchemaRegistryApi {
     @Operation(
         operationId = "registerSchema",
         summary = "Register a new Schema associated with a public key",
-        tags = { "Trusted Schema Registry" },
+        tags = { "Trusted Schemas Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Schema registered successfully.")
         }
@@ -57,7 +57,7 @@ public interface SchemaRegistryApi {
         value = "/schemas",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<Void> registerSchema(
+    abstract ResponseEntity<WrongRequest> registerSchema(
         @Parameter(name = "SchemaDetails", description = "DID registration request", required = true)
         @Valid @RequestBody SchemaDetails SchemaDetails 
     );
@@ -66,7 +66,7 @@ public interface SchemaRegistryApi {
     @Operation(
         operationId = "listSchemas",
         summary = "List all registered Schemas",
-        tags = { "Trusted Schema Registry" },
+        tags = { "Trusted Schemas Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "A list of registered Schemas", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ListSchemas200Response.class))
@@ -89,7 +89,7 @@ public interface SchemaRegistryApi {
     @Operation(
         operationId = "updateSchema",
         summary = "Update an already registered Schema",
-        tags = { "Trusted Schema Registry" },
+        tags = { "Trusted Schemas Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Schema updated successfully."),
             @ApiResponse(responseCode = "404", description = "No Schema has the requested ID", content = {
@@ -107,5 +107,27 @@ public interface SchemaRegistryApi {
         @PathVariable("SchemaId") String did,
         @Parameter(name = "UpdateDidRequest", description = "DID update request", required = true)
         @Valid @RequestBody SchemaDetails updateDidRequest
+    );
+
+
+    @Operation(
+        operationId = "deleteSchema",
+        summary = "Deletes a specific registered Schema",
+        tags = { "Trusted Schemas Registry" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The Schema was deleted succesfully", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDetails.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No Schema has the requested ID", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            })
+        }
+    )@RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/schemas/{schemaId}",
+        produces = { "application/json" }
+    )    
+    abstract ResponseEntity<WrongRequest> deleteSchema(
+        @Parameter(name = "schemaId", description = "The DID of the schema to delete.", required = true, in = ParameterIn.PATH) @PathVariable("schemaId") String schemaId
     );
 }

@@ -33,7 +33,8 @@ public class AccessNodeRegistryApiController extends ApiController implements Ac
     }
 
     @Override
-    public ResponseEntity<Void> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
+    public ResponseEntity<WrongRequest> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
+        if(this.detailsList.contains(accessNodeDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Access Node"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(accessNodeDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -65,5 +66,11 @@ public class AccessNodeRegistryApiController extends ApiController implements Ac
         );
 
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> deleteAccessNode(String accessNodeId) {
+        if(deleteFromId(accessNodeId)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"),HttpStatus.NOT_FOUND);
     }
 }

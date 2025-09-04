@@ -1,5 +1,6 @@
 package com.digitelts.dome.trust.registry.model;
 
+import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -20,6 +21,11 @@ public class WrongRequest {
 
     public WrongRequest(int code, String message){
         this.errCode = code;
+        this.errMessage = message;
+    }
+
+    public WrongRequest(HttpStatus status, String message){
+        this.errCode = status.value();
         this.errMessage = message;
     }
 

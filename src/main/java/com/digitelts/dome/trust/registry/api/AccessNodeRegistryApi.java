@@ -22,7 +22,7 @@ public interface AccessNodeRegistryApi {
     }
 
 
-     @Operation(
+    @Operation(
         operationId = "getAccessNode",
         summary = "Get details of a specific registered Access Node",
         tags = { "Trusted Access Node Registry" },
@@ -57,7 +57,7 @@ public interface AccessNodeRegistryApi {
         value = "/accessNodes",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<Void> registerAccessNode(
+    abstract ResponseEntity<WrongRequest> registerAccessNode(
         @Parameter(name = "AccessNodeDetails", description = "DID registration request", required = true)
         @Valid @RequestBody AccessNodeDetails accessNodeDetails 
     );
@@ -107,5 +107,27 @@ public interface AccessNodeRegistryApi {
         @PathVariable("accessNodeId") String did,
         @Parameter(name = "UpdateDidRequest", description = "DID update request", required = true)
         @Valid @RequestBody AccessNodeDetails updateDidRequest
+    );
+
+
+    @Operation(
+        operationId = "deleteAccessNode",
+        summary = "Deletes a specific registered Access Node",
+        tags = { "Trusted Access Node Registry" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The Access Node was deleted succesfully", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AccessNodeDetails.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No Access Node has the requested ID", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            })
+        }
+    )@RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/accessNodes/{accessNodeId}",
+        produces = { "application/json" }
+    )    
+    abstract ResponseEntity<WrongRequest> deleteAccessNode(
+        @Parameter(name = "accessNodeId", description = "The DID of the access node to delete.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeId") String accessNodeId
     );
 }
