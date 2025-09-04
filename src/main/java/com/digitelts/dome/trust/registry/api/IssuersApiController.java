@@ -1,21 +1,22 @@
 package com.digitelts.dome.trust.registry.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
-import javax.validation.constraints.*;
-import java.util.Optional;
+import javax.validation.Valid;
+import java.util.*;
 import javax.annotation.Generated;
+import com.digitelts.dome.trust.registry.model.*;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class IssuersApiController implements IssuersApi {
+public class IssuersApiController extends ApiController implements IssuersApi {
 
     private final NativeWebRequest request;
 
-    @Autowired
     public IssuersApiController(NativeWebRequest request) {
         this.request = request;
     }
@@ -25,4 +26,48 @@ public class IssuersApiController implements IssuersApi {
         return Optional.ofNullable(request);
     }
 
+    @Override
+    public ResponseEntity<ListIssuers200Response> listIssuers(@Valid Integer pageAfter, @Valid Integer pageSize) {
+
+        ListIssuers200Response response = (ListIssuers200Response) this.listDetails(
+                pageAfter,
+                pageSize,
+                new ListIssuers200Response(),
+                new ListIssuers200ResponseLinks(),
+                "http://localhost:8080/v4/issuers?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+                "issuers/"                   
+            );
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Object> getIssuer(String issuerId) {
+        IssuerDetails response = (IssuerDetails)findDetails(issuerId);
+
+        if(response == null){
+            System.out.println("Issuer with ID: "+issuerId+" not found");
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(),"Issuer not found"),HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+    
+    @Override
+    public ResponseEntity<Void> insertIssuer(@Valid IssuerDetails insertIssuerRequest) {
+        this.detailsList.add(insertIssuerRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> updateIssuer(String issuerId, @Valid IssuerDetails updateIssuerRequest) {
+        IssuerDetails issuer = (IssuerDetails)findDetails(issuerId);
+        if(issuer==null){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Issuer not found"),HttpStatus.NOT_FOUND);
+        }
+        issuer.setDid(updateIssuerRequest.getDid());
+        issuer.setValidFrom(updateIssuerRequest.getValidFrom());
+        issuer.setValidTo(updateIssuerRequest.getValidTo());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
