@@ -71,21 +71,37 @@ public abstract class ApiController {
         int startIndex = currentPage*pageSize;
         int endIndex = Math.min(startIndex+pageSize, this.detailsList.size());
 
-        for(int i = 0; i < this.detailsList.size(); i++){
-            TrustedRegistryDetails details = detailsList.get(i);
-            summaries.add(details.getSummary(this.API_URL+apiUri));
-        }
-        paginated = summaries.subList(startIndex, endIndex);
+        if(this.detailsList.isEmpty()){
+            links.setFirst(String.format(urlString, 0, pageSize));
+            links.setLast(String.format(urlString, 0, pageSize));
+        }else{
+            for(int i = 0; i < this.detailsList.size(); i++){
+                TrustedRegistryDetails details = detailsList.get(i);
+                summaries.add(details.getSummary(this.API_URL+apiUri));
+            }
+            paginated = summaries.subList(startIndex, endIndex);
 
-        links.setFirst(String.format(urlString, 0, pageSize));
-        links.setLast(String.format(urlString, (totalPages-1),pageSize));
-        if((currentPage+1) < totalPages) links.setNext(String.format(urlString, (currentPage+1),pageSize));
-        if(currentPage > 0) links.setPrev(String.format(urlString, (currentPage-1),pageSize));
+            links.setFirst(String.format(urlString, 0, pageSize));
+            links.setLast(String.format(urlString, (totalPages-1),pageSize));
+            if((currentPage+1) < totalPages) links.setNext(String.format(urlString, (currentPage+1),pageSize));
+            if(currentPage > 0) links.setPrev(String.format(urlString, (currentPage-1),pageSize));
+        }
 
         response.setLinks(links);
         response.setPageSize(pageSize);
         response.setItems(paginated);
 
         return response;
+    }
+
+    /**
+     * Método para eliminar de la lista el registro cuyo DID coincida con
+     * el solicitado
+     * 
+     * @param did El DID del registro que se quiere eliminar
+     * @return true si se ha eliminado el registro o false en caso contrario
+     */
+    public boolean deleteFromId(String did){
+        return this.detailsList.removeIf(detail -> detail.getDid().equals(did));
     }
 }

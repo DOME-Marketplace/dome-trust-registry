@@ -14,7 +14,7 @@ public class CredentialStatusRegistryApiController extends ApiController impleme
 
     private final NativeWebRequest request;
 
-    public CredentialStatusRegistryApiController(NativeWebRequest request) {
+    public CredentialStatusRegistryApiController(NativeWebRequest request, SchemaRegistryApiController schemaRegistryApiController) {
         this.request = request;
     }
 
@@ -31,7 +31,8 @@ public class CredentialStatusRegistryApiController extends ApiController impleme
     }
 
     @Override
-    public ResponseEntity<Void> registerCredentialStatus(@Valid CredentialStatusDetails credentialStatusDetails) {
+    public ResponseEntity<WrongRequest> registerCredentialStatus(@Valid CredentialStatusDetails credentialStatusDetails) {
+        if(this.detailsList.contains(credentialStatusDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Credential Status"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(credentialStatusDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -60,5 +61,11 @@ public class CredentialStatusRegistryApiController extends ApiController impleme
         );
 
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> deleteCredentialStatus(String credentialStatusId) {
+        if(deleteFromId(credentialStatusId)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Credential Status not found"),HttpStatus.NOT_FOUND);
     }
 }

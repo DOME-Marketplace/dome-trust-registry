@@ -31,7 +31,8 @@ public class SchemaRegistryApiController extends ApiController implements Schema
     }
 
     @Override
-    public ResponseEntity<Void> registerSchema(@Valid SchemaDetails schemaDetails) {
+    public ResponseEntity<WrongRequest> registerSchema(@Valid SchemaDetails schemaDetails) {
+        if(this.detailsList.contains(schemaDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Schema"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(schemaDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -60,5 +61,11 @@ public class SchemaRegistryApiController extends ApiController implements Schema
         );
 
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> deleteSchema(String schemaId) {
+        if(this.deleteFromId(schemaId)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Schema not found"),HttpStatus.NOT_FOUND);
     }
 }

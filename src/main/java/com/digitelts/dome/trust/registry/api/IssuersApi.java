@@ -49,7 +49,7 @@ public interface IssuersApi {
                     @ApiResponse(responseCode = "200", description = "Transaction executed successfully.")
             })
     @RequestMapping(method = RequestMethod.POST, value = "/issuers", consumes = { "application/json" })
-    abstract ResponseEntity<Void> insertIssuer(
+    abstract ResponseEntity<WrongRequest> insertIssuer(
             @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody IssuerDetails insertIssuerRequest);
 
 
@@ -74,4 +74,25 @@ public interface IssuersApi {
             @Parameter(name = "issuerId", description = "The DID of the issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
             @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody IssuerDetails updateIssuerRequest);
 
+
+    @Operation(
+        operationId = "deleteIssuer",
+        summary = "Deletes a specific registered Issuer",
+        tags = { "Trusted Issuers Registry" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The Issuer was deleted succesfully", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = IssuerDetails.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No Issuer has the requested ID", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            })
+        }
+    )@RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/issuers/{issuerId}",
+        produces = { "application/json" }
+    )    
+    abstract ResponseEntity<WrongRequest> deleteIssuer(
+        @Parameter(name = "issuerId", description = "The DID of the issuer to delete.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId
+    );
 }

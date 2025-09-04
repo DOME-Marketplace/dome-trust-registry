@@ -30,12 +30,13 @@ public class ParticipantsApiController extends ApiController implements Particip
     @Override
     public ResponseEntity<Object> getParticipant(String participantId) {
         ParticipantDetails participant = (ParticipantDetails)findDetails(participantId);
-        if(participant==null) return new ResponseEntity<>(new WrongRequest(404, "Participant not found"),HttpStatus.NOT_FOUND);
+        if(participant==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND, "Participant not found"),HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(participant,HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
+    public ResponseEntity<WrongRequest> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
+        if(this.detailsList.contains(insertParticipantRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Participant"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(insertParticipantRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -65,5 +66,11 @@ public class ParticipantsApiController extends ApiController implements Particip
         );
 
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> deleteParticipant(String participantId) {
+        if(deleteFromId(participantId)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"), HttpStatus.NOT_FOUND);
     }
 }

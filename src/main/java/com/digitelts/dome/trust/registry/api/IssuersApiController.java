@@ -54,7 +54,8 @@ public class IssuersApiController extends ApiController implements IssuersApi {
     }
     
     @Override
-    public ResponseEntity<Void> insertIssuer(@Valid IssuerDetails insertIssuerRequest) {
+    public ResponseEntity<WrongRequest> insertIssuer(@Valid IssuerDetails insertIssuerRequest) {
+        if(this.detailsList.contains(insertIssuerRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Issuer"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(insertIssuerRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -69,5 +70,11 @@ public class IssuersApiController extends ApiController implements IssuersApi {
         issuer.setValidFrom(updateIssuerRequest.getValidFrom());
         issuer.setValidTo(updateIssuerRequest.getValidTo());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> deleteIssuer(String issuerId) {
+        if(deleteFromId(issuerId)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Issuer not found"),HttpStatus.NOT_FOUND);
     }
 }
