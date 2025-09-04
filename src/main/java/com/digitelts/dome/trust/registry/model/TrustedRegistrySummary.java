@@ -11,14 +11,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @see IssuerSummary
  * @see ParticipantSummary
  */
-public abstract class Summary {
+public abstract class TrustedRegistrySummary {
 
     @NonNull
     protected String did;
     @NonNull
     protected String href;
 
-    public Summary(String did, String href){
+    public TrustedRegistrySummary(String did, String href){
         this.did = did;
         this.href = href;
     }
@@ -51,7 +51,7 @@ public abstract class Summary {
         if (o == null || getClass() != o.getClass()) {
         return false;
         }
-        Summary summary = (Summary) o;
+        TrustedRegistrySummary summary = (TrustedRegistrySummary) o;
         return Objects.equals(this.did, summary.getDid()) &&
                 Objects.equals(this.href, summary.getHref());
     }

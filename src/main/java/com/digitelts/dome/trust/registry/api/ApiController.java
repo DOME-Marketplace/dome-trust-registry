@@ -12,7 +12,7 @@ import com.digitelts.dome.trust.registry.model.*;
  */
 public abstract class ApiController {
     
-    protected List<Details> detailsList;
+    protected List<TrustedRegistryDetails> detailsList;
     private final String API_URL = "http://localhost:8080/v4/";
 
 
@@ -29,10 +29,10 @@ public abstract class ApiController {
      * la lista
      */
     @Nullable
-    public Details findDetails(String did){
+    public TrustedRegistryDetails findDetails(String did){
 
         for(int i = 0; i < detailsList.size(); i++){
-            Details details = this.detailsList.get(i);
+            TrustedRegistryDetails details = this.detailsList.get(i);
             if(details.getDid().equals(did)) return details;
         }
 
@@ -60,7 +60,7 @@ public abstract class ApiController {
      * de los datos de la lista de detalles
      */
     public List200Response listDetails(Integer pageAfter, Integer pageSize, List200Response response, List200ResponseLinks links, String urlString, String apiUri){
-        List<Summary> summaries = new ArrayList<>(), paginated = new ArrayList<>();
+        List<TrustedRegistrySummary> summaries = new ArrayList<>(), paginated = new ArrayList<>();
 
         if(pageSize == null || pageSize <= 0){
             pageSize = 10;
@@ -72,7 +72,7 @@ public abstract class ApiController {
         int endIndex = Math.min(startIndex+pageSize, this.detailsList.size());
 
         for(int i = 0; i < this.detailsList.size(); i++){
-            Details details = detailsList.get(i);
+            TrustedRegistryDetails details = detailsList.get(i);
             summaries.add(details.getSummary(this.API_URL+apiUri));
         }
         paginated = summaries.subList(startIndex, endIndex);
