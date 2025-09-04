@@ -16,7 +16,7 @@ public abstract class List200Response {
 
     protected String self;
     @Valid
-    protected List<Summary> items;
+    protected List<TrustedRegistrySummary> items;
     protected Integer total;
     protected Integer pageSize;
     protected List200ResponseLinks links;
@@ -26,7 +26,7 @@ public abstract class List200Response {
         this.items = new ArrayList<>();
     }
 
-    public List200Response(String self, List<Summary> items, Integer total, Integer pageSize, List200ResponseLinks links){
+    public List200Response(String self, List<TrustedRegistrySummary> items, Integer total, Integer pageSize, List200ResponseLinks links){
         this.self = self;
         this.items = items;
         this.total = total;
@@ -44,7 +44,7 @@ public abstract class List200Response {
     @Valid 
     @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("items")
-    public List<Summary> getItems() {
+    public List<TrustedRegistrySummary> getItems() {
         return this.items;
     }
 
@@ -72,7 +72,7 @@ public abstract class List200Response {
         this.self = self;
     }
 
-    public void setItems(List<@Valid Summary> items) {
+    public void setItems(List<@Valid TrustedRegistrySummary> items) {
         this.items = items;
         this.total = this.items.size();
     }
@@ -124,13 +124,13 @@ public abstract class List200Response {
         return sb.toString();
     }
 
-    public void addItem(@Valid Summary item){
+    public void addItem(@Valid TrustedRegistrySummary item){
         this.items.add(item);
         this.total += 1;
     }
 
     @Nullable
-    public @Valid Summary getItemAt(int index){
+    public @Valid TrustedRegistrySummary getItemAt(int index){
         if(index<0 || index>this.total){
             return null;
         }

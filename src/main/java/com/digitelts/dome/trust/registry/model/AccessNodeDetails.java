@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 
-public class AccessNodeDetails extends Details {
+public class AccessNodeDetails extends TrustedRegistryDetails {
 
     @NotNull
     private String name; 

@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @see IssuerDetails
  * @see ParticipantDetails
  */
-public abstract class Details {
+public abstract class TrustedRegistryDetails {
 
     @NonNull
     protected String did;
@@ -23,7 +23,7 @@ public abstract class Details {
 
     
     // BUILDERS //
-    public Details(String id, LocalDateTime from, LocalDateTime to){
+    public TrustedRegistryDetails(String id, LocalDateTime from, LocalDateTime to){
         this.did = id;
         this.validFrom = from;
         this.validTo = to;
@@ -67,8 +67,8 @@ public abstract class Details {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Details)) return false;
-        Details that = (Details) o;
+        if (!(o instanceof TrustedRegistryDetails)) return false;
+        TrustedRegistryDetails that = (TrustedRegistryDetails) o;
         return Objects.equals(did, that.getDid()) &&
                 Objects.equals(validFrom, that.getValidFrom()) &&
                 Objects.equals(validTo, that.getValidTo());
@@ -96,5 +96,5 @@ public abstract class Details {
      * 'href' de la clase Summary
      * @return El objeto de la clase Summary que representa a esta instancia
      */
-    public abstract Summary getSummary(String url);
+    public abstract TrustedRegistrySummary getSummary(String url);
 }

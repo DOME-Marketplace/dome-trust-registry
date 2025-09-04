@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("listAccessNodes_200_response")
 public class ListAccessNodes200Response extends List200Response{
 
-    public ListAccessNodes200Response(String self, List<Summary> items, Integer total, Integer pageSize, ListAccessNodes200ResponseLinks links){
+    public ListAccessNodes200Response(String self, List<TrustedRegistrySummary> items, Integer total, Integer pageSize, ListAccessNodes200ResponseLinks links){
         super(self, items, total, pageSize, links);
     }
 
