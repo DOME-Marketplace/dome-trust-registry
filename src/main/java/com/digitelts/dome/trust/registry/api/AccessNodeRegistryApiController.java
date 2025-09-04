@@ -1,21 +1,21 @@
 package com.digitelts.dome.trust.registry.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
-import javax.validation.constraints.*;
-import java.util.Optional;
+import com.digitelts.dome.trust.registry.model.*;
+import java.util.*;
 import javax.annotation.Generated;
+import javax.validation.Valid;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class AccessNodeRegistryApiController implements AccessNodeRegistryApi {
+public class AccessNodeRegistryApiController extends ApiController implements AccessNodeRegistryApi {
 
     private final NativeWebRequest request;
 
-    @Autowired
     public AccessNodeRegistryApiController(NativeWebRequest request) {
         this.request = request;
     }
@@ -25,4 +25,45 @@ public class AccessNodeRegistryApiController implements AccessNodeRegistryApi {
         return Optional.ofNullable(request);
     }
 
+    @Override
+    public ResponseEntity<Object> getAccessNode(String accessNodeId) {
+        AccessNodeDetails node = (AccessNodeDetails)findDetails(accessNodeId);
+        if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(node,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
+        this.detailsList.add(accessNodeDetails);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<WrongRequest> updateAccessNode(String accessNodeId, @Valid AccessNodeDetails updateDidRequest) {
+        AccessNodeDetails node = (AccessNodeDetails)findDetails(accessNodeId);
+        if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
+        node.setDid(updateDidRequest.getDid());
+        node.setName(updateDidRequest.getName());
+        node.setDlt_public_key(updateDidRequest.getDlt_public_key());
+        node.setUrl(updateDidRequest.getUrl());
+        node.setValidFrom(updateDidRequest.getValidFrom());
+        node.setValidTo(updateDidRequest.getValidTo());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ListAccessNodes200Response> listAccessNodes(@Valid Integer pageAfter,
+            @Valid Integer pageSize) {
+        
+        ListAccessNodes200Response response = (ListAccessNodes200Response) this.listDetails(
+            pageAfter,
+            pageSize,
+            new ListAccessNodes200Response(),
+            new ListAccessNodes200ResponseLinks(),
+            "http://localhost:8080/v4/accessNodes?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+            "accessNodes/"                   
+        );
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 }
