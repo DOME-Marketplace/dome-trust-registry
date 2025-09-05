@@ -9,11 +9,14 @@ import com.digitelts.dome.trust.registry.model.*;
  * @see AccessNodeRegistryApiController
  * @see IssuersApiController
  * @see ParticipantsApiController
+ * @see CredentialStatusRegistryApiController
+ * @see SchemaRegistryApiController
+ * @see ServiceRegistryApiController
  */
 public abstract class ApiController {
     
     protected List<TrustedRegistryDetails> detailsList;
-    private final String API_URL = "http://localhost:8080/v4/";
+    protected final String API_URL = "http://localhost:8080/v4/";
 
 
     public ApiController(){
@@ -21,11 +24,11 @@ public abstract class ApiController {
     }
 
     /**
-     * Método para buscar instancias de clase Details por su DID
+     * Método para buscar instancias de clase {@code Details} por su DID
      * 
      * @param did El DID del objeto a buscar
-     * @return El objeto de clase Details cuyo DID coincide con el DID
-     * pasado como parámetro, o null si el DID no coincide con ninguno de
+     * @return El objeto de clase {@code Details} cuyo DID coincide con el DID
+     * pasado como parámetro, o {@code null} si el DID no coincide con ninguno de
      * la lista
      */
     @Nullable
@@ -41,22 +44,24 @@ public abstract class ApiController {
 
 
     /**
-     * Método para generar un objeto de alguna subclase de List200Response a partir
-     * de la lista de Details de la instancia sobre la que se invoca este método
+     * Método para generar un objeto de alguna subclase de {@code List200Response} a partir
+     * de la lista de {@code Details} de la instancia sobre la que se invoca este método
      * 
      * @param pageAfter
      * @param pageSize
-     * @param response El objeto de alguna subclase de List200Response sobre el que se
+     * @param response El objeto de alguna subclase de {@code List200Response} sobre el que se
      * va a trabajar
-     * @param links El objeto de alguna subclase de List200ResponseLinks que se va a incluir
+     * @param links El objeto de alguna subclase de {@code List200ResponseLinks} que se va a incluir
      * en el objeto devuelto
      * @param urlString La URL base que se formateará para poder moverse entre las páginas
      * de la lista 
      * @param apiUri La URI que representa a la subclase concreta:
-     *  - accessNodes
-     *  - issuers
-     *  - participants
-     * @return Un objeto de alguna subclase de List200Response con la lista generada a partir
+     * <ul>
+     *  <li>{@code accessNodes}
+     *  <li>{@code issuers}
+     *  <li>{@code participants}
+     * </ul>
+     * @return Un objeto de alguna subclase de {@code List200Response} con la lista generada a partir
      * de los datos de la lista de detalles
      */
     public List200Response listDetails(Integer pageAfter, Integer pageSize, List200Response response, List200ResponseLinks links, String urlString, String apiUri){
@@ -99,7 +104,7 @@ public abstract class ApiController {
      * el solicitado
      * 
      * @param did El DID del registro que se quiere eliminar
-     * @return true si se ha eliminado el registro o false en caso contrario
+     * @return {@code true} si se ha eliminado el registro o {@code false} en caso contrario
      */
     public boolean deleteFromId(String did){
         return this.detailsList.removeIf(detail -> detail.getDid().equals(did));
