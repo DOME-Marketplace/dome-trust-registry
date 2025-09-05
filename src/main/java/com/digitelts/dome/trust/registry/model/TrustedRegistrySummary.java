@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @see AccessNodeSummary
  * @see IssuerSummary
  * @see ParticipantSummary
+ * @see CredentialStatusSummary
+ * @see ServiceSummary
+ * @see SchemaSummary
  */
 public abstract class TrustedRegistrySummary {
 

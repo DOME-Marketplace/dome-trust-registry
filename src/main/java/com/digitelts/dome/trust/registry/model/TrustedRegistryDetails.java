@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @see AccessNodeDetails
  * @see IssuerDetails
  * @see ParticipantDetails
+ * @see CredentialStatusDetails
+ * @see SchemaDetails
+ * @see ServiceDetails
  */
 public abstract class TrustedRegistryDetails {
 
@@ -89,12 +92,12 @@ public abstract class TrustedRegistryDetails {
     }
 
     /**
-     * Método para obtener un objeto Summary a partir de la información
+     * Método para obtener un objeto {@code Summary} a partir de la información
      * de esta clase
      * 
      * @param url La URL base que se formateará para obtener el atributo
-     * 'href' de la clase Summary
-     * @return El objeto de la clase Summary que representa a esta instancia
+     * {@code href} de la clase {@code Summary}
+     * @return El objeto de la clase {@code Summary} que representa a esta instancia
      */
     public abstract TrustedRegistrySummary getSummary(String url);
 }

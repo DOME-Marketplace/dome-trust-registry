@@ -130,4 +130,50 @@ public interface CredentialStatusRegistryApi {
     abstract ResponseEntity<WrongRequest> deleteCredentialStatus(
         @Parameter(name = "credentialStatusId", description = "The DID of the credential status to delete.", required = true, in = ParameterIn.PATH) @PathVariable("credentialStatusId") String credentialStatusId
     );
+
+
+    @Operation(
+        operationId = "listCredentialStatuss",
+        summary = "List all invalid registered Credential Statuses",
+        tags = { "Trusted Credential Statuses Registry" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "A list of invalid registered Credential Statuses", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ListCredentialStatuses200Response.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/credentialStatuses/invalid",
+        produces = { "application/json" }
+    )
+    abstract ResponseEntity<ListCredentialStatuses200Response> listInvalidCredentialStatuses(
+        @Parameter(name = "page[after]", description = "Cursor for pagination (starting point)", in = ParameterIn.QUERY)
+        @Valid @RequestParam(value = "page[after]", required = false) Integer pageAfter,
+        @Parameter(name = "page[size]", description = "Number of items per page", in = ParameterIn.QUERY)
+        @Valid @RequestParam(value = "page[size]", required = false) Integer pageSize
+    );
+
+
+    @Operation(
+        operationId = "listCredentialStatuss",
+        summary = "List all revoked registered Credential Statuses",
+        tags = { "Trusted Credential Statuses Registry" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "A list of revoked registered Credential Statuses", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ListCredentialStatuses200Response.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/credentialStatuses/revoked",
+        produces = { "application/json" }
+    )
+    abstract ResponseEntity<ListCredentialStatuses200Response> listRevokedCredentialStatuses(
+        @Parameter(name = "page[after]", description = "Cursor for pagination (starting point)", in = ParameterIn.QUERY)
+        @Valid @RequestParam(value = "page[after]", required = false) Integer pageAfter,
+        @Parameter(name = "page[size]", description = "Number of items per page", in = ParameterIn.QUERY)
+        @Valid @RequestParam(value = "page[size]", required = false) Integer pageSize
+    );
 }
