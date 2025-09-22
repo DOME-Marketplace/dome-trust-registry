@@ -12,7 +12,7 @@ import javax.validation.Valid;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class AccessNodeRegistryApiController extends ApiController implements AccessNodeRegistryApi {
+public class AccessNodeRegistryApiController extends RegistryApiController implements AccessNodeRegistryApi {
 
     private final NativeWebRequest request;
 
@@ -33,22 +33,18 @@ public class AccessNodeRegistryApiController extends ApiController implements Ac
     }
 
     @Override
-    public ResponseEntity<WrongRequest> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
-        if(this.detailsList.contains(accessNodeDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Access Node"),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
+        if(this.detailsList.contains(accessNodeDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(accessNodeDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateAccessNode(String accessNodeId, @Valid AccessNodeDetails updateDidRequest) {
+    public ResponseEntity<?> updateAccessNode(String accessNodeId, @Valid AccessNodeDetails updateDidRequest) {
         AccessNodeDetails node = (AccessNodeDetails)findDetails(accessNodeId);
         if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
-        node.setDid(updateDidRequest.getDid());
+        node.setId(updateDidRequest.getId());
         node.setName(updateDidRequest.getName());
-        node.setDlt_public_key(updateDidRequest.getDlt_public_key());
-        node.setUrl(updateDidRequest.getUrl());
-        node.setValidFrom(updateDidRequest.getValidFrom());
-        node.setValidTo(updateDidRequest.getValidTo());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -69,8 +65,8 @@ public class AccessNodeRegistryApiController extends ApiController implements Ac
     }
 
     @Override
-    public ResponseEntity<WrongRequest> deleteAccessNode(String accessNodeId) {
-        if(deleteFromId(accessNodeId)) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"),HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteAccessNode(String accessNodeId) {
+        deleteFromId(accessNodeId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

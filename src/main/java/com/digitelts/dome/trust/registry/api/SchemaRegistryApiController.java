@@ -10,7 +10,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class SchemaRegistryApiController extends ApiController implements SchemaRegistryApi {
+public class SchemaRegistryApiController extends RegistryApiController implements SchemaRegistryApi {
 
     private final NativeWebRequest request;
 
@@ -31,19 +31,18 @@ public class SchemaRegistryApiController extends ApiController implements Schema
     }
 
     @Override
-    public ResponseEntity<WrongRequest> registerSchema(@Valid SchemaDetails schemaDetails) {
-        if(this.detailsList.contains(schemaDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Schema"),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> registerSchema(@Valid SchemaDetails schemaDetails) {
+        if(this.detailsList.contains(schemaDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Schema already exists"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(schemaDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateSchema(String schemaId, @Valid SchemaDetails updateDidRequest) {
-        SchemaDetails node = (SchemaDetails)findDetails(schemaId);
-        if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Schema not found"), HttpStatus.NOT_FOUND);
-        node.setDid(updateDidRequest.getDid());
-        node.setValidFrom(updateDidRequest.getValidFrom());
-        node.setValidTo(updateDidRequest.getValidTo());
+    public ResponseEntity<?> updateSchema(String schemaId, @Valid SchemaDetails updateSchemaRequest) {
+        SchemaDetails schema = (SchemaDetails)findDetails(schemaId);
+        if(schema==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Schema not found"), HttpStatus.NOT_FOUND);
+        schema.setId(updateSchemaRequest.getId());
+        schema.setSchemaData(updateSchemaRequest.getSchemaData());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -64,8 +63,8 @@ public class SchemaRegistryApiController extends ApiController implements Schema
     }
 
     @Override
-    public ResponseEntity<WrongRequest> deleteSchema(String schemaId) {
-        if(this.deleteFromId(schemaId)) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Schema not found"),HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteSchema(String schemaId) {
+        deleteFromId(schemaId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -40,7 +40,7 @@ public interface SchemaRegistryApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<Object> getSchema(
-        @Parameter(name = "SchemaId", description = "The DID of the Schema to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("SchemaId") String SchemaId
+        @Parameter(name = "SchemaId", description = "The ID of the Schema to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("SchemaId") String SchemaId
     );
 
 
@@ -57,8 +57,8 @@ public interface SchemaRegistryApi {
         value = "/schemas",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> registerSchema(
-        @Parameter(name = "SchemaDetails", description = "DID registration request", required = true)
+    abstract ResponseEntity<?> registerSchema(
+        @Parameter(name = "SchemaDetails", description = "ID registration request", required = true)
         @Valid @RequestBody SchemaDetails SchemaDetails 
     );
 
@@ -102,11 +102,11 @@ public interface SchemaRegistryApi {
         value = "/schemas/{schemaId}",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> updateSchema(
-        @Parameter(name = "SchemaId", description = "The DID of the Schema to update", required = true, in = ParameterIn.PATH)
+    abstract ResponseEntity<?> updateSchema(
+        @Parameter(name = "SchemaId", description = "The ID of the Schema to update", required = true, in = ParameterIn.PATH)
         @PathVariable("SchemaId") String did,
-        @Parameter(name = "UpdateDidRequest", description = "DID update request", required = true)
-        @Valid @RequestBody SchemaDetails updateDidRequest
+        @Parameter(name = "UpdateSchemaRequest", description = "Schema update request", required = true)
+        @Valid @RequestBody SchemaDetails updateSchemaRequest
     );
 
 
@@ -117,9 +117,6 @@ public interface SchemaRegistryApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "The Schema was deleted succesfully", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDetails.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "No Schema has the requested ID", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
@@ -127,7 +124,7 @@ public interface SchemaRegistryApi {
         value = "/schemas/{schemaId}",
         produces = { "application/json" }
     )    
-    abstract ResponseEntity<WrongRequest> deleteSchema(
-        @Parameter(name = "schemaId", description = "The DID of the schema to delete.", required = true, in = ParameterIn.PATH) @PathVariable("schemaId") String schemaId
+    abstract ResponseEntity<?> deleteSchema(
+        @Parameter(name = "schemaId", description = "The ID of the schema to delete.", required = true, in = ParameterIn.PATH) @PathVariable("schemaId") String schemaId
     );
 }

@@ -50,7 +50,7 @@ public interface ParticipantsApi {
                                     @ApiResponse(responseCode = "200", description = "Transaction executed successfully."),
                     })
     @RequestMapping(method = RequestMethod.POST, value = "/participants", consumes = { "application/json" })
-    abstract ResponseEntity<WrongRequest> insertParticipant(
+    abstract ResponseEntity<?> insertParticipant(
                     @Parameter(name = "InsertParticipantRequest", description = "", required = true) @Valid @RequestBody ParticipantDetails insertParticipantRequest);
 
 
@@ -75,7 +75,7 @@ public interface ParticipantsApi {
                     })
     @RequestMapping(method = RequestMethod.PUT, value = "/participants/{participantId}", consumes = {
                     "application/json" })
-    abstract ResponseEntity<WrongRequest> updateParticipant(
+    abstract ResponseEntity<?> updateParticipant(
                     @Parameter(name = "participantId", description = "The DID of the participant to update.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId,
                     @Parameter(name = "UpdateParticipantRequest", description = "", required = true) @Valid @RequestBody ParticipantDetails updateParticipantRequest);
 
@@ -87,9 +87,6 @@ public interface ParticipantsApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "The Participant was deleted succesfully", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDetails.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "No Participant has the requested ID", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
@@ -97,7 +94,7 @@ public interface ParticipantsApi {
         value = "/participants/{participantId}",
         produces = { "application/json" }
     )    
-    abstract ResponseEntity<WrongRequest> deleteParticipant(
+    abstract ResponseEntity<?> deleteParticipant(
         @Parameter(name = "participantId", description = "The DID of the participant to delete.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId
     );
 }

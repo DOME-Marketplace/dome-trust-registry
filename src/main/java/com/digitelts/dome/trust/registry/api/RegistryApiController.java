@@ -5,38 +5,37 @@ import javax.annotation.Nullable;
 import com.digitelts.dome.trust.registry.model.*;
 
 /**
- * Clase abstracta con métodos y atributos comunes
+ * Abstract class with common methods and attributes
  * @see AccessNodeRegistryApiController
- * @see IssuersApiController
+ * @see LEARCredentialIssuerApiController
  * @see ParticipantsApiController
  * @see CredentialStatusRegistryApiController
  * @see SchemaRegistryApiController
  * @see ServiceRegistryApiController
  */
-public abstract class ApiController {
+public abstract class RegistryApiController {
     
     protected List<TrustedRegistryDetails> detailsList;
     protected final String API_URL = "http://localhost:8080/v4/";
 
 
-    public ApiController(){
+    public RegistryApiController(){
         detailsList = new ArrayList<>();
     }
 
     /**
-     * Método para buscar instancias de clase {@code Details} por su DID
+     * Method to search instances of {@code Details} class by its DID
      * 
-     * @param did El DID del objeto a buscar
-     * @return El objeto de clase {@code Details} cuyo DID coincide con el DID
-     * pasado como parámetro, o {@code null} si el DID no coincide con ninguno de
-     * la lista
+     * @param did The DID to look for
+     * @return The {@code Details} class object whose DID matches the given DID, or
+     * {@code null} if the given DID doesn't match with any from the list
      */
     @Nullable
     public TrustedRegistryDetails findDetails(String did){
 
         for(int i = 0; i < detailsList.size(); i++){
             TrustedRegistryDetails details = this.detailsList.get(i);
-            if(details.getDid().equals(did)) return details;
+            if(details.getId().equals(did)) return details;
         }
 
         return null;
@@ -44,25 +43,25 @@ public abstract class ApiController {
 
 
     /**
-     * Método para generar un objeto de alguna subclase de {@code List200Response} a partir
-     * de la lista de {@code Details} de la instancia sobre la que se invoca este método
+     * Method to create an object of any {@code List200Response} subclass from the {@code Details}
+     * list of the instance on which this method is invoked.
      * 
      * @param pageAfter
      * @param pageSize
-     * @param response El objeto de alguna subclase de {@code List200Response} sobre el que se
-     * va a trabajar
-     * @param links El objeto de alguna subclase de {@code List200ResponseLinks} que se va a incluir
-     * en el objeto devuelto
-     * @param urlString La URL base que se formateará para poder moverse entre las páginas
-     * de la lista 
-     * @param apiUri La URI que representa a la subclase concreta:
+     * @param response The object of any {@code List200Response} subclass being worked on
+     * @param links The instance of any {@code List200ResponseLinks} subclass which will be included
+     * in the returned object
+     * @param urlString The base URL which will be formated to allow the user to move along the
+     * list pages
+     * @param apiUri The URI which will represent the exact subclass:
      * <ul>
      *  <li>{@code accessNodes}
      *  <li>{@code issuers}
      *  <li>{@code participants}
      * </ul>
-     * @return Un objeto de alguna subclase de {@code List200Response} con la lista generada a partir
-     * de los datos de la lista de detalles
+     * @return An object of any {@code List200Response} subclass with the list made from the detail
+     * list
+     * 
      */
     public List200Response listDetails(Integer pageAfter, Integer pageSize, List200Response response, List200ResponseLinks links, String urlString, String apiUri){
         List<TrustedRegistrySummary> summaries = new ArrayList<>(), paginated = new ArrayList<>();
@@ -100,13 +99,12 @@ public abstract class ApiController {
     }
 
     /**
-     * Método para eliminar de la lista el registro cuyo DID coincida con
-     * el solicitado
+     * Method to remove the registry whose ID matches the given ID
      * 
-     * @param did El DID del registro que se quiere eliminar
-     * @return {@code true} si se ha eliminado el registro o {@code false} en caso contrario
+     * @param did The ID of the registry to remove
+     * @return {@code true} if the registry was removed o {@code false} otherwise
      */
     public boolean deleteFromId(String did){
-        return this.detailsList.removeIf(detail -> detail.getDid().equals(did));
+        return this.detailsList.removeIf(detail -> detail.getId().equals(did));
     }
 }

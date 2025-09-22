@@ -11,14 +11,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
-public class ParticipantDetails extends TrustedRegistryDetails{
-
+public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
+  
   @Nullable
   protected LocalDateTime validFrom;
   @Nullable
   protected LocalDateTime validTo;
 
-  public ParticipantDetails(@NonNull String id, @NonNull LocalDateTime from, @NonNull LocalDateTime to){
+  public LEARCredentialIssuerDetails(@NonNull String id, @NonNull LocalDateTime from, @NonNull LocalDateTime to){
     super(id);
     this.validFrom = from;
     this.validTo = to;
@@ -47,15 +47,15 @@ public class ParticipantDetails extends TrustedRegistryDetails{
   }
 
   @Override
-  @Schema(name = "did", description = "The Decentralized Identifier (DID) of this participant.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "did", description = "The Decentralized Identifier (DID) of this LEAR Credential Issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("did")
   public String getId(){
       return this.id;
   }
 
   @Override
-  public ParticipantSummary getSummary(String url){
-    return new ParticipantSummary(this.id, url+this.id);
+  public LEARCredentialIssuerSummary getSummary(String url){
+    return new LEARCredentialIssuerSummary(this.id, url+this.id);
   }
 }
 

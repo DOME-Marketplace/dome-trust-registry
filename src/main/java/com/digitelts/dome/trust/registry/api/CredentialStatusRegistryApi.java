@@ -57,7 +57,7 @@ public interface CredentialStatusRegistryApi {
         value = "/credentialStatuses",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> registerCredentialStatus(
+    abstract ResponseEntity<?> registerCredentialStatus(
         @Parameter(name = "CredentialStatusDetails", description = "DID registration request", required = true)
         @Valid @RequestBody CredentialStatusDetails CredentialStatusDetails 
     );
@@ -102,11 +102,11 @@ public interface CredentialStatusRegistryApi {
         value = "/credentialStatuses/{credentialStatusId}",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> updateCredentialStatus(
+    abstract ResponseEntity<?> updateCredentialStatus(
         @Parameter(name = "CredentialStatusId", description = "The DID of the Credential Status to update", required = true, in = ParameterIn.PATH)
         @PathVariable("CredentialStatusId") String did,
-        @Parameter(name = "UpdateDidRequest", description = "DID update request", required = true)
-        @Valid @RequestBody CredentialStatusDetails updateDidRequest
+        @Parameter(name = "UpdateCredentialStatusRequest", description = "Credential Status update request", required = true)
+        @Valid @RequestBody CredentialStatusDetails updateCredentialStatusRequest
     );
 
 
@@ -117,9 +117,6 @@ public interface CredentialStatusRegistryApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "The Credential Status was deleted succesfully", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = CredentialStatusDetails.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "No Credential Status has the requested ID", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
@@ -127,7 +124,7 @@ public interface CredentialStatusRegistryApi {
         value = "/credentialStatuses/{credentialStatusId}",
         produces = { "application/json" }
     )    
-    abstract ResponseEntity<WrongRequest> deleteCredentialStatus(
+    abstract ResponseEntity<?> deleteCredentialStatus(
         @Parameter(name = "credentialStatusId", description = "The DID of the credential status to delete.", required = true, in = ParameterIn.PATH) @PathVariable("credentialStatusId") String credentialStatusId
     );
 
