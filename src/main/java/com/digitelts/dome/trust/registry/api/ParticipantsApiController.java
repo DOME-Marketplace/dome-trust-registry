@@ -1,5 +1,6 @@
 package com.digitelts.dome.trust.registry.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,11 @@ import javax.validation.Valid;
 public class ParticipantsApiController extends RegistryApiController implements ParticipantsApi{
 
     private final NativeWebRequest request;
+
+    @Value("${HOST_URL}")
+    private String host;
+    @Value("${PORT}")
+    private String port;
 
     public ParticipantsApiController(NativeWebRequest request) {
         super();
@@ -60,7 +66,7 @@ public class ParticipantsApiController extends RegistryApiController implements 
             pageSize,
             new ListParticipants200Response(),
             new ListParticipants200ResponseLinks(),
-            "http://localhost:8080/v4/participants?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+            host+":"+port+"/v4/participants?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
             "participants/"                   
         );
 

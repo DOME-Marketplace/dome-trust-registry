@@ -1,0 +1,15 @@
+services:
+  trusted-registry:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:8080"
+    networks:
+      - springboot
+    environment:
+      - HOST_URL=${HOST_URL}
+      - PORT=${PORT}
+
+networks:
+  springboot:

@@ -1,5 +1,6 @@
 package com.digitelts.dome.trust.registry.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,11 @@ import com.digitelts.dome.trust.registry.model.*;
 public class LEARCredentialIssuerApiController extends RegistryApiController implements LEARCredentialIssuerApi {
 
     private final NativeWebRequest request;
+
+    @Value("${HOST_URL}")
+    private String host;
+    @Value("${PORT}")
+    private String port;
 
     public LEARCredentialIssuerApiController(NativeWebRequest request) {
         this.request = request;
@@ -34,7 +40,7 @@ public class LEARCredentialIssuerApiController extends RegistryApiController imp
                 pageSize,
                 new ListIssuers200Response(),
                 new ListIssuers200ResponseLinks(),
-                "http://localhost:8080/v4/issuers?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+                host+":"+port+"/v4/issuers?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
                 "issuers/"                   
             );
 
