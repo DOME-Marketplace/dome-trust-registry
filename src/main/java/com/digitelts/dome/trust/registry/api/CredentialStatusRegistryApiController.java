@@ -1,5 +1,6 @@
 package com.digitelts.dome.trust.registry.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,11 @@ import javax.validation.Valid;
 public class CredentialStatusRegistryApiController extends RegistryApiController implements CredentialStatusRegistryApi {
 
     private final NativeWebRequest request;
-    private final String urlString = "http://localhost:8080/v4/credentialStatuses?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d";
+    @Value("${HOST_URL}")
+    private String host;
+    @Value("${PORT}")
+    private String port;
+    private final String urlString = host+":"+port+"/v4/credentialStatuses?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d";
     private final String apiUri = "credentialStatuses/";
 
     public CredentialStatusRegistryApiController(NativeWebRequest request, SchemaRegistryApiController schemaRegistryApiController) {

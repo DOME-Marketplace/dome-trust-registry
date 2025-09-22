@@ -1,5 +1,6 @@
 package com.digitelts.dome.trust.registry.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,11 @@ import javax.validation.Valid;
 public class ServiceRegistryApiController extends RegistryApiController implements ServiceRegistryApi {
 
     private final NativeWebRequest request;
+
+    @Value("${HOST_URL}")
+    private String host;
+    @Value("${PORT}")
+    private String port;
 
     public ServiceRegistryApiController(NativeWebRequest request) {
         this.request = request;
@@ -64,7 +70,7 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
             pageSize,
             new ListServices200Response(),
             new ListServices200ResponseLinks(),
-            "http://localhost:8080/v4/services?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+            host+":"+port+"/v4/services?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
             "services/"                   
         );
 
