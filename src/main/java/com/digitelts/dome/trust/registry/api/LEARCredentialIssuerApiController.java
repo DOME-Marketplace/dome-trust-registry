@@ -13,11 +13,11 @@ import com.digitelts.dome.trust.registry.model.*;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class IssuersApiController extends ApiController implements IssuersApi {
+public class LEARCredentialIssuerApiController extends RegistryApiController implements LEARCredentialIssuerApi {
 
     private final NativeWebRequest request;
 
-    public IssuersApiController(NativeWebRequest request) {
+    public LEARCredentialIssuerApiController(NativeWebRequest request) {
         this.request = request;
     }
 
@@ -43,7 +43,7 @@ public class IssuersApiController extends ApiController implements IssuersApi {
 
     @Override
     public ResponseEntity<Object> getIssuer(String issuerId) {
-        IssuerDetails response = (IssuerDetails)findDetails(issuerId);
+        LEARCredentialIssuerDetails response = (LEARCredentialIssuerDetails)findDetails(issuerId);
 
         if(response == null){
             System.out.println("Issuer with ID: "+issuerId+" not found");
@@ -54,27 +54,27 @@ public class IssuersApiController extends ApiController implements IssuersApi {
     }
     
     @Override
-    public ResponseEntity<WrongRequest> insertIssuer(@Valid IssuerDetails insertIssuerRequest) {
-        if(this.detailsList.contains(insertIssuerRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Issuer"),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> insertIssuer(@Valid LEARCredentialIssuerDetails insertIssuerRequest) {
+        if(this.detailsList.contains(insertIssuerRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "LEAR Credential Issuer already exists"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(insertIssuerRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateIssuer(String issuerId, @Valid IssuerDetails updateIssuerRequest) {
-        IssuerDetails issuer = (IssuerDetails)findDetails(issuerId);
+    public ResponseEntity<?> updateIssuer(String issuerId, @Valid LEARCredentialIssuerDetails updateIssuerRequest) {
+        LEARCredentialIssuerDetails issuer = (LEARCredentialIssuerDetails)findDetails(issuerId);
         if(issuer==null){
             return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Issuer not found"),HttpStatus.NOT_FOUND);
         }
-        issuer.setDid(updateIssuerRequest.getDid());
+        issuer.setId(updateIssuerRequest.getId());
         issuer.setValidFrom(updateIssuerRequest.getValidFrom());
         issuer.setValidTo(updateIssuerRequest.getValidTo());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<WrongRequest> deleteIssuer(String issuerId) {
-        if(deleteFromId(issuerId)) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Issuer not found"),HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteIssuer(String issuerId) {
+        deleteFromId(issuerId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

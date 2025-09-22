@@ -1,16 +1,34 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class SchemaDetails extends TrustedRegistryDetails{
 
-    public SchemaDetails(String id, LocalDateTime from, LocalDateTime to) {
-        super(id, from, to);
+    @NotNull
+    private String schemaData;
+
+    public SchemaDetails(String id, String schemaData) {
+        super(id);
+        this.schemaData = schemaData;
+    }
+
+    @Schema(name = "schemaData", description = "The JSON representation of the Schema", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("schemaData")
+    public String getSchemaData(){
+        return schemaData;
+    }
+
+    public void setSchemaData(String data){
+        this.schemaData = data;
     }
 
     @Override
     public SchemaSummary getSummary(String url) {
-        return new SchemaSummary(this.did, url+this.did);
+        return new SchemaSummary(this.id, url+this.id);
     }
     
 }

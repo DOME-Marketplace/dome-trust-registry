@@ -14,7 +14,7 @@ import java.util.Optional;
 import org.springframework.web.context.request.NativeWebRequest;
 
 @Validated
-@Tag(name = "Trusted Access Node Registry", description = "Accepted Access Node DIDs and their associations with public keys")
+@Tag(name = "Trusted Access Node Registry", description = "Accepted Access Node addresses and their associations with public keys")
 public interface AccessNodeRegistryApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -30,17 +30,17 @@ public interface AccessNodeRegistryApi {
             @ApiResponse(responseCode = "200", description = "Details of the Access Node", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = AccessNodeDetails.class))
             }),
-            @ApiResponse(responseCode = "404", description = "No Access Node has the requested ID", content = {
+            @ApiResponse(responseCode = "404", description = "No Access Node has the requested address", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
         method = RequestMethod.GET,
-        value = "/accessNodes/{accessNodeId}",
+        value = "/accessNodes/{accessNodeAddress}",
         produces = { "application/json" }
     )    
     abstract ResponseEntity<Object> getAccessNode(
-        @Parameter(name = "accessNodeId", description = "The DID of the access node to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeId") String accessNodeId
+        @Parameter(name = "accessNodeAddress", description = "The address of the access node to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeAddress") String accessNodeAddress
     );
 
 
@@ -57,8 +57,8 @@ public interface AccessNodeRegistryApi {
         value = "/accessNodes",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> registerAccessNode(
-        @Parameter(name = "AccessNodeDetails", description = "DID registration request", required = true)
+    abstract ResponseEntity<?> registerAccessNode(
+        @Parameter(name = "AccessNodeDetails", description = "Access Node registration request", required = true)
         @Valid @RequestBody AccessNodeDetails accessNodeDetails 
     );
 
@@ -92,20 +92,20 @@ public interface AccessNodeRegistryApi {
         tags = { "Trusted Access Node Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Access Node updated successfully."),
-            @ApiResponse(responseCode = "404", description = "No Access Node has the requested ID", content = {
+            @ApiResponse(responseCode = "404", description = "No Access Node has the requested address", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/accessNodes/{accessNodeId}",
+        value = "/accessNodes/{accessNodeAddress}",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> updateAccessNode(
-        @Parameter(name = "accessNodeId", description = "The DID of the Access Node to update", required = true, in = ParameterIn.PATH)
-        @PathVariable("accessNodeId") String did,
-        @Parameter(name = "UpdateDidRequest", description = "DID update request", required = true)
+    abstract ResponseEntity<?> updateAccessNode(
+        @Parameter(name = "accessNodeAddress", description = "The address of the Access Node to update", required = true, in = ParameterIn.PATH)
+        @PathVariable("accessNodeAddress") String did,
+        @Parameter(name = "UpdateDidRequest", description = "Access Node update request", required = true)
         @Valid @RequestBody AccessNodeDetails updateDidRequest
     );
 
@@ -117,17 +117,14 @@ public interface AccessNodeRegistryApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "The Access Node was deleted succesfully", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = AccessNodeDetails.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "No Access Node has the requested ID", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/accessNodes/{accessNodeId}",
+        value = "/accessNodes/{accessNodeAddress}",
         produces = { "application/json" }
     )    
-    abstract ResponseEntity<WrongRequest> deleteAccessNode(
-        @Parameter(name = "accessNodeId", description = "The DID of the access node to delete.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeId") String accessNodeId
+    abstract ResponseEntity<?> deleteAccessNode(
+        @Parameter(name = "accessNodeAddress", description = "The address of the access node to delete.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeAddress") String accessNodeAddress
     );
 }

@@ -40,7 +40,7 @@ public interface ServiceRegistryApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<Object> getService(
-        @Parameter(name = "ServiceId", description = "The DID of the Service to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("ServiceId") String ServiceId
+        @Parameter(name = "ServiceId", description = "The ID of the Service to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("ServiceId") String ServiceId
     );
 
 
@@ -57,8 +57,8 @@ public interface ServiceRegistryApi {
         value = "/services",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> registerService(
-        @Parameter(name = "ServiceDetails", description = "DID registration request", required = true)
+    abstract ResponseEntity<?> registerService(
+        @Parameter(name = "ServiceDetails", description = "ID registration request", required = true)
         @Valid @RequestBody ServiceDetails ServiceDetails 
     );
 
@@ -102,11 +102,11 @@ public interface ServiceRegistryApi {
         value = "/services/{serviceId}",
         consumes = { "application/json" }
     )
-    abstract ResponseEntity<WrongRequest> updateService(
-        @Parameter(name = "ServiceId", description = "The DID of the Service to update", required = true, in = ParameterIn.PATH)
+    abstract ResponseEntity<?> updateService(
+        @Parameter(name = "ServiceId", description = "The ID of the Service to update", required = true, in = ParameterIn.PATH)
         @PathVariable("ServiceId") String did,
-        @Parameter(name = "UpdateDidRequest", description = "DID update request", required = true)
-        @Valid @RequestBody ServiceDetails updateDidRequest
+        @Parameter(name = "UpdateServideRequest", description = "Service update request", required = true)
+        @Valid @RequestBody ServiceDetails updateServiceRequest
     );
 
 
@@ -117,9 +117,6 @@ public interface ServiceRegistryApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "The Service was deleted succesfully", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDetails.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "No Service has the requested ID", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
@@ -127,7 +124,7 @@ public interface ServiceRegistryApi {
         value = "/services/{serviceId}",
         produces = { "application/json" }
     )    
-    abstract ResponseEntity<WrongRequest> deleteService(
-        @Parameter(name = "serviceId", description = "The DID of the service to delete.", required = true, in = ParameterIn.PATH) @PathVariable("serviceId") String serviceId
+    abstract ResponseEntity<?> deleteService(
+        @Parameter(name = "serviceId", description = "The ID of the service to delete.", required = true, in = ParameterIn.PATH) @PathVariable("serviceId") String serviceId
     );
 }

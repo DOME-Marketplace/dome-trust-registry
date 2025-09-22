@@ -5,17 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Clase para manejar las respuestas del servidor con
- * código 4xx
+ * Class for handling server responses with code 4xx
  */
 public class WrongRequest {
 
     /**
-     * Código de error (400, 404, etc.)
+     * Error code (400, 404, etc.)
      */
     private int errCode;
     /**
-     * Mensaje que describe el error
+     * Message describing the error
      */
     private String errMessage;
 
@@ -43,7 +42,7 @@ public class WrongRequest {
         return errCode;
     }
 
-    @Schema(name = "errMessage", description = "A message about the error", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "errMessage", description = "A message describing the error", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("errMessage")
     public String getErrMessage(){
         return errMessage;

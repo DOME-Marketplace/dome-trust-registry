@@ -10,7 +10,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class CredentialStatusRegistryApiController extends ApiController implements CredentialStatusRegistryApi {
+public class CredentialStatusRegistryApiController extends RegistryApiController implements CredentialStatusRegistryApi {
 
     private final NativeWebRequest request;
     private final String urlString = "http://localhost:8080/v4/credentialStatuses?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d";
@@ -33,19 +33,19 @@ public class CredentialStatusRegistryApiController extends ApiController impleme
     }
 
     @Override
-    public ResponseEntity<WrongRequest> registerCredentialStatus(@Valid CredentialStatusDetails credentialStatusDetails) {
-        if(this.detailsList.contains(credentialStatusDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Credential Status"),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> registerCredentialStatus(@Valid CredentialStatusDetails credentialStatusDetails) {
+        if(this.detailsList.contains(credentialStatusDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Credential Status already exists"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(credentialStatusDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateCredentialStatus(String credentialStatusId, @Valid CredentialStatusDetails updateDidRequest) {
-        CredentialStatusDetails node = (CredentialStatusDetails)findDetails(credentialStatusId);
-        if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Credential Status not found"), HttpStatus.NOT_FOUND);
-        node.setDid(updateDidRequest.getDid());
-        node.setValidFrom(updateDidRequest.getValidFrom());
-        node.setValidTo(updateDidRequest.getValidTo());
+    public ResponseEntity<?> updateCredentialStatus(String credentialStatusId, @Valid CredentialStatusDetails updateCredentialStatusRequest) {
+        CredentialStatusDetails credentialStatus = (CredentialStatusDetails)findDetails(credentialStatusId);
+        if(credentialStatus==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Credential Status not found"), HttpStatus.NOT_FOUND);
+        credentialStatus.setId(updateCredentialStatusRequest.getId());
+        credentialStatus.setRevocation(updateCredentialStatusRequest.getRevocation());
+        credentialStatus.setValidity(updateCredentialStatusRequest.getValidity());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -66,9 +66,9 @@ public class CredentialStatusRegistryApiController extends ApiController impleme
     }
 
     @Override
-    public ResponseEntity<WrongRequest> deleteCredentialStatus(String credentialStatusId) {
-        if(deleteFromId(credentialStatusId)) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Credential Status not found"),HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteCredentialStatus(String credentialStatusId) {
+        deleteFromId(credentialStatusId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override

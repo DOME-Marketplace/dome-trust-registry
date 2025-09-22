@@ -13,7 +13,7 @@ import javax.validation.Valid;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class ParticipantsApiController extends ApiController implements ParticipantsApi{
+public class ParticipantsApiController extends RegistryApiController implements ParticipantsApi{
 
     private final NativeWebRequest request;
 
@@ -35,19 +35,18 @@ public class ParticipantsApiController extends ApiController implements Particip
     }
 
     @Override
-    public ResponseEntity<WrongRequest> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
-        if(this.detailsList.contains(insertParticipantRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Participant"),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
+        if(this.detailsList.contains(insertParticipantRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(insertParticipantRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateParticipant(String participantId,
+    public ResponseEntity<?> updateParticipant(String participantId,
             @Valid ParticipantDetails updateParticipantRequest) {
         ParticipantDetails participant = (ParticipantDetails)findDetails(participantId);
         if(participant==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"),HttpStatus.NOT_FOUND);
-        participant.setDid(updateParticipantRequest.getDid());
-        participant.setRegistrar(updateParticipantRequest.getRegistrar());
+        participant.setId(updateParticipantRequest.getId());
         participant.setValidFrom(updateParticipantRequest.getValidFrom());
         participant.setValidTo(updateParticipantRequest.getValidTo());
         return new ResponseEntity<>(HttpStatus.OK);
@@ -69,8 +68,8 @@ public class ParticipantsApiController extends ApiController implements Particip
     }
 
     @Override
-    public ResponseEntity<WrongRequest> deleteParticipant(String participantId) {
-        if(deleteFromId(participantId)) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"), HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteParticipant(String participantId) {
+        deleteFromId(participantId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

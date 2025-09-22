@@ -1,7 +1,5 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,8 +9,8 @@ public class CredentialStatusDetails extends TrustedRegistryDetails{
     private boolean isValid;
     private boolean isRevoked;
 
-    public CredentialStatusDetails(String id, LocalDateTime from, LocalDateTime to, boolean valid, boolean revoked) {
-        super(id, from, to);
+    public CredentialStatusDetails(String id, boolean valid, boolean revoked) {
+        super(id);
         this.isValid = valid;
         this.isRevoked = revoked;
     }
@@ -39,7 +37,7 @@ public class CredentialStatusDetails extends TrustedRegistryDetails{
 
     @Override
     public CredentialStatusSummary getSummary(String url) {
-        return new CredentialStatusSummary(this.did, url+this.did);
+        return new CredentialStatusSummary(this.id, url+this.id);
     }
     
 }

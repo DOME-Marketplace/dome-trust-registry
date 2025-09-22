@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.*;
 
 /**
- * Clase abstracta con métodos y atributos
+ * Abstract class with common methods and attributes
  * @see ListAccessNodes200Response
  * @see ListIssuers200Response
  * @see ListParticipants200Response
@@ -89,41 +89,6 @@ public abstract class List200Response {
         this.links = links;
     }
 
-    // OTHER METHODS //
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        List200Response that = (List200Response) o;
-        return Objects.equals(this.self, that.getSelf()) &&
-               Objects.equals(this.items, that.getItems()) &&
-               Objects.equals(this.total, that.getTotal()) &&
-               Objects.equals(this.pageSize, that.getPageSize()) &&
-               Objects.equals(this.links, that.getLinks());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.self, this.items, this.total, this.pageSize, this.links);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class "+this.getClass().getSimpleName()+" {\n");
-        sb.append("    self: ").append(toIndentedString(this.self)).append("\n");
-        sb.append("    items: ").append(toIndentedString(this.items)).append("\n");
-        sb.append("    total: ").append(toIndentedString(this.total)).append("\n");
-        sb.append("    pageSize: ").append(toIndentedString(this.pageSize)).append("\n");
-        sb.append("    links: ").append(toIndentedString(this.links)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
     public void addItem(@Valid TrustedRegistrySummary item){
         this.items.add(item);
         this.total += 1;
@@ -135,16 +100,5 @@ public abstract class List200Response {
             return null;
         }
         return this.items.get(index);
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
     }
 }

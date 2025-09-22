@@ -10,7 +10,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class ServiceRegistryApiController extends ApiController implements ServiceRegistryApi {
+public class ServiceRegistryApiController extends RegistryApiController implements ServiceRegistryApi {
 
     private final NativeWebRequest request;
 
@@ -25,25 +25,33 @@ public class ServiceRegistryApiController extends ApiController implements Servi
 
     @Override
     public ResponseEntity<Object> getService(String serviceId) {
-        ServiceDetails node = (ServiceDetails)findDetails(serviceId);
-        if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"),HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(node,HttpStatus.OK);
+        ServiceDetails registry = (ServiceDetails)findDetails(serviceId);
+        if(registry==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(registry,HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<WrongRequest> registerService(@Valid ServiceDetails serviceDetails) {
-        if(this.detailsList.contains(serviceDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Invalid Service"),HttpStatus.BAD_REQUEST);
+        if(this.detailsList.contains(serviceDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Service already exists"),HttpStatus.BAD_REQUEST);
         this.detailsList.add(serviceDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateService(String serviceId, @Valid ServiceDetails updateDidRequest) {
-        ServiceDetails node = (ServiceDetails)findDetails(serviceId);
-        if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
-        node.setDid(updateDidRequest.getDid());
-        node.setValidFrom(updateDidRequest.getValidFrom());
-        node.setValidTo(updateDidRequest.getValidTo());
+    public ResponseEntity<WrongRequest> updateService(String serviceId, @Valid ServiceDetails updateServiceRequest) {
+        ServiceDetails service = (ServiceDetails)findDetails(serviceId);
+        if(service==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
+        service.setId(updateServiceRequest.getId());
+        service.setUrl(updateServiceRequest.getUrl());
+        service.setRedirectUris(updateServiceRequest.getRedirectUris());
+        service.setScopes(updateServiceRequest.getScopes());
+        service.setClientAuthenticationMethods(updateServiceRequest.getClientAuthenticationMethods());
+        service.setPostLogoutRedirectUris(updateServiceRequest.getPostLogoutRedirectUris());
+        service.setRequireAuthorizationConsent(updateServiceRequest.isRequireAuthorizationConsent());
+        service.setRequireProofKey(updateServiceRequest.isRequireProofKey());
+        service.setJwkSetUrl(updateServiceRequest.getJwkSetUrl());
+        service.setTokenEndpointAuthenticationSigningAlgorithm(updateServiceRequest.getTokenEndpointAuthenticationSigningAlgorithm());
+        service.setAuthorizationGrantTypes(updateServiceRequest.getAuthorizationGrantTypes());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -65,7 +73,7 @@ public class ServiceRegistryApiController extends ApiController implements Servi
 
     @Override
     public ResponseEntity<WrongRequest> deleteService(String serviceId) {
-        if(deleteFromId(serviceId)) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"),HttpStatus.NOT_FOUND);
+        deleteFromId(serviceId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

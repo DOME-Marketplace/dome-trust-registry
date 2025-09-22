@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Validated
 @Tag(name = "Trusted Issuers Registry", description = "Operations related to the Issuers Registry")
-public interface IssuersApi {
+public interface LEARCredentialIssuerApi {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
@@ -33,7 +33,7 @@ public interface IssuersApi {
     @Operation(operationId = "getIssuer", summary = "Get details of a specific issuer", tags = {
             "Trusted Issuers Registry" }, responses = {
                     @ApiResponse(responseCode = "200", description = "Issuer details retrieved successfully.", content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = IssuerDetails.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = LEARCredentialIssuerDetails.class))
                     }),
                     @ApiResponse(responseCode = "404", description = "No issuer has the ID requested", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
@@ -49,8 +49,8 @@ public interface IssuersApi {
                     @ApiResponse(responseCode = "200", description = "Transaction executed successfully.")
             })
     @RequestMapping(method = RequestMethod.POST, value = "/issuers", consumes = { "application/json" })
-    abstract ResponseEntity<WrongRequest> insertIssuer(
-            @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody IssuerDetails insertIssuerRequest);
+    abstract ResponseEntity<?> insertIssuer(
+            @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails insertIssuerRequest);
 
 
     @Operation(operationId = "listIssuers", summary = "List all trusted issuers", tags = {
@@ -70,9 +70,9 @@ public interface IssuersApi {
                     @ApiResponse(responseCode = "200", description = "Transaction built successfully.")
             })
     @RequestMapping(method = RequestMethod.PUT, value = "/issuers/{issuerId}", consumes = { "application/json" })
-    abstract ResponseEntity<WrongRequest> updateIssuer(
+    abstract ResponseEntity<?> updateIssuer(
             @Parameter(name = "issuerId", description = "The DID of the issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
-            @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody IssuerDetails updateIssuerRequest);
+            @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails updateIssuerRequest);
 
 
     @Operation(
@@ -81,10 +81,7 @@ public interface IssuersApi {
         tags = { "Trusted Issuers Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The Issuer was deleted succesfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = IssuerDetails.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "No Issuer has the requested ID", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = LEARCredentialIssuerDetails.class))
             })
         }
     )@RequestMapping(
@@ -92,7 +89,7 @@ public interface IssuersApi {
         value = "/issuers/{issuerId}",
         produces = { "application/json" }
     )    
-    abstract ResponseEntity<WrongRequest> deleteIssuer(
+    abstract ResponseEntity<?> deleteIssuer(
         @Parameter(name = "issuerId", description = "The DID of the issuer to delete.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId
     );
 }
