@@ -49,7 +49,7 @@ public interface SchemaRegistryApi {
         summary = "Register a new Schema associated with a public key",
         tags = { "Trusted Schemas Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Schema registered successfully.")
+            @ApiResponse(responseCode = "200", description = "Schema registered successfully.", content=@Content)
         }
     )
     @RequestMapping(
@@ -91,7 +91,7 @@ public interface SchemaRegistryApi {
         summary = "Update an already registered Schema",
         tags = { "Trusted Schemas Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Schema updated successfully."),
+            @ApiResponse(responseCode = "200", description = "Schema updated successfully.", content=@Content),
             @ApiResponse(responseCode = "404", description = "No Schema has the requested ID", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
@@ -115,9 +115,7 @@ public interface SchemaRegistryApi {
         summary = "Deletes a specific registered Schema",
         tags = { "Trusted Schemas Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "The Schema was deleted succesfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = SchemaDetails.class))
-            })
+            @ApiResponse(responseCode = "200", description = "The Schema was deleted succesfully", content=@Content)
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,

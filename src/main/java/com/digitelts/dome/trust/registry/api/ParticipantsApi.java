@@ -47,7 +47,7 @@ public interface ParticipantsApi {
 
     @Operation(operationId = "insertParticipant", summary = "Insert a new participant", tags = {
                     "Trusted Participants Registry" }, responses = {
-                                    @ApiResponse(responseCode = "200", description = "Transaction executed successfully."),
+                                    @ApiResponse(responseCode = "200", description = "Participant was registered successfully.", content=@Content),
                     })
     @RequestMapping(method = RequestMethod.POST, value = "/participants", consumes = { "application/json" })
     abstract ResponseEntity<?> insertParticipant(
@@ -68,7 +68,7 @@ public interface ParticipantsApi {
 
     @Operation(operationId = "updateParticipant", summary = "Update an existing participant", tags = {
                     "Trusted Participants Registry" }, responses = {
-                                    @ApiResponse(responseCode = "200", description = "Transaction built successfully."),
+                                    @ApiResponse(responseCode = "200", description = "Transaction built successfully.", content=@Content),
                                     @ApiResponse(responseCode = "400", description = "No participant has the requested ID", content = {
                                             @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
                                     })
@@ -85,9 +85,7 @@ public interface ParticipantsApi {
         summary = "Deletes a specific registered Participant",
         tags = { "Trusted Participants Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "The Participant was deleted succesfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDetails.class))
-            })
+            @ApiResponse(responseCode = "200", description = "The Participant was deleted succesfully", content=@Content)
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,

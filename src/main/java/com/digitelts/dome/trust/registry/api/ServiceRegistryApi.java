@@ -30,17 +30,17 @@ public interface ServiceRegistryApi {
             @ApiResponse(responseCode = "200", description = "Details of the Service", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDetails.class))
             }),
-            @ApiResponse(responseCode = "404", description = "No Service has the requested ID", content = {
+            @ApiResponse(responseCode = "404", description = "No Service has the requested Client ID", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
         method = RequestMethod.GET,
-        value = "/services/{serviceId}",
+        value = "/services/{clientId}",
         produces = { "application/json" }
     )    
     abstract ResponseEntity<Object> getService(
-        @Parameter(name = "ServiceId", description = "The ID of the Service to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("ServiceId") String ServiceId
+        @Parameter(name = "clientId", description = "The Client ID of the Service to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
     );
 
 
@@ -49,7 +49,7 @@ public interface ServiceRegistryApi {
         summary = "Register a new Service associated with a public key",
         tags = { "Trusted Services Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Service registered successfully.")
+            @ApiResponse(responseCode = "200", description = "Service registered successfully.", content=@Content)
         }
     )
     @RequestMapping(
@@ -58,7 +58,7 @@ public interface ServiceRegistryApi {
         consumes = { "application/json" }
     )
     abstract ResponseEntity<?> registerService(
-        @Parameter(name = "ServiceDetails", description = "ID registration request", required = true)
+        @Parameter(name = "ServiceDetails", description = "Client ID registration request", required = true)
         @Valid @RequestBody ServiceDetails ServiceDetails 
     );
 
@@ -92,19 +92,19 @@ public interface ServiceRegistryApi {
         tags = { "Trusted Services Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Service updated successfully."),
-            @ApiResponse(responseCode = "404", description = "No Service has the requested ID", content = {
+            @ApiResponse(responseCode = "404", description = "No Service has the requested Client ID", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/services/{serviceId}",
+        value = "/services/{clientId}",
         consumes = { "application/json" }
     )
     abstract ResponseEntity<?> updateService(
-        @Parameter(name = "ServiceId", description = "The ID of the Service to update", required = true, in = ParameterIn.PATH)
-        @PathVariable("ServiceId") String did,
+        @Parameter(name = "clientId", description = "The Client ID of the Service to update", required = true, in = ParameterIn.PATH)
+        @PathVariable("clientId") String did,
         @Parameter(name = "UpdateServideRequest", description = "Service update request", required = true)
         @Valid @RequestBody ServiceDetails updateServiceRequest
     );
@@ -115,16 +115,14 @@ public interface ServiceRegistryApi {
         summary = "Deletes a specific registered Service",
         tags = { "Trusted Services Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "The Service was deleted succesfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDetails.class))
-            })
+            @ApiResponse(responseCode = "200", description = "The Service was deleted succesfully", content=@Content)
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/services/{serviceId}",
+        value = "/services/{clientId}",
         produces = { "application/json" }
     )    
     abstract ResponseEntity<?> deleteService(
-        @Parameter(name = "serviceId", description = "The ID of the service to delete.", required = true, in = ParameterIn.PATH) @PathVariable("serviceId") String serviceId
+        @Parameter(name = "clientId", description = "The Client ID of the service to delete.", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
     );
 }

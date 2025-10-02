@@ -9,8 +9,8 @@ public class AccessNodeDetails extends TrustedRegistryDetails {
     @NotNull
     private String name;
 
-    public AccessNodeDetails(@NotNull String address, @NotNull String name){
-        super(address);
+    public AccessNodeDetails(@NotNull String dlt_address, @NotNull String name){
+        super(dlt_address);
         this.name = name;
     }
 
@@ -25,8 +25,8 @@ public class AccessNodeDetails extends TrustedRegistryDetails {
     }
 
     @Override
-    @Schema(name = "address", description = "The DLT address of the Access Node.", requiredMode = Schema.RequiredMode.REQUIRED)
-    @JsonProperty("address")
+    @Schema(name = "dlt_address", description = "The DLT address of the Access Node.", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("dlt_address")
     public String getId(){
         return this.id;
     }

@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Validated
-@Tag(name = "Trusted Issuers Registry", description = "Operations related to the Issuers Registry")
+@Tag(name = "Trusted LEAR Credential Issuers Registry", description = "Operations related to the LEAR Credential Issuers Registry")
 public interface LEARCredentialIssuerApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -30,32 +30,32 @@ public interface LEARCredentialIssuerApi {
     }
 
 
-    @Operation(operationId = "getIssuer", summary = "Get details of a specific issuer", tags = {
-            "Trusted Issuers Registry" }, responses = {
-                    @ApiResponse(responseCode = "200", description = "Issuer details retrieved successfully.", content = {
+    @Operation(operationId = "getIssuer", summary = "Get details of a specific LEAR Credential Issuer", tags = {
+            "Trusted LEAR Credential Issuers Registry" }, responses = {
+                    @ApiResponse(responseCode = "200", description = "LEAR Credential Issuer details retrieved successfully.", content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = LEARCredentialIssuerDetails.class))
                     }),
-                    @ApiResponse(responseCode = "404", description = "No issuer has the ID requested", content = {
+                    @ApiResponse(responseCode = "404", description = "No LEAR Credential Issuer has the requested DID", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
                     })
             })
     @RequestMapping(method = RequestMethod.GET, value = "/issuers/{issuerId}", produces = { "application/json" })
     abstract ResponseEntity<Object> getIssuer(
-            @Parameter(name = "issuerId", description = "The DID of the issuer to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId);
+            @Parameter(name = "issuerId", description = "The DID of the LEAR Credential Issuer to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId);
 
 
-    @Operation(operationId = "insertIssuer", summary = "Insert a new issuer", tags = {
-            "Trusted Issuers Registry" }, responses = {
-                    @ApiResponse(responseCode = "200", description = "Transaction executed successfully.")
+    @Operation(operationId = "insertIssuer", summary = "Insert a new LEAR Credential Issuer", tags = {
+            "Trusted LEAR Credential Issuers Registry" }, responses = {
+                    @ApiResponse(responseCode = "200", description = "Transaction executed successfully.", content=@Content)
             })
     @RequestMapping(method = RequestMethod.POST, value = "/issuers", consumes = { "application/json" })
     abstract ResponseEntity<?> insertIssuer(
             @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails insertIssuerRequest);
 
 
-    @Operation(operationId = "listIssuers", summary = "List all trusted issuers", tags = {
-            "Trusted Issuers Registry" }, responses = {
-                    @ApiResponse(responseCode = "200", description = "A list of trusted issuers with pagination details.", content = {
+    @Operation(operationId = "listLEAR Credential Issuers", summary = "List all trusted LEAR Credential Issuers", tags = {
+            "Trusted LEAR Credential Issuers Registry" }, responses = {
+                    @ApiResponse(responseCode = "200", description = "A list of trusted LEAR Credential Issuers with pagination details.", content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = ListIssuers200Response.class))
                     })
             })
@@ -65,24 +65,25 @@ public interface LEARCredentialIssuerApi {
             @Parameter(name = "page[size]", description = "Number of items per page", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page[size]", required = false) Integer pageSize);
 
 
-    @Operation(operationId = "updateIssuer", summary = "Update an existing issuer", tags = {
-            "Trusted Issuers Registry" }, responses = {
-                    @ApiResponse(responseCode = "200", description = "Transaction built successfully.")
+    @Operation(operationId = "updateIssuer", summary = "Update an existing LEAR Credential Issuer", tags = {
+            "Trusted LEAR Credential Issuers Registry" }, responses = {
+                @ApiResponse(responseCode = "200", description = "LEAR Credential Issuer was updated successfully.", content=@Content),
+                @ApiResponse(responseCode = "404", description = "No LEAR Credential Issuer has the requested DID", content = {
+                        @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+                })
             })
     @RequestMapping(method = RequestMethod.PUT, value = "/issuers/{issuerId}", consumes = { "application/json" })
     abstract ResponseEntity<?> updateIssuer(
-            @Parameter(name = "issuerId", description = "The DID of the issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
+            @Parameter(name = "issuerId", description = "The DID of the LEAR Credential Issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
             @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails updateIssuerRequest);
 
 
     @Operation(
         operationId = "deleteIssuer",
-        summary = "Deletes a specific registered Issuer",
-        tags = { "Trusted Issuers Registry" },
+        summary = "Deletes a specific registered LEAR Credential Issuer",
+        tags = { "Trusted LEAR Credential Issuers Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "The Issuer was deleted succesfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = LEARCredentialIssuerDetails.class))
-            })
+            @ApiResponse(responseCode = "200", description = "The LEAR Credential Issuer was deleted succesfully", content=@Content)
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,
@@ -90,6 +91,6 @@ public interface LEARCredentialIssuerApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<?> deleteIssuer(
-        @Parameter(name = "issuerId", description = "The DID of the issuer to delete.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId
+        @Parameter(name = "issuerId", description = "The DID of the LEAR Credential Issuer to delete.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId
     );
 }
