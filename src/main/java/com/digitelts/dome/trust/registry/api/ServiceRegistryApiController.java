@@ -30,8 +30,8 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
     }
 
     @Override
-    public ResponseEntity<Object> getService(String serviceId) {
-        ServiceDetails registry = (ServiceDetails)findDetails(serviceId);
+    public ResponseEntity<Object> getService(String clientId) {
+        ServiceDetails registry = (ServiceDetails)findDetails(clientId);
         if(registry==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"),HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(registry,HttpStatus.OK);
     }
@@ -44,11 +44,10 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateService(String serviceId, @Valid ServiceDetails updateServiceRequest) {
-        ServiceDetails service = (ServiceDetails)findDetails(serviceId);
+    public ResponseEntity<WrongRequest> updateService(String clientId, @Valid ServiceDetails updateServiceRequest) {
+        ServiceDetails service = (ServiceDetails)findDetails(clientId);
         if(service==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
         service.setId(updateServiceRequest.getId());
-        service.setUrl(updateServiceRequest.getUrl());
         service.setRedirectUris(updateServiceRequest.getRedirectUris());
         service.setScopes(updateServiceRequest.getScopes());
         service.setClientAuthenticationMethods(updateServiceRequest.getClientAuthenticationMethods());
@@ -78,8 +77,8 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
     }
 
     @Override
-    public ResponseEntity<WrongRequest> deleteService(String serviceId) {
-        deleteFromId(serviceId);
+    public ResponseEntity<WrongRequest> deleteService(String clientId) {
+        deleteFromId(clientId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

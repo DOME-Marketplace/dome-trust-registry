@@ -14,7 +14,7 @@ import java.util.Optional;
 import org.springframework.web.context.request.NativeWebRequest;
 
 @Validated
-@Tag(name = "Trusted Access Node Registry", description = "Accepted Access Node addresses and their associations with public keys")
+@Tag(name = "Trusted Access Node Registry", description = "Accepted Access Node DLT addresses and their associations with public keys")
 public interface AccessNodeRegistryApi {
 
     default Optional<NativeWebRequest> getRequest() {
@@ -30,17 +30,17 @@ public interface AccessNodeRegistryApi {
             @ApiResponse(responseCode = "200", description = "Details of the Access Node", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = AccessNodeDetails.class))
             }),
-            @ApiResponse(responseCode = "404", description = "No Access Node has the requested address", content = {
+            @ApiResponse(responseCode = "404", description = "No Access Node has the requested DLT address", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
         }
     )@RequestMapping(
         method = RequestMethod.GET,
-        value = "/accessNodes/{accessNodeAddress}",
+        value = "/accessNodes/{accessNodeDLTAddress}",
         produces = { "application/json" }
     )    
     abstract ResponseEntity<Object> getAccessNode(
-        @Parameter(name = "accessNodeAddress", description = "The address of the access node to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeAddress") String accessNodeAddress
+        @Parameter(name = "accessNodeDLTAddress", description = "The DLT address of the access node to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeDLTAddress") String accessNodeDLTAddress
     );
 
 
@@ -49,7 +49,7 @@ public interface AccessNodeRegistryApi {
         summary = "Register a new Access Node associated with a public key",
         tags = { "Trusted Access Node Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Access Node registered successfully.")
+            @ApiResponse(responseCode = "200", description = "Access Node registered successfully.", content=@Content)
         }
     )
     @RequestMapping(
@@ -91,7 +91,7 @@ public interface AccessNodeRegistryApi {
         summary = "Update an already registered Access Node",
         tags = { "Trusted Access Node Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Access Node updated successfully."),
+            @ApiResponse(responseCode = "200", description = "Access Node updated successfully.", content=@Content),
             @ApiResponse(responseCode = "404", description = "No Access Node has the requested address", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
@@ -99,12 +99,12 @@ public interface AccessNodeRegistryApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/accessNodes/{accessNodeAddress}",
+        value = "/accessNodes/{accessNodeDLTAddress}",
         consumes = { "application/json" }
     )
     abstract ResponseEntity<?> updateAccessNode(
-        @Parameter(name = "accessNodeAddress", description = "The address of the Access Node to update", required = true, in = ParameterIn.PATH)
-        @PathVariable("accessNodeAddress") String did,
+        @Parameter(name = "accessNodeDLTAddress", description = "The address of the Access Node to update", required = true, in = ParameterIn.PATH)
+        @PathVariable("accessNodeDLTAddress") String did,
         @Parameter(name = "UpdateDidRequest", description = "Access Node update request", required = true)
         @Valid @RequestBody AccessNodeDetails updateDidRequest
     );
@@ -115,16 +115,14 @@ public interface AccessNodeRegistryApi {
         summary = "Deletes a specific registered Access Node",
         tags = { "Trusted Access Node Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "The Access Node was deleted succesfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = AccessNodeDetails.class))
-            })
+            @ApiResponse(responseCode = "200", description = "The Access Node was deleted succesfully", content=@Content)
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/accessNodes/{accessNodeAddress}",
+        value = "/accessNodes/{accessNodeDLTAddress}",
         produces = { "application/json" }
     )    
     abstract ResponseEntity<?> deleteAccessNode(
-        @Parameter(name = "accessNodeAddress", description = "The address of the access node to delete.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeAddress") String accessNodeAddress
+        @Parameter(name = "accessNodeDLTAddress", description = "The address of the access node to delete.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeDLTAddress") String accessNodeDLTAddress
     );
 }

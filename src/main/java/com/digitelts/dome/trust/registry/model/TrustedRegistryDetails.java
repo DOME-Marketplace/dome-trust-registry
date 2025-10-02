@@ -32,8 +32,8 @@ public abstract class TrustedRegistryDetails {
     }
 
     // GETTERS //
-    @Schema(name = "did", description = "The identifier of this item.", requiredMode = Schema.RequiredMode.REQUIRED)
-    @JsonProperty("did")
+    @Schema(name = "id", description = "The identifier of this item.", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("id")
     public String getId() {
         return this.id;
     }

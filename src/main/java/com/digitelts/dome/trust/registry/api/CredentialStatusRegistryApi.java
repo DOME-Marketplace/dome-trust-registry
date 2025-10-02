@@ -40,7 +40,7 @@ public interface CredentialStatusRegistryApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<Object> getCredentialStatus(
-        @Parameter(name = "CredentialStatusId", description = "The DID of the Credential Status to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("CredentialStatusId") String CredentialStatusId
+        @Parameter(name = "CredentialStatusId", description = "The ID of the Credential Status to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("CredentialStatusId") String CredentialStatusId
     );
 
 
@@ -49,7 +49,7 @@ public interface CredentialStatusRegistryApi {
         summary = "Register a new Credential Status associated with a public key",
         tags = { "Trusted Credential Statuses Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Credential Status registered successfully.")
+            @ApiResponse(responseCode = "200", description = "Credential Status registered successfully.", content=@Content)
         }
     )
     @RequestMapping(
@@ -58,7 +58,7 @@ public interface CredentialStatusRegistryApi {
         consumes = { "application/json" }
     )
     abstract ResponseEntity<?> registerCredentialStatus(
-        @Parameter(name = "CredentialStatusDetails", description = "DID registration request", required = true)
+        @Parameter(name = "CredentialStatusDetails", description = "ID registration request", required = true)
         @Valid @RequestBody CredentialStatusDetails CredentialStatusDetails 
     );
 
@@ -91,7 +91,7 @@ public interface CredentialStatusRegistryApi {
         summary = "Update an already registered Credential Status",
         tags = { "Trusted Credential Statuses Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Credential Status updated successfully."),
+            @ApiResponse(responseCode = "200", description = "Credential Status updated successfully.", content=@Content),
             @ApiResponse(responseCode = "404", description = "No Credential Status has the requested ID", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
@@ -103,7 +103,7 @@ public interface CredentialStatusRegistryApi {
         consumes = { "application/json" }
     )
     abstract ResponseEntity<?> updateCredentialStatus(
-        @Parameter(name = "CredentialStatusId", description = "The DID of the Credential Status to update", required = true, in = ParameterIn.PATH)
+        @Parameter(name = "CredentialStatusId", description = "The ID of the Credential Status to update", required = true, in = ParameterIn.PATH)
         @PathVariable("CredentialStatusId") String did,
         @Parameter(name = "UpdateCredentialStatusRequest", description = "Credential Status update request", required = true)
         @Valid @RequestBody CredentialStatusDetails updateCredentialStatusRequest
@@ -115,9 +115,7 @@ public interface CredentialStatusRegistryApi {
         summary = "Deletes a specific registered Credential Status",
         tags = { "Trusted Credential Statuses Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "The Credential Status was deleted succesfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CredentialStatusDetails.class))
-            })
+            @ApiResponse(responseCode = "200", description = "The Credential Status was deleted succesfully", content=@Content)
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,
@@ -125,7 +123,7 @@ public interface CredentialStatusRegistryApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<?> deleteCredentialStatus(
-        @Parameter(name = "credentialStatusId", description = "The DID of the credential status to delete.", required = true, in = ParameterIn.PATH) @PathVariable("credentialStatusId") String credentialStatusId
+        @Parameter(name = "credentialStatusId", description = "The ID of the credential status to delete.", required = true, in = ParameterIn.PATH) @PathVariable("credentialStatusId") String credentialStatusId
     );
 
 
