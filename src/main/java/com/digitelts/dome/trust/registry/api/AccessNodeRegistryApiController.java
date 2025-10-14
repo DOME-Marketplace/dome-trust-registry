@@ -70,9 +70,9 @@ public class AccessNodeRegistryApiController extends RegistryApiController imple
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<?> deleteAccessNode(String accessNodeId) {
-        deleteFromId(accessNodeId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    // @Override
+    // public ResponseEntity<?> deleteAccessNode(String accessNodeId) {
+    //     deleteFromId(accessNodeId);
+    //     return new ResponseEntity<>(HttpStatus.OK);
+    // }
 }

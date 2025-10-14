@@ -1,9 +1,9 @@
-package com.digitelts.dome.trust.registry.model;
+// package com.digitelts.dome.trust.registry.model;
 
-public class CredentialStatusSummary extends TrustedRegistrySummary{
+// public class CredentialStatusSummary extends TrustedRegistrySummary{
 
-    public CredentialStatusSummary(String did, String href) {
-        super(did, href);
-    }
+//     public CredentialStatusSummary(String did, String href) {
+//         super(did, href);
+//     }
     
-}
+// }
