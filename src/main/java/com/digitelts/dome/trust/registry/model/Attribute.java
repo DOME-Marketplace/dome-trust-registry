@@ -6,10 +6,14 @@ package com.digitelts.dome.trust.registry.model;
 import java.time.LocalDateTime;
 import java.util.*;
 import javax.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 
 /**
  * Class representing an object with LEAR Credential Issuer's attributes
  */
+@Schema(description = "LEAR Credential Issuer's attributes")
 public class Attribute {
     private String hash;
     private String issuerType;
@@ -21,6 +25,8 @@ public class Attribute {
         this.body = body;
     }
 
+    @Schema(name = "hash", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("hash")
     public String getHash() {
         return hash;
     }
@@ -29,6 +35,8 @@ public class Attribute {
         this.hash = hash;
     }
 
+    @Schema(name = "issuerType", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("issuerType")
     public String getIssuerType() {
         return issuerType;
     }
@@ -37,6 +45,8 @@ public class Attribute {
         this.issuerType = issuerType;
     }
 
+    @Schema(name = "body", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("body")
     public AttributeBody getBody() {
         return body;
     }
@@ -62,6 +72,8 @@ class AttributeBody{
         else this.claims = claims;
     }
 
+    @Schema(name = "credentialsType", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("credentialsType")
     public String getCredentialsType() {
         return credentialsType;
     }
@@ -70,6 +82,8 @@ class AttributeBody{
         this.credentialsType = credentialsType;
     }
 
+    @Schema(name = "validFor", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("validFor")
     public AttributeValidity getValidFor() {
         return validFor;
     }
@@ -78,6 +92,8 @@ class AttributeBody{
         this.validFor = validFor;
     }
 
+    @Schema(name = "claims", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("claims")
     public List<AttributeClaim> getClaims() {
         return claims;
     }
@@ -100,6 +116,8 @@ class AttributeValidity{
         this.to = to;
     }
 
+    @Schema(name = "from", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("from")
     public LocalDateTime getFrom() {
         return from;
     }
@@ -108,6 +126,8 @@ class AttributeValidity{
         this.from = from;
     }
 
+    @Schema(name = "to", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("to")
     public LocalDateTime getTo() {
         return to;
     }
@@ -134,6 +154,8 @@ class AttributeClaim{
         this.allowedValues.add(newValue);
     }
 
+    @Schema(name = "name", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -142,6 +164,8 @@ class AttributeClaim{
         this.name = name;
     }
 
+    @Schema(name = "allowedValues", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("allowedValues")
     public List<AttributeClaimAllowedValue> getAllowedValues() {
         return allowedValues;
     }
@@ -167,6 +191,8 @@ class AttributeClaimAllowedValue{
         this.description = description;
     }
 
+    @Schema(name = "value", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("value")
     public String getValue() {
         return value;
     }
@@ -175,6 +201,8 @@ class AttributeClaimAllowedValue{
         this.value = value;
     }
 
+    @Schema(name = "description", requiredMode = RequiredMode.REQUIRED)
+    @JsonProperty("description")
     public String getDescription() {
         return description;
     }
