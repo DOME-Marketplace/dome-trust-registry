@@ -76,9 +76,9 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<WrongRequest> deleteService(String clientId) {
-        deleteFromId(clientId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    // @Override
+    // public ResponseEntity<WrongRequest> deleteService(String clientId) {
+    //     deleteFromId(clientId);
+    //     return new ResponseEntity<>(HttpStatus.OK);
+    // }
 }

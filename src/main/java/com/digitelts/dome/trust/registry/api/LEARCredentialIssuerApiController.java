@@ -78,9 +78,9 @@ public class LEARCredentialIssuerApiController extends RegistryApiController imp
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<?> deleteIssuer(String issuerId) {
-        deleteFromId(issuerId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    // @Override
+    // public ResponseEntity<?> deleteIssuer(String issuerId) {
+    //     deleteFromId(issuerId);
+    //     return new ResponseEntity<>(HttpStatus.OK);
+    // }
 }

@@ -110,19 +110,19 @@ public interface AccessNodeRegistryApi {
     );
 
 
-    @Operation(
-        operationId = "deleteAccessNode",
-        summary = "Deletes a specific registered Access Node",
-        tags = { "Trusted Access Node Registry" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The Access Node was deleted succesfully", content=@Content)
-        }
-    )@RequestMapping(
-        method = RequestMethod.DELETE,
-        value = "/accessNodes/{accessNodeDLTAddress}",
-        produces = { "application/json" }
-    )    
-    abstract ResponseEntity<?> deleteAccessNode(
-        @Parameter(name = "accessNodeDLTAddress", description = "The address of the access node to delete.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeDLTAddress") String accessNodeDLTAddress
-    );
+    // @Operation(
+    //     operationId = "deleteAccessNode",
+    //     summary = "Deletes a specific registered Access Node",
+    //     tags = { "Trusted Access Node Registry" },
+    //     responses = {
+    //         @ApiResponse(responseCode = "200", description = "The Access Node was deleted succesfully", content=@Content)
+    //     }
+    // )@RequestMapping(
+    //     method = RequestMethod.DELETE,
+    //     value = "/accessNodes/{accessNodeDLTAddress}",
+    //     produces = { "application/json" }
+    // )    
+    // abstract ResponseEntity<?> deleteAccessNode(
+    //     @Parameter(name = "accessNodeDLTAddress", description = "The address of the access node to delete.", required = true, in = ParameterIn.PATH) @PathVariable("accessNodeDLTAddress") String accessNodeDLTAddress
+    // );
 }
