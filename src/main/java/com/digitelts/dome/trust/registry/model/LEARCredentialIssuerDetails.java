@@ -1,50 +1,27 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.time.LocalDateTime;
 import javax.annotation.Generated;
-import javax.annotation.Nullable;
+import java.util.*;
 
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
   
-  @Nullable
-  protected LocalDateTime validFrom;
-  @Nullable
-  protected LocalDateTime validTo;
+  protected List<Attribute> attributes;
+  protected boolean hasAttributes;
 
-  public LEARCredentialIssuerDetails(@NonNull String id, @NonNull LocalDateTime from, @NonNull LocalDateTime to){
+  public LEARCredentialIssuerDetails(@NonNull String id, List<Attribute> attributes){
     super(id);
-    this.validFrom = from;
-    this.validTo = to;
+    this.attributes = attributes;
+    this.hasAttributes = !attributes.isEmpty();
   }
 
-  public void setValidFrom(LocalDateTime from){
-      this.validFrom = from;
-  }
-
-  public void setValidTo(LocalDateTime to){
-      this.validTo = to;
-  }
-
-  @Schema(name = "validFrom", description = "The date from which this item is valid in ISO 8601. Only required for Trusted Participants Registries and LEAR Credential Issuers.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("validFrom")
-  @Nullable
-  public LocalDateTime getValidFrom() {
-      return this.validFrom;
-  }
-
-  @Schema(name = "validTo", description = "The date to which this item is valid in ISO 8601. Only required for Trusted Participants Registries and LEAR Credential Issuers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("validTo")
-  @Nullable
-  public LocalDateTime getValidTo() {
-      return this.validTo;
-  }
 
   @Override
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of this LEAR Credential Issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -56,6 +33,25 @@ public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
   @Override
   public LEARCredentialIssuerSummary getSummary(String url){
     return new LEARCredentialIssuerSummary(this.id, url+this.id);
+  }
+
+
+  @Schema(name = "attributes", description = "A list of attributes for this LEAR Credential Issuer", requiredMode = RequiredMode.REQUIRED)
+  @JsonProperty("attributes")
+  public List<Attribute> getAttributes() {
+    return attributes;
+  }
+
+  @Schema(name = "hasAttributes", description = "A flag indicating whether this LEAR Credential Issuer has attributes or not", requiredMode = RequiredMode.REQUIRED)
+  @JsonProperty("hasAttributes")
+  public boolean isHasAttributes() {
+    return hasAttributes;
+  }
+
+
+  public void setAttributes(List<Attribute> attributes) {
+    this.attributes = attributes;
+    this.hasAttributes = !attributes.isEmpty();
   }
 }
 

@@ -15,9 +15,11 @@ public class SchemaRegistryApiController extends RegistryApiController implement
 
     private final NativeWebRequest request;
 
-    @Value("${HOST_URL}")
+    //@Value("${HOST_URL}")
+@Value("http://localhost")
     private String host;
-    @Value("${PORT}")
+    //@Value("${PORT}")
+@Value("8080")
     private String port;
 
     public SchemaRegistryApiController(NativeWebRequest request) {
