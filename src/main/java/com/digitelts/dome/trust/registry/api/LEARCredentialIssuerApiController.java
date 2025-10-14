@@ -18,9 +18,11 @@ public class LEARCredentialIssuerApiController extends RegistryApiController imp
 
     private final NativeWebRequest request;
 
-    @Value("${HOST_URL}")
+    @Value("${HOST_URL}") // <= If running in Docker
+    //@Value("http://localhost") // <= If running in local
     private String host;
-    @Value("${PORT}")
+    @Value("${PORT}") // <= If running in Docker
+    //@Value("8080") // <= If running in local
     private String port;
 
     public LEARCredentialIssuerApiController(NativeWebRequest request) {
@@ -73,8 +75,7 @@ public class LEARCredentialIssuerApiController extends RegistryApiController imp
             return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Issuer not found"),HttpStatus.NOT_FOUND);
         }
         issuer.setId(updateIssuerRequest.getId());
-        issuer.setValidFrom(updateIssuerRequest.getValidFrom());
-        issuer.setValidTo(updateIssuerRequest.getValidTo());
+        issuer.setAttributes(updateIssuerRequest.getAttributes());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
