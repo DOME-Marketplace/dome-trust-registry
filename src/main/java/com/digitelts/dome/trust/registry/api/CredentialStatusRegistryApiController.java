@@ -14,9 +14,9 @@
 // public class CredentialStatusRegistryApiController extends RegistryApiController implements CredentialStatusRegistryApi {
 
 //     private final NativeWebRequest request;
-//     @Value("${HOST_URL}")
+//     //@Value("${HOST_URL}")
 //     private String host;
-//     @Value("${PORT}")
+//     //@Value("${PORT}")
 //     private String port;
 //     private final String urlString = host+":"+port+"/v4/credentialStatuses?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d";
 //     private final String apiUri = "credentialStatuses/";

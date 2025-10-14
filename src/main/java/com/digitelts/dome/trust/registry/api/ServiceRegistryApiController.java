@@ -15,9 +15,11 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
 
     private final NativeWebRequest request;
 
-    @Value("${HOST_URL}")
+    @Value("${HOST_URL}") // <= If running in Docker
+    //@Value("http://localhost") // <= If running in local
     private String host;
-    @Value("${PORT}")
+    @Value("${PORT}") // <= If running in Docker
+    //@Value("8080") // <= If running in local
     private String port;
 
     public ServiceRegistryApiController(NativeWebRequest request) {

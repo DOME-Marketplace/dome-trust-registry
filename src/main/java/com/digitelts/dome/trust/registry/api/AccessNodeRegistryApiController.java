@@ -17,9 +17,11 @@ public class AccessNodeRegistryApiController extends RegistryApiController imple
 
     private final NativeWebRequest request;
 
-    @Value("${HOST_URL}")
+    //@Value("${HOST_URL}")
+@Value("http://localhost")
     private String host;
-    @Value("${PORT}")
+    //@Value("${PORT}")
+@Value("8080")
     private String port;
 
     public AccessNodeRegistryApiController(NativeWebRequest request) {
