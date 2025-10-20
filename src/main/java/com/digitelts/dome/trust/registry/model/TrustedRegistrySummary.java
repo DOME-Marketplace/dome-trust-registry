@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @see AccessNodeSummary
  * @see LEARCredentialIssuerSummary
  * @see ParticipantSummary
- * @see CredentialStatusSummary
  * @see ServiceSummary
  * @see SchemaSummary
  */

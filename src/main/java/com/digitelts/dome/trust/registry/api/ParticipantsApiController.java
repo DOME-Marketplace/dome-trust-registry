@@ -18,11 +18,11 @@ public class ParticipantsApiController extends RegistryApiController implements 
 
     private final NativeWebRequest request;
 
-    @Value("${HOST_URL}") // <= If running in Docker
-    //@Value("http://localhost") // <= If running in local
+    // @Value("${HOST_URL}") // <= If running in Docker
+    @Value("http://localhost") // <= If running in local
     private String host;
-    @Value("${PORT}") // <= If running in Docker
-    //@Value("8080") // <= If running in local
+    // @Value("${PORT}") // <= If running in Docker
+    @Value("8080") // <= If running in local
     private String port;
 
     public ParticipantsApiController(NativeWebRequest request) {
@@ -55,8 +55,6 @@ public class ParticipantsApiController extends RegistryApiController implements 
         ParticipantDetails participant = (ParticipantDetails)findDetails(participantId);
         if(participant==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"),HttpStatus.NOT_FOUND);
         participant.setId(updateParticipantRequest.getId());
-        participant.setValidFrom(updateParticipantRequest.getValidFrom());
-        participant.setValidTo(updateParticipantRequest.getValidTo());
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
