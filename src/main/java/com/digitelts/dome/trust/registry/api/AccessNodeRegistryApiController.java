@@ -17,11 +17,11 @@ public class AccessNodeRegistryApiController extends RegistryApiController imple
 
     private final NativeWebRequest request;
 
-    @Value("${HOST_URL}") // <= If running in Docker
-    //@Value("http://localhost") // <= If running in local
+    // @Value("${HOST_URL}") // <= If running in Docker
+    @Value("http://localhost") // <= If running in local
     private String host;
-    @Value("${PORT}") // <= If running in Docker
-    //@Value("8080") // <= If running in local
+    // @Value("${PORT}") // <= If running in Docker
+    @Value("8080") // <= If running in local
     private String port;
 
     public AccessNodeRegistryApiController(NativeWebRequest request) {

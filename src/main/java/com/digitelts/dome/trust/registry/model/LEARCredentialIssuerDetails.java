@@ -8,7 +8,6 @@ import org.springframework.lang.NonNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
@@ -36,13 +35,13 @@ public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
   }
 
 
-  @Schema(name = "attributes", description = "A list of attributes for this LEAR Credential Issuer", requiredMode = RequiredMode.REQUIRED)
+  @Schema(name = "attributes", description = "A list of attributes for this LEAR Credential Issuer")
   @JsonProperty("attributes")
   public List<Attribute> getAttributes() {
     return attributes;
   }
 
-  @Schema(name = "hasAttributes", description = "A flag indicating whether this LEAR Credential Issuer has attributes or not", requiredMode = RequiredMode.REQUIRED)
+  @Schema(name = "hasAttributes", description = "A flag indicating whether this LEAR Credential Issuer has attributes or not")
   @JsonProperty("hasAttributes")
   public boolean isHasAttributes() {
     return hasAttributes;
