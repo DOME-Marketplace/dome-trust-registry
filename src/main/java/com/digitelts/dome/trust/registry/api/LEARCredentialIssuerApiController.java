@@ -14,7 +14,7 @@ import com.digitelts.dome.trust.registry.model.*;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class LEARCredentialIssuerApiController extends RegistryApiController implements LEARCredentialIssuerApi {
+public class LEARCredentialIssuerApiController extends RegistryApiController<LEARCredentialIssuerDetails> implements LEARCredentialIssuerApi {
 
     private final NativeWebRequest request;
 
@@ -26,6 +26,7 @@ public class LEARCredentialIssuerApiController extends RegistryApiController imp
     private String port;
 
     public LEARCredentialIssuerApiController(NativeWebRequest request) {
+        super(null);
         this.request = request;
     }
 

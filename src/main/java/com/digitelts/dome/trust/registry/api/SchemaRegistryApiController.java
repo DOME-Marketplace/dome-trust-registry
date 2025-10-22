@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class SchemaRegistryApiController extends RegistryApiController implements SchemaRegistryApi {
+public class SchemaRegistryApiController extends RegistryApiController<SchemaDetails> implements SchemaRegistryApi {
 
     private final NativeWebRequest request;
 
@@ -23,6 +23,7 @@ public class SchemaRegistryApiController extends RegistryApiController implement
     private String port;
 
     public SchemaRegistryApiController(NativeWebRequest request) {
+        super(null);
         this.request = request;
     }
 
@@ -40,18 +41,22 @@ public class SchemaRegistryApiController extends RegistryApiController implement
 
     @Override
     public ResponseEntity<?> registerSchema(@Valid SchemaDetails schemaDetails) {
-        if(this.detailsList.contains(schemaDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Schema already exists"),HttpStatus.BAD_REQUEST);
-        this.detailsList.add(schemaDetails);
-        return new ResponseEntity<>(HttpStatus.OK);
+        // if(this.detailsList.contains(schemaDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Schema already exists"),HttpStatus.BAD_REQUEST);
+        // this.detailsList.add(schemaDetails);
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.insertRegistry(schemaDetails)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<?> updateSchema(String schemaId, @Valid SchemaDetails updateSchemaRequest) {
-        SchemaDetails schema = (SchemaDetails)findDetails(schemaId);
-        if(schema==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Schema not found"), HttpStatus.NOT_FOUND);
-        schema.setId(updateSchemaRequest.getId());
-        schema.setSchemaData(updateSchemaRequest.getSchemaData());
-        return new ResponseEntity<>(HttpStatus.OK);
+        // SchemaDetails schema = (SchemaDetails)findDetails(schemaId);
+        // if(schema==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Schema not found"), HttpStatus.NOT_FOUND);
+        // schema.setId(updateSchemaRequest.getId());
+        // schema.setSchemaData(updateSchemaRequest.getSchemaData());
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.updateRegistry(schemaId,updateSchemaRequest)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
     }
 
     @Override

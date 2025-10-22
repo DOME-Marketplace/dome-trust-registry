@@ -1,6 +1,8 @@
 package com.digitelts.dome.trust.registry.model;
 
 
+import javax.persistence.*;
+
 import org.springframework.lang.NonNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,8 +15,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @see SchemaDetails
  * @see ServiceDetails
  */
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class TrustedRegistryDetails {
 
+    @Id
+    @Column(nullable = false, unique = true)
     @NonNull
     protected String id;
 
@@ -24,6 +30,7 @@ public abstract class TrustedRegistryDetails {
         this.id = id;
     }
 
+    public TrustedRegistryDetails(){}
 
     // SETTERS //
     public void setId(String id){

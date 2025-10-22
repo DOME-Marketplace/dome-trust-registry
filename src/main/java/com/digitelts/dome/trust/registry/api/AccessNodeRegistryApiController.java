@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.model.*;
+import com.digitelts.dome.trust.registry.repositories.AccessNodeRepository;
+
 import java.util.*;
 import javax.annotation.Generated;
 import javax.validation.Valid;
@@ -13,7 +15,7 @@ import javax.validation.Valid;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class AccessNodeRegistryApiController extends RegistryApiController implements AccessNodeRegistryApi {
+public class AccessNodeRegistryApiController extends RegistryApiController<AccessNodeDetails> implements AccessNodeRegistryApi {
 
     private final NativeWebRequest request;
 
@@ -24,7 +26,8 @@ public class AccessNodeRegistryApiController extends RegistryApiController imple
     @Value("8080") // <= If running in local
     private String port;
 
-    public AccessNodeRegistryApiController(NativeWebRequest request) {
+    public AccessNodeRegistryApiController(NativeWebRequest request, AccessNodeRepository repo) {
+        super(repo);
         this.request = request;
     }
 
@@ -42,18 +45,22 @@ public class AccessNodeRegistryApiController extends RegistryApiController imple
 
     @Override
     public ResponseEntity<?> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
-        if(this.detailsList.contains(accessNodeDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
-        this.detailsList.add(accessNodeDetails);
-        return new ResponseEntity<>(HttpStatus.OK);
+        // if(this.detailsList.contains(accessNodeDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
+        // this.detailsList.add(accessNodeDetails);
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.insertRegistry(accessNodeDetails)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<?> updateAccessNode(String accessNodeId, @Valid AccessNodeDetails updateDidRequest) {
-        AccessNodeDetails node = (AccessNodeDetails)findDetails(accessNodeId);
-        if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
-        node.setId(updateDidRequest.getId());
-        node.setName(updateDidRequest.getName());
-        return new ResponseEntity<>(HttpStatus.OK);
+        // AccessNodeDetails node = (AccessNodeDetails)findDetails(accessNodeId);
+        // if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
+        // node.setId(updateDidRequest.getId());
+        // node.setName(updateDidRequest.getName());
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.updateRegistry(accessNodeId,updateDidRequest)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
     }
 
     @Override

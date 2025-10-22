@@ -1,9 +1,13 @@
 package com.digitelts.dome.trust.registry.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Entity
+@Table(name = "access_nodes")
 public class AccessNodeDetails extends TrustedRegistryDetails {
     
     @NotNull
@@ -13,6 +17,8 @@ public class AccessNodeDetails extends TrustedRegistryDetails {
         super(dlt_address);
         this.name = name;
     }
+
+    public AccessNodeDetails(){}
 
     public void setName(String name) {
         this.name = name;

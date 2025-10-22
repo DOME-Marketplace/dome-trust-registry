@@ -9,14 +9,21 @@ import javax.annotation.Nullable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
+import javax.persistence.*;
 
 /**
  * Class representing an object with LEAR Credential Issuer's attributes
  */
+@Entity
 @Schema(description = "LEAR Credential Issuer's attributes")
 public class Attribute {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String hash;
     private String issuerType;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "attribute_id")
     private AttributeBody body;
 
     Attribute(String hash, String issuerType, AttributeBody body){
@@ -24,6 +31,8 @@ public class Attribute {
         this.issuerType = issuerType;
         this.body = body;
     }
+
+    public Attribute(){}
 
     @Schema(name = "hash", requiredMode = RequiredMode.REQUIRED)
     @JsonProperty("hash")
@@ -60,9 +69,17 @@ public class Attribute {
 /**
  * Class representing the 'body' field of LEAR Credential Issuer's attributes
  */
+@Entity
 class AttributeBody{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String credentialsType;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "validity_id")
     private AttributeValidity validFor;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "body_id")
     private List<AttributeClaim> claims;
 
     AttributeBody(String credentialsType, AttributeValidity validFor, @Nullable List<AttributeClaim> claims){
@@ -71,6 +88,8 @@ class AttributeBody{
         if(claims==null) this.claims = new ArrayList<>();
         else this.claims = claims;
     }
+
+    public AttributeBody(){}
 
     @Schema(name = "credentialsType", requiredMode = RequiredMode.REQUIRED)
     @JsonProperty("credentialsType")
@@ -107,7 +126,11 @@ class AttributeBody{
 /**
  * Class representing the 'validFor' field of LEAR Credential Issuer's attributes' body
  */
+@Entity
 class AttributeValidity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private LocalDateTime from;
     private LocalDateTime to;
 
@@ -115,6 +138,8 @@ class AttributeValidity{
         this.from = from;
         this.to = to;
     }
+
+    public AttributeValidity(){}
 
     @Schema(name = "from", requiredMode = RequiredMode.REQUIRED)
     @JsonProperty("from")
@@ -140,15 +165,27 @@ class AttributeValidity{
 /**
  * Class representing the 'claims' field of LEAR Credential Issuer's attributes' body
  */
+@Entity
 class AttributeClaim{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String name;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "claim_id")
     private List<AttributeClaimAllowedValue> allowedValues;
+
+    @ManyToOne
+    @JoinColumn(name = "body_id")
+    private AttributeBody attributeBody;
 
     AttributeClaim(String name, @Nullable List<AttributeClaimAllowedValue> allowedValues){
         this.name = name;
         if(allowedValues==null) this.allowedValues = new ArrayList<>();
         else this.allowedValues = allowedValues;
     }
+
+    public AttributeClaim(){}
 
     public void addAllowedValue(AttributeClaimAllowedValue newValue){
         this.allowedValues.add(newValue);
@@ -178,7 +215,11 @@ class AttributeClaim{
 /**
  * Class representing an item from the 'allowedValues' array of the 'claims' field
  */
+@Entity
 class AttributeClaimAllowedValue{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String value;
     @Nullable
     private String description;
@@ -190,6 +231,8 @@ class AttributeClaimAllowedValue{
         this.value = value;
         this.description = description;
     }
+
+    public AttributeClaimAllowedValue(){}
 
     @Schema(name = "value", requiredMode = RequiredMode.REQUIRED)
     @JsonProperty("value")

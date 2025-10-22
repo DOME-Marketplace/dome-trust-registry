@@ -7,16 +7,23 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "services")
 public class ServiceDetails extends TrustedRegistryDetails{
     
     @NotNull
+    @ElementCollection
     private List<String> redirectUris;
     @NotNull
+    @ElementCollection
     private List<String> scopes;
     @NotNull
+    @ElementCollection
     private List<String> clientAuthenticationMethods;
     @NotNull
+    @ElementCollection
     private List<String> postLogoutRedirectUris;
     @NotNull
     private boolean requireAuthorizationConsent;
@@ -45,6 +52,8 @@ public class ServiceDetails extends TrustedRegistryDetails{
         this.tokenEndpointAuthenticationSigningAlgorithm = tokenEndpointAuthenticationSigningAlgorithm;
         this.authorizationGrantTypes = authorizationGrantTypes;
     }
+
+    public ServiceDetails(){}
 
     @Override
     @Schema(name = "client_id", description = "A unique identifier of this trusted service's client.", requiredMode = Schema.RequiredMode.REQUIRED)

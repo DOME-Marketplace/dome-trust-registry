@@ -8,10 +8,15 @@ import org.springframework.lang.NonNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "lear_credential_issuers")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
   
+  @OneToMany
+  @JoinColumn(name = "issuer_id")
   protected List<Attribute> attributes;
   protected boolean hasAttributes;
 
@@ -21,6 +26,7 @@ public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
     this.hasAttributes = !attributes.isEmpty();
   }
 
+  public LEARCredentialIssuerDetails(){}
 
   @Override
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of this LEAR Credential Issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
