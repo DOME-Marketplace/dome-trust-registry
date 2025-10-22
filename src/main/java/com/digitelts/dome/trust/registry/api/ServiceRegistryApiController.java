@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class ServiceRegistryApiController extends RegistryApiController implements ServiceRegistryApi {
+public class ServiceRegistryApiController extends RegistryApiController<ServiceDetails> implements ServiceRegistryApi {
 
     private final NativeWebRequest request;
 
@@ -23,6 +23,7 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
     private String port;
 
     public ServiceRegistryApiController(NativeWebRequest request) {
+        super(null);
         this.request = request;
     }
 
@@ -40,26 +41,30 @@ public class ServiceRegistryApiController extends RegistryApiController implemen
 
     @Override
     public ResponseEntity<WrongRequest> registerService(@Valid ServiceDetails serviceDetails) {
-        if(this.detailsList.contains(serviceDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Service already exists"),HttpStatus.BAD_REQUEST);
-        this.detailsList.add(serviceDetails);
-        return new ResponseEntity<>(HttpStatus.OK);
+        // if(this.detailsList.contains(serviceDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Service already exists"),HttpStatus.BAD_REQUEST);
+        // this.detailsList.add(serviceDetails);
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.insertRegistry(serviceDetails)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<WrongRequest> updateService(String clientId, @Valid ServiceDetails updateServiceRequest) {
-        ServiceDetails service = (ServiceDetails)findDetails(clientId);
-        if(service==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
-        service.setId(updateServiceRequest.getId());
-        service.setRedirectUris(updateServiceRequest.getRedirectUris());
-        service.setScopes(updateServiceRequest.getScopes());
-        service.setClientAuthenticationMethods(updateServiceRequest.getClientAuthenticationMethods());
-        service.setPostLogoutRedirectUris(updateServiceRequest.getPostLogoutRedirectUris());
-        service.setRequireAuthorizationConsent(updateServiceRequest.isRequireAuthorizationConsent());
-        service.setRequireProofKey(updateServiceRequest.isRequireProofKey());
-        service.setJwkSetUrl(updateServiceRequest.getJwkSetUrl());
-        service.setTokenEndpointAuthenticationSigningAlgorithm(updateServiceRequest.getTokenEndpointAuthenticationSigningAlgorithm());
-        service.setAuthorizationGrantTypes(updateServiceRequest.getAuthorizationGrantTypes());
-        return new ResponseEntity<>(HttpStatus.OK);
+        // ServiceDetails service = (ServiceDetails)findDetails(clientId);
+        // if(service==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
+        // service.setId(updateServiceRequest.getId());
+        // service.setRedirectUris(updateServiceRequest.getRedirectUris());
+        // service.setScopes(updateServiceRequest.getScopes());
+        // service.setClientAuthenticationMethods(updateServiceRequest.getClientAuthenticationMethods());
+        // service.setPostLogoutRedirectUris(updateServiceRequest.getPostLogoutRedirectUris());
+        // service.setRequireAuthorizationConsent(updateServiceRequest.isRequireAuthorizationConsent());
+        // service.setRequireProofKey(updateServiceRequest.isRequireProofKey());
+        // service.setJwkSetUrl(updateServiceRequest.getJwkSetUrl());
+        // service.setTokenEndpointAuthenticationSigningAlgorithm(updateServiceRequest.getTokenEndpointAuthenticationSigningAlgorithm());
+        // service.setAuthorizationGrantTypes(updateServiceRequest.getAuthorizationGrantTypes());
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.updateRegistry(clientId,updateServiceRequest)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
     }
 
     @Override

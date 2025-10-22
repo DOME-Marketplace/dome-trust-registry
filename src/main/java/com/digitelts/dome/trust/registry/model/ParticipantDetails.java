@@ -5,10 +5,15 @@ import org.springframework.lang.NonNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.*;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "participants")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 public class ParticipantDetails extends TrustedRegistryDetails{
 
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "participant_id")
   protected List<Attribute> attributes;
   protected boolean hasAttributes;
 
@@ -17,6 +22,8 @@ public class ParticipantDetails extends TrustedRegistryDetails{
     this.attributes = new ArrayList<>();
     this.hasAttributes = false;
   }
+
+  public ParticipantDetails(){}
 
   @Override
   @Schema(name = "did", description = "The Decentralized Identifier (DID) of this participant.", requiredMode = Schema.RequiredMode.REQUIRED)

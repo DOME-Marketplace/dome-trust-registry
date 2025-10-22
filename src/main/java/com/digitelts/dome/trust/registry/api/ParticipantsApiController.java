@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.model.*;
+import com.digitelts.dome.trust.registry.repositories.ParticipantRepository;
+
 import java.util.*;
 import javax.annotation.Generated;
 import javax.validation.Valid;
@@ -14,7 +16,7 @@ import javax.validation.Valid;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
 @RequestMapping("${openapi.eBSILikeTrustedRegistry.base-path:/v4}")
-public class ParticipantsApiController extends RegistryApiController implements ParticipantsApi{
+public class ParticipantsApiController extends RegistryApiController<ParticipantDetails> implements ParticipantsApi{
 
     private final NativeWebRequest request;
 
@@ -25,8 +27,8 @@ public class ParticipantsApiController extends RegistryApiController implements 
     @Value("8080") // <= If running in local
     private String port;
 
-    public ParticipantsApiController(NativeWebRequest request) {
-        super();
+    public ParticipantsApiController(NativeWebRequest request, ParticipantRepository repo) {
+        super(repo);
         this.request = request;
     }
 
@@ -44,18 +46,22 @@ public class ParticipantsApiController extends RegistryApiController implements 
 
     @Override
     public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
-        if(this.detailsList.contains(insertParticipantRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
-        this.detailsList.add(insertParticipantRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        // if(this.detailsList.contains(insertParticipantRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
+        // this.detailsList.add(insertParticipantRequest);
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.insertRegistry(insertParticipantRequest)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<?> updateParticipant(String participantId,
             @Valid ParticipantDetails updateParticipantRequest) {
-        ParticipantDetails participant = (ParticipantDetails)findDetails(participantId);
-        if(participant==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"),HttpStatus.NOT_FOUND);
-        participant.setId(updateParticipantRequest.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        // ParticipantDetails participant = (ParticipantDetails)findDetails(participantId);
+        // if(participant==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"),HttpStatus.NOT_FOUND);
+        // participant.setId(updateParticipantRequest.getId());
+        // return new ResponseEntity<>(HttpStatus.OK);
+        if(this.updateRegistry(participantId,updateParticipantRequest)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"), HttpStatus.NOT_FOUND);
     }
     
     @Override
