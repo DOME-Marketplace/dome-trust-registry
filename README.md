@@ -19,3 +19,13 @@ You can view the api documentation in swagger-ui by pointing to
 http://localhost:8080/swagger-ui.html
 
 Change default port value in application.properties
+
+## Server configuration
+
+Depending on how the server will be running (locally or in a Docker container), there are a few changes that have to be done in the following files:
+ - `src/main/resources/application.properties`
+ - `src/main/java/com/digitelts/dome/trust/registry/api/RegistryApiController.java` (default value for `API_URL` attribute)
+
+## Database
+
+A database management website is available. Refer to the [docker-database branch](https://github.com/DigitelTS/dome-trust-registry/tree/docker-database) for more info.

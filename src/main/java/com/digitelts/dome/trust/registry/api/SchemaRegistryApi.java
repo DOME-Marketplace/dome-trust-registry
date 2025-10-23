@@ -40,7 +40,7 @@ public interface SchemaRegistryApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<Object> getSchema(
-        @Parameter(name = "SchemaId", description = "The ID of the Schema to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("SchemaId") String SchemaId
+        @Parameter(name = "schemaId", description = "The ID of the Schema to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("schemaId") String schemaId
     );
 
 
@@ -103,8 +103,8 @@ public interface SchemaRegistryApi {
         consumes = { "application/json" }
     )
     abstract ResponseEntity<?> updateSchema(
-        @Parameter(name = "SchemaId", description = "The ID of the Schema to update", required = true, in = ParameterIn.PATH)
-        @PathVariable("SchemaId") String did,
+        @Parameter(name = "schemaId", description = "The ID of the Schema to update", required = true, in = ParameterIn.PATH)
+        @PathVariable("schemaId") String did,
         @Parameter(name = "UpdateSchemaRequest", description = "Schema update request", required = true)
         @Valid @RequestBody SchemaDetails updateSchemaRequest
     );
