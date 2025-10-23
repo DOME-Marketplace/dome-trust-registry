@@ -3,6 +3,8 @@ package com.digitelts.dome.trust.registry.api;
 import java.util.*;
 import javax.annotation.Nullable;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.TrustedRegistryRepository;
 
@@ -17,14 +19,14 @@ import com.digitelts.dome.trust.registry.repositories.TrustedRegistryRepository;
  */
 public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
     
-    // protected List<TrustedRegistryDetails> detailsList;
     @Nullable
     protected TrustedRegistryRepository<T> repository;
-    protected final String API_URL = "http://localhost:8080/v4/";
+    // @Value("${API_URL}") // <= If running in Docker
+    @Value("http://localhost:8080/v4/") // <= If running in local
+    protected String API_URL;
 
 
     public RegistryApiController(@Nullable TrustedRegistryRepository<T> repo){
-        // detailsList = new ArrayList<>();
         this.repository = repo;
     }
 
@@ -65,7 +67,6 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
     public List200Response listDetails(Integer pageAfter, Integer pageSize, List200Response response, List200ResponseLinks links, String urlString, String apiUri){
         List<TrustedRegistrySummary> summaries = new ArrayList<>(), paginated = new ArrayList<>();
         List<T> detailsList = repository.findAll();
-        System.out.println(detailsList.toString());
 
         if(pageSize == null || pageSize <= 0){
             pageSize = 10;
@@ -130,6 +131,7 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
      */
     public boolean updateRegistry(String id, T newRegistry){
         if(!this.repository.existsById(id)) return false;
+        newRegistry.setId(id);
         this.repository.saveAndFlush(newRegistry);
         return true;
     }

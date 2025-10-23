@@ -1,11 +1,12 @@
 package com.digitelts.dome.trust.registry.api;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.model.*;
+import com.digitelts.dome.trust.registry.repositories.ServiceRepository;
+
 import java.util.*;
 import javax.validation.Valid;
 
@@ -15,15 +16,8 @@ public class ServiceRegistryApiController extends RegistryApiController<ServiceD
 
     private final NativeWebRequest request;
 
-    // @Value("${HOST_URL}") // <= If running in Docker
-    @Value("http://localhost") // <= If running in local
-    private String host;
-    // @Value("${PORT}") // <= If running in Docker
-    @Value("8080") // <= If running in local
-    private String port;
-
-    public ServiceRegistryApiController(NativeWebRequest request) {
-        super(null);
+    public ServiceRegistryApiController(NativeWebRequest request, ServiceRepository repo) {
+        super(repo);
         this.request = request;
     }
 
@@ -41,28 +35,12 @@ public class ServiceRegistryApiController extends RegistryApiController<ServiceD
 
     @Override
     public ResponseEntity<WrongRequest> registerService(@Valid ServiceDetails serviceDetails) {
-        // if(this.detailsList.contains(serviceDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Service already exists"),HttpStatus.BAD_REQUEST);
-        // this.detailsList.add(serviceDetails);
-        // return new ResponseEntity<>(HttpStatus.OK);
         if(this.insertRegistry(serviceDetails)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<WrongRequest> updateService(String clientId, @Valid ServiceDetails updateServiceRequest) {
-        // ServiceDetails service = (ServiceDetails)findDetails(clientId);
-        // if(service==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
-        // service.setId(updateServiceRequest.getId());
-        // service.setRedirectUris(updateServiceRequest.getRedirectUris());
-        // service.setScopes(updateServiceRequest.getScopes());
-        // service.setClientAuthenticationMethods(updateServiceRequest.getClientAuthenticationMethods());
-        // service.setPostLogoutRedirectUris(updateServiceRequest.getPostLogoutRedirectUris());
-        // service.setRequireAuthorizationConsent(updateServiceRequest.isRequireAuthorizationConsent());
-        // service.setRequireProofKey(updateServiceRequest.isRequireProofKey());
-        // service.setJwkSetUrl(updateServiceRequest.getJwkSetUrl());
-        // service.setTokenEndpointAuthenticationSigningAlgorithm(updateServiceRequest.getTokenEndpointAuthenticationSigningAlgorithm());
-        // service.setAuthorizationGrantTypes(updateServiceRequest.getAuthorizationGrantTypes());
-        // return new ResponseEntity<>(HttpStatus.OK);
         if(this.updateRegistry(clientId,updateServiceRequest)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
     }
@@ -76,16 +54,10 @@ public class ServiceRegistryApiController extends RegistryApiController<ServiceD
             pageSize,
             new ListServices200Response(),
             new ListServices200ResponseLinks(),
-            host+":"+port+"/v4/services?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+            this.API_URL+"services?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
             "services/"                   
         );
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
-
-    // @Override
-    // public ResponseEntity<WrongRequest> deleteService(String clientId) {
-    //     deleteFromId(clientId);
-    //     return new ResponseEntity<>(HttpStatus.OK);
-    // }
 }

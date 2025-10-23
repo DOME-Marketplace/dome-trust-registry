@@ -1,6 +1,5 @@
 package com.digitelts.dome.trust.registry.api;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,13 +18,6 @@ import javax.validation.Valid;
 public class ParticipantsApiController extends RegistryApiController<ParticipantDetails> implements ParticipantsApi{
 
     private final NativeWebRequest request;
-
-    // @Value("${HOST_URL}") // <= If running in Docker
-    @Value("http://localhost") // <= If running in local
-    private String host;
-    // @Value("${PORT}") // <= If running in Docker
-    @Value("8080") // <= If running in local
-    private String port;
 
     public ParticipantsApiController(NativeWebRequest request, ParticipantRepository repo) {
         super(repo);
@@ -46,9 +38,6 @@ public class ParticipantsApiController extends RegistryApiController<Participant
 
     @Override
     public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
-        // if(this.detailsList.contains(insertParticipantRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
-        // this.detailsList.add(insertParticipantRequest);
-        // return new ResponseEntity<>(HttpStatus.OK);
         if(this.insertRegistry(insertParticipantRequest)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
     }
@@ -56,10 +45,6 @@ public class ParticipantsApiController extends RegistryApiController<Participant
     @Override
     public ResponseEntity<?> updateParticipant(String participantId,
             @Valid ParticipantDetails updateParticipantRequest) {
-        // ParticipantDetails participant = (ParticipantDetails)findDetails(participantId);
-        // if(participant==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"),HttpStatus.NOT_FOUND);
-        // participant.setId(updateParticipantRequest.getId());
-        // return new ResponseEntity<>(HttpStatus.OK);
         if(this.updateRegistry(participantId,updateParticipantRequest)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"), HttpStatus.NOT_FOUND);
     }
@@ -72,7 +57,7 @@ public class ParticipantsApiController extends RegistryApiController<Participant
             pageSize,
             new ListParticipants200Response(),
             new ListParticipants200ResponseLinks(),
-            host+":"+port+"/v4/participants?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+            this.API_URL+"participants?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
             "participants/"                   
         );
 

@@ -1,6 +1,5 @@
 package com.digitelts.dome.trust.registry.api;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,13 +17,6 @@ import javax.validation.Valid;
 public class AccessNodeRegistryApiController extends RegistryApiController<AccessNodeDetails> implements AccessNodeRegistryApi {
 
     private final NativeWebRequest request;
-
-    // @Value("${HOST_URL}") // <= If running in Docker
-    @Value("http://localhost") // <= If running in local
-    private String host;
-    // @Value("${PORT}") // <= If running in Docker
-    @Value("8080") // <= If running in local
-    private String port;
 
     public AccessNodeRegistryApiController(NativeWebRequest request, AccessNodeRepository repo) {
         super(repo);
@@ -45,20 +37,12 @@ public class AccessNodeRegistryApiController extends RegistryApiController<Acces
 
     @Override
     public ResponseEntity<?> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
-        // if(this.detailsList.contains(accessNodeDetails)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
-        // this.detailsList.add(accessNodeDetails);
-        // return new ResponseEntity<>(HttpStatus.OK);
         if(this.insertRegistry(accessNodeDetails)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<?> updateAccessNode(String accessNodeId, @Valid AccessNodeDetails updateDidRequest) {
-        // AccessNodeDetails node = (AccessNodeDetails)findDetails(accessNodeId);
-        // if(node==null) return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
-        // node.setId(updateDidRequest.getId());
-        // node.setName(updateDidRequest.getName());
-        // return new ResponseEntity<>(HttpStatus.OK);
         if(this.updateRegistry(accessNodeId,updateDidRequest)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
     }
@@ -72,16 +56,10 @@ public class AccessNodeRegistryApiController extends RegistryApiController<Acces
             pageSize,
             new ListAccessNodes200Response(),
             new ListAccessNodes200ResponseLinks(),
-            host+":"+port+"/v4/accessNodes?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+            this.API_URL+"accessNodes?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
             "accessNodes/"                   
         );
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
-
-    // @Override
-    // public ResponseEntity<?> deleteAccessNode(String accessNodeId) {
-    //     deleteFromId(accessNodeId);
-    //     return new ResponseEntity<>(HttpStatus.OK);
-    // }
 }

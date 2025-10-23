@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class SchemaDetails extends TrustedRegistryDetails{
 
     @NotNull
+    @Lob
     private String schemaData;
 
     public SchemaDetails(String id, String schemaData) {

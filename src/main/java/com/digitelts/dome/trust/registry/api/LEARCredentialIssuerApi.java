@@ -76,21 +76,4 @@ public interface LEARCredentialIssuerApi {
     abstract ResponseEntity<?> updateIssuer(
             @Parameter(name = "issuerId", description = "The DID of the LEAR Credential Issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
             @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails updateIssuerRequest);
-
-
-//     @Operation(
-//         operationId = "deleteIssuer",
-//         summary = "Deletes a specific registered LEAR Credential Issuer",
-//         tags = { "Trusted LEAR Credential Issuers Registry" },
-//         responses = {
-//             @ApiResponse(responseCode = "200", description = "The LEAR Credential Issuer was deleted succesfully", content=@Content)
-//         }
-//     )@RequestMapping(
-//         method = RequestMethod.DELETE,
-//         value = "/issuers/{issuerId}",
-//         produces = { "application/json" }
-//     )    
-//     abstract ResponseEntity<?> deleteIssuer(
-//         @Parameter(name = "issuerId", description = "The DID of the LEAR Credential Issuer to delete.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId
-//     );
 }

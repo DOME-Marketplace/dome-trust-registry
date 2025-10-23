@@ -108,21 +108,4 @@ public interface ServiceRegistryApi {
         @Parameter(name = "UpdateServideRequest", description = "Service update request", required = true)
         @Valid @RequestBody ServiceDetails updateServiceRequest
     );
-
-
-    // @Operation(
-    //     operationId = "deleteService",
-    //     summary = "Deletes a specific registered Service",
-    //     tags = { "Trusted Services Registry" },
-    //     responses = {
-    //         @ApiResponse(responseCode = "200", description = "The Service was deleted succesfully", content=@Content)
-    //     }
-    // )@RequestMapping(
-    //     method = RequestMethod.DELETE,
-    //     value = "/services/{clientId}",
-    //     produces = { "application/json" }
-    // )    
-    // abstract ResponseEntity<?> deleteService(
-    //     @Parameter(name = "clientId", description = "The Client ID of the service to delete.", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
-    // );
 }

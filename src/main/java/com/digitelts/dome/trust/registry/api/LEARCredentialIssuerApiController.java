@@ -1,6 +1,5 @@
 package com.digitelts.dome.trust.registry.api;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,6 +9,7 @@ import javax.validation.Valid;
 import java.util.*;
 import javax.annotation.Generated;
 import com.digitelts.dome.trust.registry.model.*;
+import com.digitelts.dome.trust.registry.repositories.LEARCredentialIssuerRepository;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
@@ -18,15 +18,8 @@ public class LEARCredentialIssuerApiController extends RegistryApiController<LEA
 
     private final NativeWebRequest request;
 
-    // @Value("${HOST_URL}") // <= If running in Docker
-    @Value("http://localhost") // <= If running in local
-    private String host;
-    // @Value("${PORT}") // <= If running in Docker
-    @Value("8080") // <= If running in local
-    private String port;
-
-    public LEARCredentialIssuerApiController(NativeWebRequest request) {
-        super(null);
+    public LEARCredentialIssuerApiController(NativeWebRequest request, LEARCredentialIssuerRepository repo) {
+        super(repo);
         this.request = request;
     }
 
@@ -43,7 +36,7 @@ public class LEARCredentialIssuerApiController extends RegistryApiController<LEA
                 pageSize,
                 new ListIssuers200Response(),
                 new ListIssuers200ResponseLinks(),
-                host+":"+port+"/v4/issuers?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
+                this.API_URL+"issuers?page%%5Bafter%%5D=%d&page%%5Bsize%%5D=%d",
                 "issuers/"                   
             );
 
@@ -55,8 +48,7 @@ public class LEARCredentialIssuerApiController extends RegistryApiController<LEA
         LEARCredentialIssuerDetails response = (LEARCredentialIssuerDetails)findDetails(issuerId);
 
         if(response == null){
-            System.out.println("Issuer with ID: "+issuerId+" not found");
-            return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(),"Issuer not found"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(),"LEAR Credential Issuer not found"),HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(response,HttpStatus.OK);
@@ -64,25 +56,13 @@ public class LEARCredentialIssuerApiController extends RegistryApiController<LEA
     
     @Override
     public ResponseEntity<?> insertIssuer(@Valid LEARCredentialIssuerDetails insertIssuerRequest) {
-        if(this.detailsList.contains(insertIssuerRequest)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "LEAR Credential Issuer already exists"),HttpStatus.BAD_REQUEST);
-        this.detailsList.add(insertIssuerRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(this.insertRegistry(insertIssuerRequest)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "LEAR Credential Ussuer already exists"), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<?> updateIssuer(String issuerId, @Valid LEARCredentialIssuerDetails updateIssuerRequest) {
-        LEARCredentialIssuerDetails issuer = (LEARCredentialIssuerDetails)findDetails(issuerId);
-        if(issuer==null){
-            return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Issuer not found"),HttpStatus.NOT_FOUND);
-        }
-        issuer.setId(updateIssuerRequest.getId());
-        issuer.setAttributes(updateIssuerRequest.getAttributes());
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(this.updateRegistry(issuerId,updateIssuerRequest)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "LEAR Credential Issuer not found"), HttpStatus.NOT_FOUND);
     }
-
-    // @Override
-    // public ResponseEntity<?> deleteIssuer(String issuerId) {
-    //     deleteFromId(issuerId);
-    //     return new ResponseEntity<>(HttpStatus.OK);
-    // }
 }
