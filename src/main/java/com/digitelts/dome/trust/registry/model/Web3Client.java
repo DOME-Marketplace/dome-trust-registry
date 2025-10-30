@@ -49,6 +49,7 @@ public class Web3Client {
     private Credentials credentials;
     /**
      * Contract
+     * @see DIDList
      */
     private DIDList contract;
 

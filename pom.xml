@@ -33,6 +33,24 @@
                 <configuration>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.web3j</groupId>
+                <artifactId>web3j-maven-plugin</artifactId>
+                <version>4.14.0</version>
+                <configuration>
+                    <packageName>com.digitelts.dome.trust.registry.contracts</packageName>
+                    <sourceDestination>src/main/resources/contract</sourceDestination>
+                    <outputDirectory>
+                        <java>src/main/java</java>
+                    </outputDirectory>
+                    <abiSourceFiles>
+                        <directory>src/main/resources/contract</directory>
+                        <includes>
+                            <include>*.abi</include>
+                        </includes>
+                    </abiSourceFiles>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -99,7 +117,7 @@
         <dependency>
             <groupId>org.web3j</groupId>
             <artifactId>core</artifactId>
-            <version>4.10.3</version>
+            <version>4.14.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,10 +1,7 @@
 package com.digitelts.dome.trust.registry.invoker;
 
 import com.digitelts.dome.trust.registry.config.CustomProperties;
-import com.digitelts.dome.trust.registry.model.Web3Client;
 import com.fasterxml.jackson.databind.Module;
-
-import io.reactivex.annotations.Nullable;
 
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.SpringApplication;

@@ -32,33 +32,21 @@ A database management website is available. Refer to the [docker-database branch
 
 ## Blockchain contract
 
-> 💡 *It you use Windows, WSL will make it much easier*
+> 💡 *If you use Windows, WSL will make it much easier*
 
 The server can dump the Trust Participant list data into a Blockchain. For this to be achieved, make sure that the `.env` file and the `src/main/resources/application.yml` file contain the correct Web3 configuration values (`ETH_*` and `eth:`). In addition, the following files are needed:
- - `src/main/resources/contract/contract.sol`: This is the smart-contract.
  - `src/main/resources/contract/<contract name>.abi`: It contains the contract's ABI.
- - `src/main/resources/contract/<contract name>.bin`: It contains the contract's bytecode.
  - `src/main/java/com/digitelts/dome/trust/registry/contracts/<contract name>.java`: Here is the auto-generated contract code. It should include a file with the same name as the smart-contract itself.
 
 ### Compiling the contract
 
-It may be neccessary to compile the `contract.sol` file if the files `<contract name>.abi` and `<contract name>.bin` don't exist. 
-
-> ⚠️ *A Solidity compiler is needed for this step*
-
-Run the following command from the project's root path:
+If the `<contract name>.java` file does not exist, it can be generated with Maven by running the following command:
 ```
-solc src/main/resources/contract/contract.sol --bin --abi --optimize -o src/main/resources/contract
-```
-
-### Creating the auto-generated class
-
-If the `src/main/java/.../contracts/<contract name>.java` file doesn't exist you need to run the following command:
-```
-web3j generate solidity -b src/main/resources/contract/<contract name>.bin -a src/main/resources/contract/<contract name>.abi -o src/main/java -p com.digitelts.dome.trust.registry.contracts
+mvn web3j:generate-sources
 ```
 
 ### 💡 Useful links
  - [Compiling a Solidity smart-contract](https://docs.web3j.io/latest/getting_started/deploy_interact_smart_contracts/)
- - [Web3j command line tools](https://docs.web3j.io/latest/command_line_tools/)
- - [Installing the Solidity compiler](https://docs.soliditylang.org/en/latest/installing-solidity.html#npm-node-js)
+ - [Maven plugin](https://github.com/LFDT-web3j/web3j-maven-plugin)
+ - ~~[Web3j command line tools](https://docs.web3j.io/latest/command_line_tools/)~~
+ - ~~[Installing the Solidity compiler](https://docs.soliditylang.org/en/latest/installing-solidity.html#npm-node-js)~~
