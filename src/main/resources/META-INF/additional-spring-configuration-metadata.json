@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "eth.provider",
+    "type": "java.lang.String",
+    "description": "The RPC node address"
+  },
+  {
+    "name": "eth.contract.address",
+    "type": "java.lang.String",
+    "description": "Smart-contract's address"
+  },
+  {
+    "name": "eth.key",
+    "type": "java.lang.String",
+    "description": "Account's private key"
+  },
+  {
+    "name": "eth.address",
+    "type": "java.lang.String",
+    "description": "Account's address"
+  }
+]}
