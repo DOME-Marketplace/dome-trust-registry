@@ -18,10 +18,12 @@ import javax.validation.Valid;
 public class ParticipantsApiController extends RegistryApiController<ParticipantDetails> implements ParticipantsApi{
 
     private final NativeWebRequest request;
+    private final Web3Client web3;
 
-    public ParticipantsApiController(NativeWebRequest request, ParticipantRepository repo) {
+    public ParticipantsApiController(NativeWebRequest request, Web3Client w3Client, ParticipantRepository repo) {
         super(repo);
         this.request = request;
+        this.web3 = w3Client;
     }
 
     @Override
@@ -38,8 +40,13 @@ public class ParticipantsApiController extends RegistryApiController<Participant
 
     @Override
     public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
-        if(this.insertRegistry(insertParticipantRequest)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
+        try{
+            if(!this.insertRegistry(insertParticipantRequest)) throw new Exception("Participant already exists");
+            web3.includeDID(insertParticipantRequest.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), e.getMessage()),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
@@ -66,7 +73,12 @@ public class ParticipantsApiController extends RegistryApiController<Participant
 
     @Override
     public ResponseEntity<?> deleteParticipant(String participantId) {
-        deleteFromId(participantId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try{
+            deleteFromId(participantId);
+            web3.removeDID(participantId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
