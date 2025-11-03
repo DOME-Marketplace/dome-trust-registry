@@ -16,8 +16,6 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 
 /**
- * Class represenging the DIDList smart-contract for saving Trust Participant DIDs in the Blockchain network
- * 
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
@@ -60,32 +58,32 @@ public class DIDList extends Contract {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
-    public RemoteFunctionCall<Boolean> didlist(String param0) {
+    public RemoteFunctionCall<Boolean> didlist(byte[] param0) {
         final Function function = new Function(FUNC_DIDLIST, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(param0)), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(param0)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         return executeRemoteCallSingleValueReturn(function, Boolean.class);
     }
 
-    public RemoteFunctionCall<TransactionReceipt> includeDID(String did) {
+    public RemoteFunctionCall<TransactionReceipt> includeDID(byte[] did) {
         final Function function = new Function(
                 FUNC_INCLUDEDID, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(did)), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(did)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteFunctionCall<Boolean> isDIDIncluded(String did) {
+    public RemoteFunctionCall<Boolean> isDIDIncluded(byte[] did) {
         final Function function = new Function(FUNC_ISDIDINCLUDED, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(did)), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(did)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         return executeRemoteCallSingleValueReturn(function, Boolean.class);
     }
 
-    public RemoteFunctionCall<TransactionReceipt> removeDID(String did) {
+    public RemoteFunctionCall<TransactionReceipt> removeDID(byte[] did) {
         final Function function = new Function(
                 FUNC_REMOVEDID, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(did)), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(did)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
