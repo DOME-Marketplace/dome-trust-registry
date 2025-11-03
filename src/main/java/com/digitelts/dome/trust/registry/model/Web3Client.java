@@ -1,5 +1,10 @@
 package com.digitelts.dome.trust.registry.model;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -115,17 +120,37 @@ public class Web3Client {
 
     /**
      * Method for dumping a Trust Participant DID into the Blockchain
+     * 
      * @param did The Trust Participant DID to be dumped
+     * @return The Trust Participant DID's hashed value
      */
-    public void includeDID(String did) throws Exception{
-        contract.includeDID(did).send();
+    public byte[] includeDID(String did) throws Exception{
+        byte[] hashed = sha256String(did);
+        contract.includeDID(hashed).send();
+        String hexed = String.format("%064x", new BigInteger(1,hashed));
+        System.out.println(hexed);
+        return hashed;
     }
 
     /**
      * Method for disabling a Trust Participant DID in the Blockchain
+     * 
      * @param did The Trust Participant DID to be disabled
      */
     public void removeDID(String did) throws Exception{
-        contract.removeDID(did).send();
+        byte[] hashed = sha256String(did);
+        contract.removeDID(hashed).send();
+    }
+
+    /**
+     * Method for generating the SHA256 hash of the given String
+     * 
+     * @param original The original String to be hashed
+     * @return The generated hash
+     */
+    public byte[] sha256String(String original) throws NoSuchAlgorithmException{
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        messageDigest.update(original.getBytes(StandardCharsets.UTF_8));
+        return messageDigest.digest();
     }
 }

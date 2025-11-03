@@ -8,6 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.ParticipantRepository;
 
+import java.math.BigInteger;
 import java.util.*;
 import javax.annotation.Generated;
 import javax.validation.Valid;
@@ -42,8 +43,9 @@ public class ParticipantsApiController extends RegistryApiController<Participant
     public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
         try{
             if(!this.insertRegistry(insertParticipantRequest)) throw new Exception("Participant already exists");
-            web3.includeDID(insertParticipantRequest.getId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            byte[] hash = web3.includeDID(insertParticipantRequest.getId());
+            String hexHash = String.format("%064x", new BigInteger(1, hash));
+            return new ResponseEntity<>(hexHash,HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), e.getMessage()),HttpStatus.BAD_REQUEST);
         }

@@ -47,7 +47,7 @@ public interface ParticipantsApi {
 
     @Operation(operationId = "insertParticipant", summary = "Insert a new participant", tags = {
                     "Trusted Participants Registry" }, responses = {
-                                    @ApiResponse(responseCode = "200", description = "Participant was registered successfully.", content=@Content),
+                                    @ApiResponse(responseCode = "200", description = "Participant was registered successfully.", content=@Content(mediaType = "text/plain", schema = @Schema(description = "The Trust Participant DID's hashed value that was inserted into the Blockchain"))),
                     })
     @RequestMapping(method = RequestMethod.POST, value = "/participants", consumes = { "application/json" })
     abstract ResponseEntity<?> insertParticipant(
