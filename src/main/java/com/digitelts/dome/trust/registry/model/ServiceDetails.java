@@ -34,13 +34,14 @@ public class ServiceDetails extends TrustedRegistryDetails{
     @NotNull
     private String tokenEndpointAuthenticationSigningAlgorithm;
     @NotNull
-    private String authorizationGrantTypes;
+    @ElementCollection
+    private List<String> authorizationGrantTypes;
 
     public ServiceDetails(String client_id,
             @NotNull List<String> redirectUris, @NotNull List<String> scopes,
             @NotNull List<String> clientAuthenticationMethods, @NotNull List<String> postLogoutRedirectUris,
             @NotNull boolean requireAuthorizationConsent, @NotNull boolean requireProofKey, @NotNull String jwkSetUrl,
-            @NotNull String tokenEndpointAuthenticationSigningAlgorithm, @NotNull String authorizationGrantTypes) {
+            @NotNull String tokenEndpointAuthenticationSigningAlgorithm, @NotNull List<String> authorizationGrantTypes) {
         super(client_id);
         this.redirectUris = redirectUris;
         this.scopes = scopes;
@@ -149,11 +150,11 @@ public class ServiceDetails extends TrustedRegistryDetails{
 
     @Schema(name = "authorizationGrantTypes", description = "Must be set to [\"authorization_code\"], as this is the only supported grant type.", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("authorizationGrantTypes")
-    public String getAuthorizationGrantTypes() {
+    public List<String> getAuthorizationGrantTypes() {
         return authorizationGrantTypes;
     }
 
-    public void setAuthorizationGrantTypes(String authorizationGrantTypes) {
+    public void setAuthorizationGrantTypes(List<String> authorizationGrantTypes) {
         this.authorizationGrantTypes = authorizationGrantTypes;
     }    
 }
