@@ -28,7 +28,7 @@ Depending on how the server will be running (locally or in a Docker container), 
 
 ## Database
 
-A database management website is available. Refer to the [docker-database branch](https://github.com/DigitelTS/dome-trust-registry/tree/docker-database) for more info.
+A database management website is available. Refer to [DOME Trust Registry Database](https://github.com/DigitelTS/dome-trust-registry-database) for more info.
 
 ## Blockchain contract
 
