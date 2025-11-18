@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import javax.annotation.Nullable;
 import javax.persistence.*;
 
 @Entity
@@ -29,9 +31,9 @@ public class ServiceDetails extends TrustedRegistryDetails{
     private boolean requireAuthorizationConsent;
     @NotNull
     private boolean requireProofKey;
-    @NotNull
+    @Nullable
     private String jwkSetUrl;
-    @NotNull
+    @Nullable
     private String tokenEndpointAuthenticationSigningAlgorithm;
     @NotNull
     @ElementCollection
