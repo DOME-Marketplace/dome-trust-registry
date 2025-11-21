@@ -148,7 +148,7 @@ public class Web3Client {
      * @param original The original String to be hashed
      * @return The generated hash
      */
-    public byte[] sha256String(String original) throws NoSuchAlgorithmException{
+    public static byte[] sha256String(String original) throws NoSuchAlgorithmException{
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         messageDigest.update(original.getBytes(StandardCharsets.UTF_8));
         return messageDigest.digest();

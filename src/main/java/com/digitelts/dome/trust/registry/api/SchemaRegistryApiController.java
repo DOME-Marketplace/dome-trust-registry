@@ -36,13 +36,13 @@ public class SchemaRegistryApiController extends RegistryApiController<SchemaDet
     @Override
     public ResponseEntity<?> registerSchema(@Valid SchemaDetails schemaDetails) {
         if(this.insertRegistry(schemaDetails)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Schema already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<?> updateSchema(String schemaId, @Valid SchemaDetails updateSchemaRequest) {
         if(this.updateRegistry(schemaId,updateSchemaRequest)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Schema not found"), HttpStatus.NOT_FOUND);
     }
 
     @Override
