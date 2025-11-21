@@ -35,13 +35,13 @@ public interface LEARCredentialIssuerApi {
                     @ApiResponse(responseCode = "200", description = "LEAR Credential Issuer details retrieved successfully.", content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = LEARCredentialIssuerDetails.class))
                     }),
-                    @ApiResponse(responseCode = "404", description = "No LEAR Credential Issuer has the requested DID", content = {
+                    @ApiResponse(responseCode = "404", description = "No LEAR Credential Issuer has the requested OID", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
                     })
             })
     @RequestMapping(method = RequestMethod.GET, value = "/issuers/{issuerId}", produces = { "application/json" })
     abstract ResponseEntity<Object> getIssuer(
-            @Parameter(name = "issuerId", description = "The DID of the LEAR Credential Issuer to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId);
+            @Parameter(name = "issuerId", description = "The OID of the LEAR Credential Issuer to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId);
 
 
     @Operation(operationId = "insertIssuer", summary = "Insert a new LEAR Credential Issuer", tags = {
@@ -68,12 +68,12 @@ public interface LEARCredentialIssuerApi {
     @Operation(operationId = "updateIssuer", summary = "Update an existing LEAR Credential Issuer", tags = {
             "Trusted LEAR Credential Issuers Registry" }, responses = {
                 @ApiResponse(responseCode = "200", description = "LEAR Credential Issuer was updated successfully.", content=@Content),
-                @ApiResponse(responseCode = "404", description = "No LEAR Credential Issuer has the requested DID", content = {
+                @ApiResponse(responseCode = "404", description = "No LEAR Credential Issuer has the requested OID", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
                 })
             })
     @RequestMapping(method = RequestMethod.PUT, value = "/issuers/{issuerId}", consumes = { "application/json" })
     abstract ResponseEntity<?> updateIssuer(
-            @Parameter(name = "issuerId", description = "The DID of the LEAR Credential Issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
+            @Parameter(name = "issuerId", description = "The OID of the LEAR Credential Issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
             @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails updateIssuerRequest);
 }

@@ -36,13 +36,13 @@ public class ServiceRegistryApiController extends RegistryApiController<ServiceD
     @Override
     public ResponseEntity<WrongRequest> registerService(@Valid ServiceDetails serviceDetails) {
         if(this.insertRegistry(serviceDetails)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Service already exists"),HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<WrongRequest> updateService(String clientId, @Valid ServiceDetails updateServiceRequest) {
         if(this.updateRegistry(clientId,updateServiceRequest)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class ParticipantDetails extends TrustedRegistryDetails{
   protected List<Attribute> attributes;
   protected boolean hasAttributes;
 
-  public ParticipantDetails(@JsonProperty("did") @NonNull String id){
+  public ParticipantDetails(@JsonProperty("oid") @NonNull String id){
     super(id);
     this.attributes = new ArrayList<>();
     this.hasAttributes = false;
@@ -26,8 +26,8 @@ public class ParticipantDetails extends TrustedRegistryDetails{
   public ParticipantDetails(){}
 
   @Override
-  @Schema(name = "did", description = "The Decentralized Identifier (DID) of this participant.", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("did")
+  @Schema(name = "oid", description = "The Organization Identifier (DID) of this participant.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("oid")
   public String getId(){
       return super.getId();
   }

@@ -42,12 +42,12 @@ public interface ParticipantsApi {
     @RequestMapping(method = RequestMethod.GET, value = "/participants/{participantId}", produces = {
                     "application/json" })
     abstract ResponseEntity<Object> getParticipant(
-                    @Parameter(name = "participantId", description = "The DID of the participant to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId);
+                    @Parameter(name = "participantId", description = "The OID of the participant to retrieve.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId);
 
 
     @Operation(operationId = "insertParticipant", summary = "Insert a new participant", tags = {
                     "Trusted Participants Registry" }, responses = {
-                                    @ApiResponse(responseCode = "200", description = "Participant was registered successfully.", content=@Content(mediaType = "text/plain", schema = @Schema(description = "The Trust Participant DID's hashed value that was inserted into the Blockchain"))),
+                                    @ApiResponse(responseCode = "200", description = "Participant was registered successfully.", content=@Content(mediaType = "text/plain", schema = @Schema(description = "The Trust Participant OID's hashed value that was inserted into the Blockchain"))),
                     })
     @RequestMapping(method = RequestMethod.POST, value = "/participants", consumes = { "application/json" })
     abstract ResponseEntity<?> insertParticipant(
@@ -76,7 +76,7 @@ public interface ParticipantsApi {
     @RequestMapping(method = RequestMethod.PUT, value = "/participants/{participantId}", consumes = {
                     "application/json" })
     abstract ResponseEntity<?> updateParticipant(
-                    @Parameter(name = "participantId", description = "The DID of the participant to update.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId,
+                    @Parameter(name = "participantId", description = "The OID of the participant to update.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId,
                     @Parameter(name = "UpdateParticipantRequest", description = "", required = true) @Valid @RequestBody ParticipantDetails updateParticipantRequest);
 
 
@@ -93,6 +93,6 @@ public interface ParticipantsApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<?> deleteParticipant(
-        @Parameter(name = "participantId", description = "The DID of the participant to delete.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId
+        @Parameter(name = "participantId", description = "The OID of the participant to delete.", required = true, in = ParameterIn.PATH) @PathVariable("participantId") String participantId
     );
 }
