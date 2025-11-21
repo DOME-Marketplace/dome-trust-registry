@@ -15,17 +15,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public abstract class TrustedRegistrySummary {
 
     @NonNull
-    protected String did;
+    protected String id;
     @NonNull
     protected String href;
 
-    public TrustedRegistrySummary(String did, String href){
-        this.did = did;
+    public TrustedRegistrySummary(String id, String href){
+        this.id = id;
         this.href = href;
     }
 
-    public void setDid(String did){
-        this.did = did;
+    public void setDid(String id){
+        this.id = id;
     }
 
     public void setHref(String href){
@@ -38,9 +38,9 @@ public abstract class TrustedRegistrySummary {
         return href;
     }
 
-    @Schema(name = "did", description = "The Decentralized Identifier (DID) of this item.", requiredMode = Schema.RequiredMode.REQUIRED)
-    @JsonProperty("did")
-    public String getDid() {
-        return did;
+    @Schema(name = "id", description = "The identifier of this item.", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("id")
+    public String getId() {
+        return id;
     }
 }
