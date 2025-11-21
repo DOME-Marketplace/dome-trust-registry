@@ -29,8 +29,8 @@ public class LEARCredentialIssuerDetails extends TrustedRegistryDetails {
   public LEARCredentialIssuerDetails(){}
 
   @Override
-  @Schema(name = "did", description = "The Decentralized Identifier (DID) of this LEAR Credential Issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("did")
+  @Schema(name = "oid", description = "The Organization Identifier (OID) of this LEAR Credential Issuer.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("oid")
   public String getId(){
       return this.id;
   }

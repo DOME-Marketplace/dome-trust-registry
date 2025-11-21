@@ -45,8 +45,29 @@ If the `<contract name>.java` file does not exist, it can be generated with Mave
 mvn web3j:generate-sources
 ```
 
+## Testing
+
+The directory `src/test/java/com/digitelts/dome/trust/registry/` contains test classes. The following command runs the tests:
+
+```bash
+mvn test
+```
+The command for running individual tests is:
+```bash
+mvn test -Dtest=<classname>
+```
+
+Three test files have been created for testing the API with the *Mockito* framework:
+ - `api/AccessNodeRegistryApiControllerTest.java` (without DELETE method)
+ - `api/SchemaRegistryApiControllerTest.java` (with DELETE method)
+ - `api/ParticipantsRegistryApiControllerTest.java` (with DELETE method and Blockchain interaction)
+
+> ⚠️ *Running all the tests will also run the `invoker/OpenApiGeneratorApplicationTests.java` file. This test will fail if the database server is not available.*
+
+
 ### 💡 Useful links
  - [Compiling a Solidity smart-contract](https://docs.web3j.io/latest/getting_started/deploy_interact_smart_contracts/)
  - [Maven plugin](https://github.com/LFDT-web3j/web3j-maven-plugin)
+ - [Mockito](https://site.mockito.org/)
  - ~~[Web3j command line tools](https://docs.web3j.io/latest/command_line_tools/)~~
  - ~~[Installing the Solidity compiler](https://docs.soliditylang.org/en/latest/installing-solidity.html#npm-node-js)~~
