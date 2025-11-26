@@ -1,68 +1,60 @@
 package com.digitelts.dome.trust.registry.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 import javax.annotation.Generated;
+import org.springframework.lang.NonNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.*;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "participants")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
-public class ParticipantDetails {
+public class ParticipantDetails extends TrustedRegistryDetails{
 
-  private String did;
-  private String registrar;
-  private String validFrom;
-  private String validTo;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "participant_id")
+  protected List<Attribute> attributes;
+  protected boolean hasAttributes;
 
-
-  
-  @Schema(name = "did", description = "The Decentralized Identifier (DID) of the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("did")
-  public String getDid() {
-    return did;
+  public ParticipantDetails(@JsonProperty("oid") @NonNull String id){
+    super(id);
+    this.attributes = new ArrayList<>();
+    this.hasAttributes = false;
   }
 
+  public ParticipantDetails(){}
 
-  public void setDid(String did) {
-    this.did = did;
+  @Override
+  @Schema(name = "oid", description = "The Organization Identifier (DID) of this participant.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("oid")
+  public String getId(){
+      return super.getId();
   }
 
-
- @Schema(name = "registrar", description = "The DID of the registrar registering the participant.", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("registrar")
-  public String getRegistrar() {
-    return registrar;
+  @Override
+  public ParticipantSummary getSummary(String url){
+    return new ParticipantSummary(this.id, url+this.id);
   }
 
-
-  public void setRegistrar(String registrar) {
-    this.registrar = registrar;
+  @Schema(name = "attributes", description = "Empty list", defaultValue = "[]")
+  @JsonProperty("attributes")
+  public List<Attribute> getAttributes() {
+    return attributes;
   }
 
- @Schema(name = "validFrom", description = "The date from which the issuer is valid in ISO 8601", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("validFrom")
-  public String getValidFrom() {
-    return validFrom;
+  public void setAttributes(List<Attribute> attributes) {
+    this.attributes = attributes;
   }
 
-
-  public void setValidFrom(String validFrom) {
-    this.validFrom = validFrom;
+  @Schema(name = "hasAttributes", description = "Whether the attributes list is empty or not", defaultValue = "false")
+  @JsonProperty("hasAttributes")
+  public boolean isHasAttributes() {
+    return hasAttributes;
   }
 
-
-  @Schema(name = "validTo", description = "The date to which the issuer is valid in ISO 8601", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("validTo")
-  public String getValidTo() {
-    return validTo;
-  }
-
-
-  public void setValidTo(String validTo) {
-    this.validTo = validTo;
+  public void setHasAttributes(boolean hasAttributes) {
+    this.hasAttributes = hasAttributes;
   }
 }
 
