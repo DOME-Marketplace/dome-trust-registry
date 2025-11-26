@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -15,6 +16,8 @@ import javax.persistence.*;
 @Table(name = "services")
 public class ServiceDetails extends TrustedRegistryDetails{
     
+    @Nullable
+    private String url;
     @NotNull
     @ElementCollection
     private List<String> redirectUris;
@@ -39,12 +42,13 @@ public class ServiceDetails extends TrustedRegistryDetails{
     @ElementCollection
     private List<String> authorizationGrantTypes;
 
-    public ServiceDetails(String client_id,
+    public ServiceDetails(String client_id, @Nullable String url,
             @NotNull List<String> redirectUris, @NotNull List<String> scopes,
             @NotNull List<String> clientAuthenticationMethods, @NotNull List<String> postLogoutRedirectUris,
             @NotNull boolean requireAuthorizationConsent, @NotNull boolean requireProofKey, @NotNull String jwkSetUrl,
             @NotNull String tokenEndpointAuthenticationSigningAlgorithm, @NotNull List<String> authorizationGrantTypes) {
         super(client_id);
+        this.url = url;
         this.redirectUris = redirectUris;
         this.scopes = scopes;
         this.clientAuthenticationMethods = clientAuthenticationMethods;
@@ -68,6 +72,15 @@ public class ServiceDetails extends TrustedRegistryDetails{
     @Override
     public ServiceSummary getSummary(String url) {
         return new ServiceSummary(this.id,url+this.id);
+    }
+
+    @Schema(name = "url", description = "The base URL of your service or application.", requiredMode = RequiredMode.REQUIRED)
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
     
     @Schema(name = "redirectUris", description = "Must include all the URLs where you expect to receive authentication responses. These should be HTTPS URLs to ensure secure communication.", requiredMode = Schema.RequiredMode.REQUIRED)
