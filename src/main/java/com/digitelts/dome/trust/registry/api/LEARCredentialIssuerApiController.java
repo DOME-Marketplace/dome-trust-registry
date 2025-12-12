@@ -8,6 +8,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import javax.validation.Valid;
 import java.util.*;
 import javax.annotation.Generated;
+
+import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.LEARCredentialIssuerRepository;
 
@@ -55,14 +57,26 @@ public class LEARCredentialIssuerApiController extends RegistryApiController<LEA
     }
     
     @Override
-    public ResponseEntity<?> insertIssuer(@Valid LEARCredentialIssuerDetails insertIssuerRequest) {
-        if(this.insertRegistry(insertIssuerRequest)) return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> insertIssuer(@Valid LEARCredentialIssuerDetails insertIssuerRequest, String bearerToken) {
+        try{
+        if(this.insertRegistry(insertIssuerRequest, bearerToken)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "LEAR Credential Ussuer already exists"), HttpStatus.BAD_REQUEST);
+        }catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<?> updateIssuer(String issuerId, @Valid LEARCredentialIssuerDetails updateIssuerRequest) {
-        if(this.updateRegistry(issuerId,updateIssuerRequest)) return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> updateIssuer(String issuerId, @Valid LEARCredentialIssuerDetails updateIssuerRequest, String bearerToken) {
+        try{
+        if(this.updateRegistry(issuerId,updateIssuerRequest,bearerToken)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "LEAR Credential Issuer not found"), HttpStatus.NOT_FOUND);
+        }catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

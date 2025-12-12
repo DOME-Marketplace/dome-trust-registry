@@ -49,7 +49,10 @@ public interface ServiceRegistryApi {
         summary = "Register a new Service associated with a public key",
         tags = { "Trusted Services Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Service registered successfully.", content=@Content)
+            @ApiResponse(responseCode = "200", description = "Service registered successfully.", content=@Content),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
         }
     )
     @RequestMapping(
@@ -59,7 +62,8 @@ public interface ServiceRegistryApi {
     )
     abstract ResponseEntity<?> registerService(
         @Parameter(name = "ServiceDetails", description = "Client ID registration request", required = true)
-        @Valid @RequestBody ServiceDetails ServiceDetails 
+        @Valid @RequestBody ServiceDetails ServiceDetails,
+        @RequestHeader("Authorization") String bearerToken
     );
 
 
@@ -94,7 +98,10 @@ public interface ServiceRegistryApi {
             @ApiResponse(responseCode = "200", description = "Service updated successfully."),
             @ApiResponse(responseCode = "404", description = "No Service has the requested Client ID", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
-            })
+            }),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
         }
     )
     @RequestMapping(
@@ -106,6 +113,7 @@ public interface ServiceRegistryApi {
         @Parameter(name = "clientId", description = "The Client ID of the Service to update", required = true, in = ParameterIn.PATH)
         @PathVariable("clientId") String did,
         @Parameter(name = "UpdateServideRequest", description = "Service update request", required = true)
-        @Valid @RequestBody ServiceDetails updateServiceRequest
+        @Valid @RequestBody ServiceDetails updateServiceRequest,
+        @RequestHeader("Authorization") String bearerToken
     );
 }

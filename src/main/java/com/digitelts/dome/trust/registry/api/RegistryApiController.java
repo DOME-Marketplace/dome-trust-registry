@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.TrustedRegistryRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 
 /**
  * Abstract class with common methods and attributes
@@ -21,13 +22,16 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
     
     @Nullable
     protected TrustedRegistryRepository<T> repository;
-    // @Value("${API_URL}") // <= If running in Docker
-    @Value("http://localhost:8080/v4/") // <= If running in local
+     @Value("${API_URL}") // <= If running in Docker
+    //@Value("http://localhost:8080/v4/") // <= If running in local
     protected String API_URL;
+    protected AuthService auth;
 
 
     public RegistryApiController(@Nullable TrustedRegistryRepository<T> repo){
         this.repository = repo;
+        auth = new AuthService();
+        auth.init();
     }
 
     /**
@@ -106,7 +110,8 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
      * @param did The ID of the registry to remove
      * @return {@code true} if the registry was removed or {@code false} otherwise
      */
-    public void deleteFromId(String did){
+    public void deleteFromId(String did, String bearerToken) throws Exception{
+        auth.validateToken(bearerToken);
         this.repository.deleteById(did);
     }
 
@@ -116,7 +121,8 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
      * @param newRegistry The new registry to be inserted
      * @return {@code true} if the registry was inserted successfully or {@code false} otherwise
      */
-    public boolean insertRegistry(T newRegistry){
+    public boolean insertRegistry(T newRegistry, String bearerToken) throws Exception{
+        auth.validateToken(bearerToken);
         if(this.repository.existsById(newRegistry.getId())) return false;
         this.repository.saveAndFlush(newRegistry);
         return true;
@@ -129,7 +135,8 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
      * @param newRegistry A new registry with the updated data
      * @return {@code true} if the registry was updated successfully or {@code false} otherwise
      */
-    public boolean updateRegistry(String id, T newRegistry){
+    public boolean updateRegistry(String id, T newRegistry, String bearerToken) throws Exception{
+        auth.validateToken(bearerToken);
         if(!this.repository.existsById(id)) return false;
         newRegistry.setId(id);
         this.repository.saveAndFlush(newRegistry);
