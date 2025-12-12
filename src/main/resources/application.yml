@@ -6,3 +6,4 @@ eth:
         address: ${ETH_CONTRACT}
 auth:
     issuer: ${AUTH_ISSUER}
+    mandators: ${AUTH_MANDATORS}
