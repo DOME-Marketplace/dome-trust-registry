@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
+
+import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.ParticipantRepository;
 
@@ -40,22 +42,30 @@ public class ParticipantsApiController extends RegistryApiController<Participant
     }
 
     @Override
-    public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest) {
+    public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest, String bearerToken) {
         try{
-            if(!this.insertRegistry(insertParticipantRequest)) throw new Exception("Participant already exists");
+            if(!this.insertRegistry(insertParticipantRequest, bearerToken)) throw new Exception("Participant already exists");
             byte[] hash = web3.includeDID(insertParticipantRequest.getId());
             String hexHash = String.format("%064x", new BigInteger(1, hash));
             return new ResponseEntity<>(hexHash,HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), e.getMessage()),HttpStatus.BAD_REQUEST);
+        } catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public ResponseEntity<?> updateParticipant(String participantId,
-            @Valid ParticipantDetails updateParticipantRequest) {
-        if(this.updateRegistry(participantId,updateParticipantRequest)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"), HttpStatus.NOT_FOUND);
+            @Valid ParticipantDetails updateParticipantRequest, String bearerToken) {
+        try{
+            if(this.updateRegistry(participantId,updateParticipantRequest,bearerToken)) return new ResponseEntity<>(HttpStatus.OK);
+            else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Participant not found"), HttpStatus.NOT_FOUND);
+        }catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
     @Override
@@ -74,12 +84,14 @@ public class ParticipantsApiController extends RegistryApiController<Participant
     }
 
     @Override
-    public ResponseEntity<?> deleteParticipant(String participantId) {
+    public ResponseEntity<?> deleteParticipant(String participantId, String bearerToken) {
         try{
-            deleteFromId(participantId);
+            deleteFromId(participantId, bearerToken);
             web3.removeDID(participantId);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
+        } catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
             return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

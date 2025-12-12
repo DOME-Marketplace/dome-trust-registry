@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,11 +47,15 @@ public interface LEARCredentialIssuerApi {
 
     @Operation(operationId = "insertIssuer", summary = "Insert a new LEAR Credential Issuer", tags = {
             "Trusted LEAR Credential Issuers Registry" }, responses = {
-                    @ApiResponse(responseCode = "200", description = "Transaction executed successfully.", content=@Content)
+                    @ApiResponse(responseCode = "200", description = "Transaction executed successfully.", content=@Content),
+                @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+                }),
             })
     @RequestMapping(method = RequestMethod.POST, value = "/issuers", consumes = { "application/json" })
     abstract ResponseEntity<?> insertIssuer(
-            @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails insertIssuerRequest);
+            @Parameter(name = "InsertIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails insertIssuerRequest,
+            @RequestHeader("Authorization") String bearerToken);
 
 
     @Operation(operationId = "listLEAR Credential Issuers", summary = "List all trusted LEAR Credential Issuers", tags = {
@@ -70,10 +75,14 @@ public interface LEARCredentialIssuerApi {
                 @ApiResponse(responseCode = "200", description = "LEAR Credential Issuer was updated successfully.", content=@Content),
                 @ApiResponse(responseCode = "404", description = "No LEAR Credential Issuer has the requested OID", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
-                })
+                }),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
             })
     @RequestMapping(method = RequestMethod.PUT, value = "/issuers/{issuerId}", consumes = { "application/json" })
     abstract ResponseEntity<?> updateIssuer(
             @Parameter(name = "issuerId", description = "The OID of the LEAR Credential Issuer to update.", required = true, in = ParameterIn.PATH) @PathVariable("issuerId") String issuerId,
-            @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails updateIssuerRequest);
+            @Parameter(name = "UpdateIssuerRequest", description = "", required = true) @Valid @RequestBody LEARCredentialIssuerDetails updateIssuerRequest,
+            @RequestHeader("Authorization") String bearerToken);
 }
