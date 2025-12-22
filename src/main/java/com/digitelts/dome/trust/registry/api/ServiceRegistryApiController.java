@@ -4,6 +4,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
+
+import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.ServiceRepository;
 
@@ -34,15 +36,27 @@ public class ServiceRegistryApiController extends RegistryApiController<ServiceD
     }
 
     @Override
-    public ResponseEntity<WrongRequest> registerService(@Valid ServiceDetails serviceDetails) {
-        if(this.insertRegistry(serviceDetails)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Service already exists"),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<WrongRequest> registerService(@Valid ServiceDetails serviceDetails, String bearerToken) {
+        try{
+            if(this.insertRegistry(serviceDetails,bearerToken)) return new ResponseEntity<>(HttpStatus.OK);
+            else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Service already exists"),HttpStatus.BAD_REQUEST);
+        }catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<WrongRequest> updateService(String clientId, @Valid ServiceDetails updateServiceRequest) {
-        if(this.updateRegistry(clientId,updateServiceRequest)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
+    public ResponseEntity<WrongRequest> updateService(String clientId, @Valid ServiceDetails updateServiceRequest, String bearerToken) {
+        try{
+            if(this.updateRegistry(clientId,updateServiceRequest,bearerToken)) return new ResponseEntity<>(HttpStatus.OK);
+            else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Service not found"), HttpStatus.NOT_FOUND);
+        }catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

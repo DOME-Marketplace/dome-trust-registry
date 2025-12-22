@@ -10,6 +10,13 @@ services:
     environment:
       - HOST_URL=${HOST_URL}
       - PORT=${PORT}
+      - API_URL=${API_URL}
+      - DB_URL=${DB_URL}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_PASS=${DB_PASS}
+      - DB_USER=${DB_USER}
+      - DB_DRIVER=${DB_DRIVER}
 
 networks:
   springboot:

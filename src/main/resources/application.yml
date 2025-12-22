@@ -1,13 +1,9 @@
 eth:
-# > Docker
-    # provider: ${ETH_PROVIDER}
-    # address: ${ETH_ADDRESS}
-    # key: ${ETH_KEY}
-    # contract:
-    #     address: ${ETH_CONTRACT}
-# > Local
-    provider: http://localhost:8550
-    address: "0x145bb30acf08b12ecdcbac0615d905a219d44515"
-    key: "0x104bdc341ce484b88cd498380f54dc053eec060f58b2141109cc5013c9234406"
+    provider: ${ETH_PROVIDER}
+    address: ${ETH_ADDRESS}
+    key: ${ETH_KEY}
     contract:
-        address: "0xF32E7AcA7D8364E711205Da6F15553D6aF18E2a7"
+        address: ${ETH_CONTRACT}
+auth:
+    issuer: ${AUTH_ISSUER}
+    mandators: ${AUTH_MANDATORS}

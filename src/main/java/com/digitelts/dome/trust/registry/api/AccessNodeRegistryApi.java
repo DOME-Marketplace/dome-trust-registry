@@ -49,7 +49,10 @@ public interface AccessNodeRegistryApi {
         summary = "Register a new Access Node associated with a public key",
         tags = { "Trusted Access Node Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Access Node registered successfully.", content=@Content)
+            @ApiResponse(responseCode = "200", description = "Access Node registered successfully.", content=@Content),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
         }
     )
     @RequestMapping(
@@ -59,7 +62,8 @@ public interface AccessNodeRegistryApi {
     )
     abstract ResponseEntity<?> registerAccessNode(
         @Parameter(name = "AccessNodeDetails", description = "Access Node registration request", required = true)
-        @Valid @RequestBody AccessNodeDetails accessNodeDetails 
+        @Valid @RequestBody AccessNodeDetails accessNodeDetails,
+        @RequestHeader("Authorization") String bearerToken
     );
 
 
@@ -92,6 +96,9 @@ public interface AccessNodeRegistryApi {
         tags = { "Trusted Access Node Registry" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Access Node updated successfully.", content=@Content),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
             @ApiResponse(responseCode = "404", description = "No Access Node has the requested address", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
             })
@@ -106,7 +113,8 @@ public interface AccessNodeRegistryApi {
         @Parameter(name = "accessNodeDLTAddress", description = "The address of the Access Node to update", required = true, in = ParameterIn.PATH)
         @PathVariable("accessNodeDLTAddress") String did,
         @Parameter(name = "UpdateDidRequest", description = "Access Node update request", required = true)
-        @Valid @RequestBody AccessNodeDetails updateDidRequest
+        @Valid @RequestBody AccessNodeDetails updateDidRequest,
+        @RequestHeader("Authorization") String bearerToken
     );
 
 

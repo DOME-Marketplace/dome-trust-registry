@@ -4,6 +4,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.NativeWebRequest;
+
+import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.AccessNodeRepository;
 
@@ -36,15 +38,27 @@ public class AccessNodeRegistryApiController extends RegistryApiController<Acces
     }
 
     @Override
-    public ResponseEntity<?> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails) {
-        if(this.insertRegistry(accessNodeDetails)) return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> registerAccessNode(@Valid AccessNodeDetails accessNodeDetails, String bearerToken) {
+        try{
+        if(this.insertRegistry(accessNodeDetails, bearerToken)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Access Node already exists"),HttpStatus.BAD_REQUEST);
+        }catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<?> updateAccessNode(String accessNodeId, @Valid AccessNodeDetails updateDidRequest) {
-        if(this.updateRegistry(accessNodeId,updateDidRequest)) return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> updateAccessNode(String accessNodeId, @Valid AccessNodeDetails updateDidRequest, String bearerToken) {
+        try{
+        if(this.updateRegistry(accessNodeId,updateDidRequest,bearerToken)) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(new WrongRequest(HttpStatus.NOT_FOUND.value(), "Access Node not found"), HttpStatus.NOT_FOUND);
+        }catch(AuthException e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.UNAUTHORIZED.value(), e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new WrongRequest(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

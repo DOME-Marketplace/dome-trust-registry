@@ -49,7 +49,10 @@ public interface SchemaRegistryApi {
         summary = "Register a new Schema associated with a public key",
         tags = { "Trusted Schemas Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Schema registered successfully.", content=@Content)
+            @ApiResponse(responseCode = "200", description = "Schema registered successfully.", content=@Content),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
         }
     )
     @RequestMapping(
@@ -59,7 +62,8 @@ public interface SchemaRegistryApi {
     )
     abstract ResponseEntity<?> registerSchema(
         @Parameter(name = "SchemaDetails", description = "ID registration request", required = true)
-        @Valid @RequestBody SchemaDetails SchemaDetails 
+        @Valid @RequestBody SchemaDetails SchemaDetails,
+        @RequestHeader("Authorization") String bearerToken
     );
 
 
@@ -94,7 +98,10 @@ public interface SchemaRegistryApi {
             @ApiResponse(responseCode = "200", description = "Schema updated successfully.", content=@Content),
             @ApiResponse(responseCode = "404", description = "No Schema has the requested ID", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
-            })
+            }),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
         }
     )
     @RequestMapping(
@@ -106,7 +113,8 @@ public interface SchemaRegistryApi {
         @Parameter(name = "schemaId", description = "The ID of the Schema to update", required = true, in = ParameterIn.PATH)
         @PathVariable("schemaId") String did,
         @Parameter(name = "UpdateSchemaRequest", description = "Schema update request", required = true)
-        @Valid @RequestBody SchemaDetails updateSchemaRequest
+        @Valid @RequestBody SchemaDetails updateSchemaRequest,
+        @RequestHeader("Authorization") String bearerToken
     );
 
 
@@ -115,7 +123,10 @@ public interface SchemaRegistryApi {
         summary = "Deletes a specific registered Schema",
         tags = { "Trusted Schemas Registry" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "The Schema was deleted succesfully", content=@Content)
+            @ApiResponse(responseCode = "200", description = "The Schema was deleted succesfully", content=@Content),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = WrongRequest.class))
+            }),
         }
     )@RequestMapping(
         method = RequestMethod.DELETE,
@@ -123,6 +134,7 @@ public interface SchemaRegistryApi {
         produces = { "application/json" }
     )    
     abstract ResponseEntity<?> deleteSchema(
-        @Parameter(name = "schemaId", description = "The ID of the schema to delete.", required = true, in = ParameterIn.PATH) @PathVariable("schemaId") String schemaId
+        @Parameter(name = "schemaId", description = "The ID of the schema to delete.", required = true, in = ParameterIn.PATH) @PathVariable("schemaId") String schemaId,
+        @RequestHeader("Authorization") String bearerToken
     );
 }
