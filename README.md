@@ -1,13 +1,22 @@
-# DOME Trust Framework UI & API
+# DOME Trust Framework API
 
-This repository contains the **new Trust Framework UI and API**, which are part of the DOME Marketplace ecosystem. This project is designed as the next generation of the trust framework, providing a modern, more extensible, and robust solution for managing trust registries.
+This repository contains the **new Trust Framework API**, which is part of the DOME Marketplace ecosystem. This project is designed as the next generation of the trust framework, providing a modern, more extensible, and robust solution for managing trust registries.
+## Table of Contents
+ - [Overview](#overview)
+ - [Improvements over Existing Trust Framework](#improvements-over-existing-trust-framework)
+ - [Status](#status)
+ - [Getting Started](#getting-started)
+ - [Server Configuration](#server-configuration)
+ - [Blockchain Contract](#blockchain-contract)
+ - [Testing](#testing)
+ - [Trusted Registries in DOME](#trusted-registries-in-dome) 
 
 ## Overview
 
-- **UI**: The new user interface is developed in a separate repository for modularity and ease of maintenance.  
-  👉 [Trust Framework UI Repository](https://github.com/DOME-Marketplace/dome-trust-registries-ui)
+The API in this repository supports all the functionalities needed by the new DOME Trust Registries User Interface (UI) and provides significant improvements and capabilities over our existing solution. 
 
-- **API**: The API in this repository supports all the functionalities needed by the new UI and provides significant improvements and capabilities over our existing solution.
+The UI is developed in a separate repository for modularity and ease of maintenance.
+  👉 [Trust Framework UI Repository](https://github.com/DOME-Marketplace/dome-trust-registries-ui)
 
 ## Improvements over Existing Trust Framework
 
