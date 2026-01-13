@@ -39,8 +39,6 @@ public class ParticipantsRegistryApiControllerTest {
 
     @BeforeEach
     void setUp() throws Exception{
-        // apiController = new ParticipantsApiController(request, web3, repository);
-        // apiController.auth = auth;
         doNothing().when(auth).init();
         doNothing().when(auth).validateToken(mockedToken);
     }

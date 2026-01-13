@@ -40,8 +40,6 @@ public class SchemaRegistryApiControllerTest {
 
     @BeforeEach
     void setUp() throws Exception{
-        // apiController = new SchemaRegistryApiController(request, repository);
-        // apiController.auth = auth;
         doNothing().when(auth).init();
         doNothing().when(auth).validateToken(mockedToken);
     }

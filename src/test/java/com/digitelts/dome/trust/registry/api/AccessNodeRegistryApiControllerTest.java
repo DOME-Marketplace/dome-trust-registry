@@ -42,7 +42,6 @@ public class AccessNodeRegistryApiControllerTest {
     void setUp() throws Exception{
         doNothing().when(auth).init();
         doNothing().when(auth).validateToken(mockedToken);
-        // apiController = new AccessNodeRegistryApiController(request, repository);
     }
 
     AccessNodeDetails getMockedDetails(){
