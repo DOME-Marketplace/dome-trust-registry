@@ -8,6 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.ServiceRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 
 import java.util.*;
 import javax.validation.Valid;
@@ -20,6 +21,11 @@ public class ServiceRegistryApiController extends RegistryApiController<ServiceD
 
     public ServiceRegistryApiController(NativeWebRequest request, ServiceRepository repo) {
         super(repo);
+        this.request = request;
+    }
+
+    public ServiceRegistryApiController(NativeWebRequest request, ServiceRepository repo, AuthService auth) {
+        super(repo, auth);
         this.request = request;
     }
 

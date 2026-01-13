@@ -8,6 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.AccessNodeRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 
 import java.util.*;
 import javax.annotation.Generated;
@@ -22,6 +23,11 @@ public class AccessNodeRegistryApiController extends RegistryApiController<Acces
 
     public AccessNodeRegistryApiController(NativeWebRequest request, AccessNodeRepository repo) {
         super(repo);
+        this.request = request;
+    }
+
+    public AccessNodeRegistryApiController(NativeWebRequest request, AccessNodeRepository repo, AuthService auth) {
+        super(repo, auth);
         this.request = request;
     }
 

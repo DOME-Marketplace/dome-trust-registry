@@ -8,6 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.SchemaRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 
 import java.util.*;
 import javax.validation.Valid;
@@ -20,6 +21,11 @@ public class SchemaRegistryApiController extends RegistryApiController<SchemaDet
 
     public SchemaRegistryApiController(NativeWebRequest request, SchemaRepository repo) {
         super(repo);
+        this.request = request;
+    }
+
+    public SchemaRegistryApiController(NativeWebRequest request, SchemaRepository repo, AuthService auth) {
+        super(repo, auth);
         this.request = request;
     }
 

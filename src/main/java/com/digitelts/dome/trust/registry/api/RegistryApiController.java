@@ -34,6 +34,15 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
         auth.init();
     }
 
+    public RegistryApiController(
+        @Nullable TrustedRegistryRepository<T> repo,
+        AuthService authService
+    ){
+        this.repository = repo;
+        this.auth = authService;
+        this.auth.init();
+    }
+
     /**
      * Method to search instances of {@code Details} class by its DID
      * 

@@ -9,6 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.ParticipantRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -29,6 +30,12 @@ public class ParticipantsApiController extends RegistryApiController<Participant
         this.web3 = w3Client;
     }
 
+    public ParticipantsApiController(NativeWebRequest request, Web3Client w3Client, ParticipantRepository repo, AuthService auth) {
+        super(repo, auth);
+        this.request = request;
+        this.web3 = w3Client;
+    }
+
     @Override
     public Optional<NativeWebRequest> getRequest() {
         return Optional.ofNullable(request);
@@ -44,7 +51,7 @@ public class ParticipantsApiController extends RegistryApiController<Participant
     @Override
     public ResponseEntity<?> insertParticipant(@Valid ParticipantDetails insertParticipantRequest, String bearerToken) {
         try{
-            if(!this.insertRegistry(insertParticipantRequest, bearerToken)) throw new Exception("Participant already exists");
+            if(!this.insertRegistry(insertParticipantRequest, bearerToken)) return new ResponseEntity<>(new WrongRequest(HttpStatus.BAD_REQUEST.value(), "Participant already exists"),HttpStatus.BAD_REQUEST);
             byte[] hash = web3.includeDID(insertParticipantRequest.getId());
             String hexHash = String.format("%064x", new BigInteger(1, hash));
             return new ResponseEntity<>(hexHash,HttpStatus.OK);

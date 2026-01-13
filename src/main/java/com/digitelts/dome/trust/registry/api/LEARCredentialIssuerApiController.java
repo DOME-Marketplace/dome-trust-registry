@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 import com.digitelts.dome.trust.registry.exceptions.AuthException;
 import com.digitelts.dome.trust.registry.model.*;
 import com.digitelts.dome.trust.registry.repositories.LEARCredentialIssuerRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-08-13T11:13:01.155472Z[UTC]", comments = "Generator version: 7.7.0")
 @Controller
@@ -22,6 +23,11 @@ public class LEARCredentialIssuerApiController extends RegistryApiController<LEA
 
     public LEARCredentialIssuerApiController(NativeWebRequest request, LEARCredentialIssuerRepository repo) {
         super(repo);
+        this.request = request;
+    }
+
+    public LEARCredentialIssuerApiController(NativeWebRequest request, LEARCredentialIssuerRepository repo, AuthService auth) {
+        super(repo, auth);
         this.request = request;
     }
 

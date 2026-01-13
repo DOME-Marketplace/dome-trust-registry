@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.digitelts.dome.trust.registry.repositories.AccessNodeRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 import com.digitelts.dome.trust.registry.model.AccessNodeDetails;
 import com.digitelts.dome.trust.registry.model.List200Response;
 import com.digitelts.dome.trust.registry.model.List200ResponseLinks;
@@ -28,13 +30,19 @@ public class AccessNodeRegistryApiControllerTest {
     private NativeWebRequest request;
     @Mock
     private AccessNodeRepository repository;
+    @Mock(lenient = true)
+    private AuthService auth;
+    @InjectMocks
     private AccessNodeRegistryApiController apiController;
     private String mockedId = "dlt_address";
     private String mockedName = "access_node_name";
+    private String mockedToken = "some_user_jwt";
 
     @BeforeEach
-    void setUp(){
-        apiController = new AccessNodeRegistryApiController(request, repository);
+    void setUp() throws Exception{
+        doNothing().when(auth).init();
+        doNothing().when(auth).validateToken(mockedToken);
+        // apiController = new AccessNodeRegistryApiController(request, repository);
     }
 
     AccessNodeDetails getMockedDetails(){
@@ -94,7 +102,7 @@ public class AccessNodeRegistryApiControllerTest {
         when(repository.existsById(mockedId))
         .thenReturn(false);
 
-        ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails);
+        ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails, mockedToken);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository).saveAndFlush(mockedDetails);
@@ -110,7 +118,7 @@ public class AccessNodeRegistryApiControllerTest {
         when(repository.existsById(mockedId))
         .thenReturn(true);
 
-        ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails);
+        ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails, mockedToken);
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         
         verify(repository).existsById(mockedId);
@@ -125,7 +133,7 @@ public class AccessNodeRegistryApiControllerTest {
         when(repository.existsById(mockedId))
         .thenReturn(true);
 
-        ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails);
+        ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -139,7 +147,7 @@ public class AccessNodeRegistryApiControllerTest {
         when(repository.existsById(mockedId))
         .thenReturn(false);
 
-        ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails);
+        ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(repository).existsById(mockedId);

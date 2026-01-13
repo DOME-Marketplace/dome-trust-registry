@@ -8,12 +8,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.repositories.ParticipantRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 import com.digitelts.dome.trust.registry.model.ParticipantDetails;
 import com.digitelts.dome.trust.registry.model.Web3Client;
 import com.digitelts.dome.trust.registry.model.List200Response;
@@ -28,12 +30,19 @@ public class ParticipantsRegistryApiControllerTest {
     private ParticipantRepository repository;
     @Mock
     private Web3Client web3;
+    @Mock(lenient = true)
+    private AuthService auth;
+    @InjectMocks
     private ParticipantsApiController apiController;
     private String mockedId = "did:key:foo";
+    private String mockedToken = "some_user_jwt";
 
     @BeforeEach
-    void setUp(){
-        apiController = new ParticipantsApiController(request, web3, repository);
+    void setUp() throws Exception{
+        // apiController = new ParticipantsApiController(request, web3, repository);
+        // apiController.auth = auth;
+        doNothing().when(auth).init();
+        doNothing().when(auth).validateToken(mockedToken);
     }
 
     ParticipantDetails getMockedDetails(){
@@ -93,7 +102,7 @@ public class ParticipantsRegistryApiControllerTest {
             when(web3.includeDID(mockedId))
             .thenReturn(Web3Client.sha256String(mockedId));
 
-            ResponseEntity<?> result = apiController.insertParticipant(mockedDetails);
+            ResponseEntity<?> result = apiController.insertParticipant(mockedDetails, mockedToken);
 
             assertEquals(HttpStatus.OK, result.getStatusCode());
             verify(repository).existsById(mockedId);
@@ -111,7 +120,7 @@ public class ParticipantsRegistryApiControllerTest {
         when(repository.existsById(mockedId))
         .thenReturn(true);
 
-        ResponseEntity<?> result = apiController.insertParticipant(mockedDetails);
+        ResponseEntity<?> result = apiController.insertParticipant(mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -120,13 +129,13 @@ public class ParticipantsRegistryApiControllerTest {
 
     /*** PUT ***/
     @Test
-    void testUpdateParticipant_whenParticipantExists_shouldReturnHttp200(){
+    void testUpdateParticipant_whenParticipantExists_shouldReturnHttp200() {
         ParticipantDetails mockedDetails = getMockedDetails();
 
         when(repository.existsById(mockedId))
         .thenReturn(true);
 
-        ResponseEntity<?> result = apiController.updateParticipant(mockedId, mockedDetails);
+        ResponseEntity<?> result = apiController.updateParticipant(mockedId, mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -134,13 +143,13 @@ public class ParticipantsRegistryApiControllerTest {
     }
 
     @Test
-    void testUpdateParticipant_whenParticipantDoesntExist_shouldReturnHttp404(){
+    void testUpdateParticipant_whenParticipantDoesntExist_shouldReturnHttp404() {
         ParticipantDetails mockedDetails = getMockedDetails();
 
         when(repository.existsById(mockedId))
         .thenReturn(false);
 
-        ResponseEntity<?> result = apiController.updateParticipant(mockedId, mockedDetails);
+        ResponseEntity<?> result = apiController.updateParticipant(mockedId, mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -198,11 +207,11 @@ public class ParticipantsRegistryApiControllerTest {
 
     /*** DELETE ***/
     @Test
-    void testDeleteParticipant_whenParticipantExists_shouldReturnHttp200(){
+    void testDeleteParticipant_whenParticipantExists_shouldReturnHttp200() {
         try{
             doNothing().when(web3).removeDID(mockedId);
 
-            ResponseEntity<?> result = apiController.deleteParticipant(mockedId);
+            ResponseEntity<?> result = apiController.deleteParticipant(mockedId, mockedToken);
 
             assertEquals(HttpStatus.OK, result.getStatusCode());
             verify(repository).deleteById(mockedId);
@@ -213,11 +222,11 @@ public class ParticipantsRegistryApiControllerTest {
     }
 
     @Test
-    void testDeleteParticipant_whenParticipantDoesntExists_shouldReturnHttp200(){
+    void testDeleteParticipant_whenParticipantDoesntExists_shouldReturnHttp200() {
         try{
             doNothing().when(web3).removeDID(mockedId);
 
-            ResponseEntity<?> result = apiController.deleteParticipant(mockedId);
+            ResponseEntity<?> result = apiController.deleteParticipant(mockedId, mockedToken);
 
             assertEquals(HttpStatus.OK, result.getStatusCode());
             verify(repository).deleteById(mockedId);

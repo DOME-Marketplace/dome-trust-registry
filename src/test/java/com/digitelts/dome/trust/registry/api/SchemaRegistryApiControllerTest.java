@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.digitelts.dome.trust.registry.repositories.SchemaRepository;
+import com.digitelts.dome.trust.registry.services.AuthService;
 import com.digitelts.dome.trust.registry.model.SchemaDetails;
 import com.digitelts.dome.trust.registry.model.List200Response;
 import com.digitelts.dome.trust.registry.model.List200ResponseLinks;
@@ -28,13 +30,20 @@ public class SchemaRegistryApiControllerTest {
     private NativeWebRequest request;
     @Mock
     private SchemaRepository repository;
+    @Mock(lenient = true)
+    private AuthService auth;
+    @InjectMocks
     private SchemaRegistryApiController apiController;
     private String mockedId = "trusted_schema_id";
     private String mockedData = "trusted_schema_data";
+    private String mockedToken = "some_user_jwt";
 
     @BeforeEach
-    void setUp(){
-        apiController = new SchemaRegistryApiController(request, repository);
+    void setUp() throws Exception{
+        // apiController = new SchemaRegistryApiController(request, repository);
+        // apiController.auth = auth;
+        doNothing().when(auth).init();
+        doNothing().when(auth).validateToken(mockedToken);
     }
 
     SchemaDetails getMockedDetails(){
@@ -88,13 +97,13 @@ public class SchemaRegistryApiControllerTest {
 
     /*** POST ***/
     @Test
-    void testRegisterSchema_whenSchemaDoesntExist_shouldReturnHttp200(){
+    void testRegisterSchema_whenSchemaDoesntExist_shouldReturnHttp200() {
         SchemaDetails mockedDetails = getMockedDetails();
 
         when(repository.existsById(mockedId))
         .thenReturn(false);
 
-        ResponseEntity<?> result = apiController.registerSchema(mockedDetails);
+        ResponseEntity<?> result = apiController.registerSchema(mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -102,13 +111,13 @@ public class SchemaRegistryApiControllerTest {
     }
 
     @Test
-    void testRegisterSchema_whenSchemaExists_shouldReturnHttp400(){
+    void testRegisterSchema_whenSchemaExists_shouldReturnHttp400() {
         SchemaDetails mockedDetails = getMockedDetails();
 
         when(repository.existsById(mockedId))
         .thenReturn(true);
 
-        ResponseEntity<?> result = apiController.registerSchema(mockedDetails);
+        ResponseEntity<?> result = apiController.registerSchema(mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -117,13 +126,13 @@ public class SchemaRegistryApiControllerTest {
 
     /*** PUT ***/
     @Test
-    void testUpdateSchema_whenSchemaExists_shouldReturnHttp200(){
+    void testUpdateSchema_whenSchemaExists_shouldReturnHttp200() {
         SchemaDetails mockedDetails = getMockedDetails();
 
         when(repository.existsById(mockedId))
         .thenReturn(true);
 
-        ResponseEntity<?> result = apiController.updateSchema(mockedId, mockedDetails);
+        ResponseEntity<?> result = apiController.updateSchema(mockedId, mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -131,13 +140,13 @@ public class SchemaRegistryApiControllerTest {
     }
 
     @Test
-    void testUpdateSchema_whenSchemaDoesntExist_shouldReturnHttp404(){
+    void testUpdateSchema_whenSchemaDoesntExist_shouldReturnHttp404() {
         SchemaDetails mockedDetails = getMockedDetails();
 
         when(repository.existsById(mockedId))
         .thenReturn(false);
 
-        ResponseEntity<?> result = apiController.updateSchema(mockedId, mockedDetails);
+        ResponseEntity<?> result = apiController.updateSchema(mockedId, mockedDetails, mockedToken);
 
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -195,16 +204,16 @@ public class SchemaRegistryApiControllerTest {
 
     /*** DELETE ***/
     @Test
-    void testDeleteSchema_whenSchemaExists_shouldReturnHttp200(){
-        ResponseEntity<?> result = apiController.deleteSchema(mockedId);
+    void testDeleteSchema_whenSchemaExists_shouldReturnHttp200() {
+        ResponseEntity<?> result = apiController.deleteSchema(mockedId, mockedToken);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).deleteById(mockedId);
     }
 
     @Test
-    void testDeleteSchema_whenSchemaDoesntExists_shouldReturnHttp200(){
-        ResponseEntity<?> result = apiController.deleteSchema(mockedId);
+    void testDeleteSchema_whenSchemaDoesntExists_shouldReturnHttp200() {
+        ResponseEntity<?> result = apiController.deleteSchema(mockedId, mockedToken);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).deleteById(mockedId);
