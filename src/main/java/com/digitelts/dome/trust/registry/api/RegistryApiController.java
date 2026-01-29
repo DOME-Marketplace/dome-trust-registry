@@ -44,15 +44,15 @@ public abstract class RegistryApiController<T extends TrustedRegistryDetails> {
     }
 
     /**
-     * Method to search instances of {@code Details} class by its DID
+     * Method to search instances of {@code Details} class by its ID
      * 
-     * @param did The DID to look for
-     * @return The {@code Details} class object whose DID matches the given DID, or
-     * {@code null} if the given DID doesn't match with any from the list
+     * @param id The ID to look for
+     * @return The {@code Details} class object whose ID matches the given ID, or
+     * {@code null} if the given ID doesn't match with any from the list
      */
     @Nullable
-    public T findDetails(String did){
-        return repository.findById(did).orElse(null);
+    public T findDetails(String id){
+        return repository.findById(id).orElse(null);
     }
 
 
