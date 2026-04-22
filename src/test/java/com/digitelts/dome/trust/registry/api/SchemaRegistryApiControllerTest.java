@@ -3,6 +3,8 @@ package com.digitelts.dome.trust.registry.api;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import com.digitelts.dome.trust.registry.repositories.SchemaRepository;
@@ -42,6 +45,8 @@ public class SchemaRegistryApiControllerTest {
     void setUp() throws Exception{
         doNothing().when(auth).init();
         doNothing().when(auth).validateToken(mockedToken);
+        // Set API_URL var
+        ReflectionTestUtils.setField(apiController, "API_URL", "http://localhost:8080/v0/");
     }
 
     SchemaDetails getMockedDetails(){
@@ -66,7 +71,9 @@ public class SchemaRegistryApiControllerTest {
         SchemaDetails mockedDetails = getMockedDetails();
 
         when(repository.findById(mockedId))
-            .thenReturn(Optional.of(mockedDetails));
+            .thenReturn(Optional.of(
+                new SchemaDetails(mockedId,mockedData)
+            ));
 
         ResponseEntity<?> result = apiController.getSchema(mockedId);
         
@@ -75,8 +82,8 @@ public class SchemaRegistryApiControllerTest {
         assertInstanceOf(SchemaDetails.class, result.getBody());
         
         SchemaDetails retrievedSchema = (SchemaDetails) result.getBody();
-        assertEquals(mockedId, retrievedSchema.getId());
-        assertEquals(mockedData, retrievedSchema.getSchemaData());
+        assertEquals(mockedDetails.getId(), retrievedSchema.getId());
+        assertEquals(mockedDetails.getSchemaData(), retrievedSchema.getSchemaData());
         verify(repository)
             .findById(mockedId);
     }
@@ -103,6 +110,11 @@ public class SchemaRegistryApiControllerTest {
 
         ResponseEntity<?> result = apiController.registerSchema(mockedDetails, mockedToken);
 
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
+
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository).saveAndFlush(mockedDetails);
@@ -116,6 +128,11 @@ public class SchemaRegistryApiControllerTest {
         .thenReturn(true);
 
         ResponseEntity<?> result = apiController.registerSchema(mockedDetails, mockedToken);
+
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
 
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -132,6 +149,11 @@ public class SchemaRegistryApiControllerTest {
 
         ResponseEntity<?> result = apiController.updateSchema(mockedId, mockedDetails, mockedToken);
 
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
+
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository).saveAndFlush(mockedDetails);
@@ -146,6 +168,11 @@ public class SchemaRegistryApiControllerTest {
 
         ResponseEntity<?> result = apiController.updateSchema(mockedId, mockedDetails, mockedToken);
 
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
+
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository, never()).saveAndFlush(mockedDetails);
@@ -154,13 +181,16 @@ public class SchemaRegistryApiControllerTest {
     /*** LIST ***/
     @Test
     void testListSchemas_whithNotEmptyList_shouldReturnPaginatedResponse(){
-        List<SchemaDetails> mockedList = getMockedDetails(10);
+        // Generating a list with 15 mocked values
+        List<SchemaDetails> mockedList = getMockedDetails(15);
+        // 15 items, 5 per page -> 3 pages in total
         int pageSize = 5;
+        String expectedUrl = "http://localhost:8080/v0/schemas?page[after]=%d&page[size]=%d";
 
         when(repository.findAll())
         .thenReturn(mockedList);
 
-        ResponseEntity<?> result = apiController.listSchemas(0,pageSize);
+        ResponseEntity<?> result = apiController.listSchemas(1,pageSize);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -171,15 +201,18 @@ public class SchemaRegistryApiControllerTest {
         assertNotNull(list200.getLinks());
         assertInstanceOf(List200ResponseLinks.class, list200.getLinks());
         List200ResponseLinks links = list200.getLinks();
-        assertNotNull(links.getFirst());
-        assertNotNull(links.getLast());
-        assertNotNull(links.getNext());
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getFirst(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 2, 5), URLDecoder.decode(links.getLast(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 2, 5), URLDecoder.decode(links.getNext(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getPrev(), StandardCharsets.UTF_8));
     }
 
     @Test
     void testListSchemas_whithEmptyList_shouldReturnEmptyPaginatedResponse(){
+        // Generating an empty list
         List<SchemaDetails> mockedList = getMockedDetails(0);
         int pageSize = 5;
+        String expectedUrl = "http://localhost:8080/v0/schemas?page[after]=%d&page[size]=%d";
 
         when(repository.findAll())
         .thenReturn(mockedList);
@@ -195,15 +228,22 @@ public class SchemaRegistryApiControllerTest {
         assertNotNull(list200.getLinks());
         assertInstanceOf(List200ResponseLinks.class, list200.getLinks());
         List200ResponseLinks links = list200.getLinks();
-        assertNotNull(links.getFirst());
-        assertNotNull(links.getLast());
+        // Empty list -> Just one page
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getFirst(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getLast(), StandardCharsets.UTF_8));
         assertNull(links.getNext());
+        assertNull(links.getPrev());
     }
 
     /*** DELETE ***/
     @Test
     void testDeleteSchema_whenSchemaExists_shouldReturnHttp200() {
         ResponseEntity<?> result = apiController.deleteSchema(mockedId, mockedToken);
+
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).deleteById(mockedId);
@@ -212,6 +252,11 @@ public class SchemaRegistryApiControllerTest {
     @Test
     void testDeleteSchema_whenSchemaDoesntExists_shouldReturnHttp200() {
         ResponseEntity<?> result = apiController.deleteSchema(mockedId, mockedToken);
+
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).deleteById(mockedId);
