@@ -71,7 +71,9 @@ public class AccessNodeRegistryApiControllerTest {
         AccessNodeDetails accessNode = getMockedDetails();
 
         when(repository.findById(mockedId))
-            .thenReturn(Optional.of(accessNode));
+            .thenReturn(Optional.of(
+                new AccessNodeDetails(mockedId, mockedName)
+            ));
 
         ResponseEntity<?> result = apiController.getAccessNode(mockedId);
         
@@ -80,7 +82,8 @@ public class AccessNodeRegistryApiControllerTest {
         assertInstanceOf(AccessNodeDetails.class, result.getBody());
         
         AccessNodeDetails retrievedAccessNode = (AccessNodeDetails) result.getBody();
-        assertEquals(accessNode, retrievedAccessNode);
+        assertEquals(accessNode.getName(), retrievedAccessNode.getName());
+        assertEquals(accessNode.getId(), retrievedAccessNode.getId());
         verify(repository)
             .findById(mockedId);
     }
