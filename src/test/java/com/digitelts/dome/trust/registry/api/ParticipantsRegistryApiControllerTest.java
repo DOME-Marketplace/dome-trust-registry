@@ -2,6 +2,9 @@ package com.digitelts.dome.trust.registry.api;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.NativeWebRequest;
 import com.digitelts.dome.trust.registry.repositories.ParticipantRepository;
 import com.digitelts.dome.trust.registry.services.AuthService;
@@ -41,6 +45,8 @@ public class ParticipantsRegistryApiControllerTest {
     void setUp() throws Exception{
         doNothing().when(auth).init();
         doNothing().when(auth).validateToken(mockedToken);
+        // Set API_URL var
+        ReflectionTestUtils.setField(apiController, "API_URL", "http://localhost:8080/v0/");
     }
 
     ParticipantDetails getMockedDetails(){
@@ -64,7 +70,9 @@ public class ParticipantsRegistryApiControllerTest {
         ParticipantDetails mockedDetails = getMockedDetails();
 
         when(repository.findById(mockedId))
-            .thenReturn(Optional.of(mockedDetails));
+            .thenReturn(Optional.of(
+                new ParticipantDetails(mockedId)
+            ));
 
         ResponseEntity<?> result = apiController.getParticipant(mockedId);
         
@@ -73,7 +81,7 @@ public class ParticipantsRegistryApiControllerTest {
         assertInstanceOf(ParticipantDetails.class, result.getBody());
         
         ParticipantDetails retrievedParticipant = (ParticipantDetails) result.getBody();
-        assertEquals(mockedId, retrievedParticipant.getId());
+        assertEquals(mockedDetails.getId(), retrievedParticipant.getId());
         verify(repository).findById(mockedId);
     }
 
@@ -102,6 +110,11 @@ public class ParticipantsRegistryApiControllerTest {
 
             ResponseEntity<?> result = apiController.insertParticipant(mockedDetails, mockedToken);
 
+            // Check token is validated
+            assertDoesNotThrow(() -> {
+                verify(auth).validateToken(mockedToken);
+            });
+
             assertEquals(HttpStatus.OK, result.getStatusCode());
             verify(repository).existsById(mockedId);
             verify(repository).saveAndFlush(mockedDetails);
@@ -120,6 +133,11 @@ public class ParticipantsRegistryApiControllerTest {
 
         ResponseEntity<?> result = apiController.insertParticipant(mockedDetails, mockedToken);
 
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
+
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository, never()).saveAndFlush(mockedDetails);
@@ -135,6 +153,11 @@ public class ParticipantsRegistryApiControllerTest {
 
         ResponseEntity<?> result = apiController.updateParticipant(mockedId, mockedDetails, mockedToken);
 
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
+
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository).saveAndFlush(mockedDetails);
@@ -149,6 +172,11 @@ public class ParticipantsRegistryApiControllerTest {
 
         ResponseEntity<?> result = apiController.updateParticipant(mockedId, mockedDetails, mockedToken);
 
+        // Check token is validated
+        assertDoesNotThrow(() -> {
+            verify(auth).validateToken(mockedToken);
+        });
+
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository, never()).saveAndFlush(mockedDetails);
@@ -157,13 +185,16 @@ public class ParticipantsRegistryApiControllerTest {
     /*** LIST ***/
     @Test
     void testListParticipants_whithNotEmptyList_shouldReturnPaginatedResponse(){
-        List<ParticipantDetails> mockedList = getMockedDetails(10);
+        // Generating a list with 15 mocked values
+        List<ParticipantDetails> mockedList = getMockedDetails(15);
+        // 15 items, 5 per page -> 3 pages in total
         int pageSize = 5;
+        String expectedUrl = "http://localhost:8080/v0/participants?page[after]=%d&page[size]=%d";
 
         when(repository.findAll())
         .thenReturn(mockedList);
 
-        ResponseEntity<?> result = apiController.listParticipants(0,pageSize);
+        ResponseEntity<?> result = apiController.listParticipants(1,pageSize);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -174,15 +205,18 @@ public class ParticipantsRegistryApiControllerTest {
         assertNotNull(list200.getLinks());
         assertInstanceOf(List200ResponseLinks.class, list200.getLinks());
         List200ResponseLinks links = list200.getLinks();
-        assertNotNull(links.getFirst());
-        assertNotNull(links.getLast());
-        assertNotNull(links.getNext());
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getFirst(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 2, 5), URLDecoder.decode(links.getLast(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 2, 5), URLDecoder.decode(links.getNext(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getPrev(), StandardCharsets.UTF_8));
     }
 
     @Test
     void testListParticipants_whithEmptyList_shouldReturnEmptyPaginatedResponse(){
+        // Generating an empty list
         List<ParticipantDetails> mockedList = getMockedDetails(0);
         int pageSize = 5;
+        String expectedUrl = "http://localhost:8080/v0/participants?page[after]=%d&page[size]=%d";
 
         when(repository.findAll())
         .thenReturn(mockedList);
@@ -198,9 +232,11 @@ public class ParticipantsRegistryApiControllerTest {
         assertNotNull(list200.getLinks());
         assertInstanceOf(List200ResponseLinks.class, list200.getLinks());
         List200ResponseLinks links = list200.getLinks();
-        assertNotNull(links.getFirst());
-        assertNotNull(links.getLast());
+        // Empty list -> Just one page
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getFirst(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getLast(), StandardCharsets.UTF_8));
         assertNull(links.getNext());
+        assertNull(links.getPrev());
     }
 
     /*** DELETE ***/
@@ -210,6 +246,11 @@ public class ParticipantsRegistryApiControllerTest {
             doNothing().when(web3).removeDID(mockedId);
 
             ResponseEntity<?> result = apiController.deleteParticipant(mockedId, mockedToken);
+
+            // Check token is validated
+            assertDoesNotThrow(() -> {
+                verify(auth).validateToken(mockedToken);
+            });
 
             assertEquals(HttpStatus.OK, result.getStatusCode());
             verify(repository).deleteById(mockedId);
@@ -225,6 +266,11 @@ public class ParticipantsRegistryApiControllerTest {
             doNothing().when(web3).removeDID(mockedId);
 
             ResponseEntity<?> result = apiController.deleteParticipant(mockedId, mockedToken);
+
+            // Check token is validated
+            assertDoesNotThrow(() -> {
+                verify(auth).validateToken(mockedToken);
+            });
 
             assertEquals(HttpStatus.OK, result.getStatusCode());
             verify(repository).deleteById(mockedId);
