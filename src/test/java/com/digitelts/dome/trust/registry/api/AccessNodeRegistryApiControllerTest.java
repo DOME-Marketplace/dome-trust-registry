@@ -108,11 +108,9 @@ public class AccessNodeRegistryApiControllerTest {
         ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails, mockedToken);
 
         // Check token is validated
-        try {
+        assertDoesNotThrow(() -> {
             verify(auth).validateToken(mockedToken);
-        } catch (Exception e) {
-            System.err.println("Unexpected exception: " + e.getMessage());
-        }
+        });
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -132,11 +130,9 @@ public class AccessNodeRegistryApiControllerTest {
         ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails, mockedToken);
 
         // Check token is validated
-        try {
+        assertDoesNotThrow(() -> {
             verify(auth).validateToken(mockedToken);
-        } catch (Exception e) {
-            System.err.println("Unexpected exception: " + e.getMessage());
-        }
+        });
 
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -154,11 +150,9 @@ public class AccessNodeRegistryApiControllerTest {
         ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails, mockedToken);
 
         // Check token is validated
-        try {
+        assertDoesNotThrow(() -> {
             verify(auth).validateToken(mockedToken);
-        } catch (Exception e) {
-            System.err.println("Unexpected exception: " + e.getMessage());
-        }
+        });
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -175,11 +169,9 @@ public class AccessNodeRegistryApiControllerTest {
         ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails, mockedToken);
 
         // Check token is validated
-        try {
+        assertDoesNotThrow(() -> {
             verify(auth).validateToken(mockedToken);
-        } catch (Exception e) {
-            System.err.println("Unexpected exception: " + e.getMessage());
-        }
+        });
 
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(repository).existsById(mockedId);
