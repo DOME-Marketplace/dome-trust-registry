@@ -3,6 +3,8 @@ package com.digitelts.dome.trust.registry.api;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.test.util.*;
 
 import com.digitelts.dome.trust.registry.repositories.AccessNodeRepository;
 import com.digitelts.dome.trust.registry.services.AuthService;
@@ -42,6 +45,8 @@ public class AccessNodeRegistryApiControllerTest {
     void setUp() throws Exception{
         doNothing().when(auth).init();
         doNothing().when(auth).validateToken(mockedToken);
+        // Set API_URL var
+        ReflectionTestUtils.setField(apiController, "API_URL", "http://localhost:8080/v0/");
     }
 
     AccessNodeDetails getMockedDetails(){
@@ -75,8 +80,7 @@ public class AccessNodeRegistryApiControllerTest {
         assertInstanceOf(AccessNodeDetails.class, result.getBody());
         
         AccessNodeDetails retrievedAccessNode = (AccessNodeDetails) result.getBody();
-        assertEquals(mockedId, retrievedAccessNode.getId());
-        assertEquals(mockedName, retrievedAccessNode.getName());
+        assertEquals(accessNode, retrievedAccessNode);
         verify(repository)
             .findById(mockedId);
     }
@@ -102,6 +106,14 @@ public class AccessNodeRegistryApiControllerTest {
         .thenReturn(false);
 
         ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails, mockedToken);
+
+        // Check token is validated
+        try {
+            verify(auth).validateToken(mockedToken);
+        } catch (Exception e) {
+            System.err.println("Unexpected exception: " + e.getMessage());
+        }
+
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository).saveAndFlush(mockedDetails);
@@ -118,8 +130,15 @@ public class AccessNodeRegistryApiControllerTest {
         .thenReturn(true);
 
         ResponseEntity<?> result = apiController.registerAccessNode(mockedDetails, mockedToken);
+
+        // Check token is validated
+        try {
+            verify(auth).validateToken(mockedToken);
+        } catch (Exception e) {
+            System.err.println("Unexpected exception: " + e.getMessage());
+        }
+
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-        
         verify(repository).existsById(mockedId);
         verify(repository, never()).saveAndFlush(mockedDetails);
     }
@@ -133,6 +152,13 @@ public class AccessNodeRegistryApiControllerTest {
         .thenReturn(true);
 
         ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails, mockedToken);
+
+        // Check token is validated
+        try {
+            verify(auth).validateToken(mockedToken);
+        } catch (Exception e) {
+            System.err.println("Unexpected exception: " + e.getMessage());
+        }
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         verify(repository).existsById(mockedId);
@@ -148,6 +174,13 @@ public class AccessNodeRegistryApiControllerTest {
 
         ResponseEntity<?> result = apiController.updateAccessNode(mockedId, mockedDetails, mockedToken);
 
+        // Check token is validated
+        try {
+            verify(auth).validateToken(mockedToken);
+        } catch (Exception e) {
+            System.err.println("Unexpected exception: " + e.getMessage());
+        }
+
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(repository).existsById(mockedId);
         verify(repository, never()).saveAndFlush(mockedDetails);
@@ -156,13 +189,16 @@ public class AccessNodeRegistryApiControllerTest {
     /*** LIST ***/
     @Test
     void testListAccessNodes_whithNotEmptyList_shouldReturnPaginatedResponse(){
-        List<AccessNodeDetails> mockedList = getMockedDetails(10);
+        // Generating a list with 15 mocked values
+        List<AccessNodeDetails> mockedList = getMockedDetails(15);
+        // 15 items, 5 per page -> 3 pages in total
         int pageSize = 5;
+        String expectedUrl = "http://localhost:8080/v0/accessNodes?page[after]=%d&page[size]=%d";
 
         when(repository.findAll())
         .thenReturn(mockedList);
 
-        ResponseEntity<?> result = apiController.listAccessNodes(0,pageSize);
+        ResponseEntity<?> result = apiController.listAccessNodes(1,pageSize);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -173,15 +209,18 @@ public class AccessNodeRegistryApiControllerTest {
         assertNotNull(list200.getLinks());
         assertInstanceOf(List200ResponseLinks.class, list200.getLinks());
         List200ResponseLinks links = list200.getLinks();
-        assertNotNull(links.getFirst());
-        assertNotNull(links.getLast());
-        assertNotNull(links.getNext());
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getFirst(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 2, 5), URLDecoder.decode(links.getLast(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 2, 5), URLDecoder.decode(links.getNext(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getPrev(), StandardCharsets.UTF_8));
     }
 
     @Test
     void testListAccessNodes_whithEmptyList_shouldReturnEmptyPaginatedResponse(){
+        // Generating an empty list
         List<AccessNodeDetails> mockedList = getMockedDetails(0);
         int pageSize = 5;
+        String expectedUrl = "http://localhost:8080/v0/accessNodes?page[after]=%d&page[size]=%d";
 
         when(repository.findAll())
         .thenReturn(mockedList);
@@ -197,8 +236,10 @@ public class AccessNodeRegistryApiControllerTest {
         assertNotNull(list200.getLinks());
         assertInstanceOf(List200ResponseLinks.class, list200.getLinks());
         List200ResponseLinks links = list200.getLinks();
-        assertNotNull(links.getFirst());
-        assertNotNull(links.getLast());
+        // Empty list -> Just one page
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getFirst(), StandardCharsets.UTF_8));
+        assertEquals(String.format(expectedUrl, 0, 5), URLDecoder.decode(links.getLast(), StandardCharsets.UTF_8));
         assertNull(links.getNext());
+        assertNull(links.getPrev());
     }
 }
