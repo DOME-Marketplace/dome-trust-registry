@@ -1,6 +1,7 @@
 package com.digitelts.dome.trust.registry.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.math.BigInteger;
@@ -45,29 +46,51 @@ public class Web3ClientTest {
     @Test
     @SuppressWarnings("unchecked")
     void testIncludeDID_shouldReturnHash() throws Exception {
-        byte[] mockedHash = Web3Client.sha256String(mockedId);
+        byte[] expectedHash = new BigInteger("62b2e3d9ea9270a4e4c4faa1cc4218f7b2af9545cc15ed3bc4aa6f9ad8c278a4", 16).toByteArray();
         RemoteFunctionCall<TransactionReceipt> remoteCall = mock(RemoteFunctionCall.class);
-        when(contract.includeDID(mockedHash)).thenReturn(remoteCall);
+        when(contract.includeDID(expectedHash)).thenReturn(remoteCall);
         when(remoteCall.send()).thenReturn(mock(TransactionReceipt.class));
 
-        byte[] result = w3.includeDID(mockedId);
+        byte[] result = assertDoesNotThrow(() -> w3.includeDID(mockedId));
 
-        assertArrayEquals(mockedHash, result);
-        verify(contract).includeDID(mockedHash);
+        assertArrayEquals(expectedHash, result);
+        verify(contract).includeDID(expectedHash);
         verify(remoteCall).send();
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    void testRemoveDID_shouldReturnHash() throws Exception {
+    void testIncludeDID_shouldThrowException() throws Exception{
+        RemoteFunctionCall<TransactionReceipt> remoteCall = mock(RemoteFunctionCall.class);
+        when(contract.includeDID(any())).thenReturn(remoteCall);
+        when(remoteCall.send()).thenThrow(new Exception("Mocked remote call excepction"));
+
+        assertThrows(Exception.class, () -> w3.includeDID(mockedId));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void testRemoveDID_shouldCallContract() throws Exception {
         byte[] expectedHash = Web3Client.sha256String(mockedId);
         RemoteFunctionCall<TransactionReceipt> remoteCall = mock(RemoteFunctionCall.class);
         when(contract.removeDID(expectedHash)).thenReturn(remoteCall);
         when(remoteCall.send()).thenReturn(mock(TransactionReceipt.class));
 
-        w3.removeDID(mockedId);
+        assertDoesNotThrow(() -> {
+            w3.removeDID(mockedId);
+        });
 
         verify(contract).removeDID(expectedHash);
         verify(remoteCall).send();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void testRemoveDID_shouldThrowException() throws Exception{
+        RemoteFunctionCall<TransactionReceipt> remoteCall = mock(RemoteFunctionCall.class);
+        when(contract.removeDID(any())).thenReturn(remoteCall);
+        when(remoteCall.send()).thenThrow(new Exception("Mocked remote call excepction"));
+
+        assertThrows(Exception.class, () -> w3.removeDID(mockedId));
     }
 }
