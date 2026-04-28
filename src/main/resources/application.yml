@@ -1,0 +1,9 @@
+eth:
+    provider: ${ETH_PROVIDER}
+    address: ${ETH_ADDRESS}
+    key: ${ETH_KEY}
+    contract:
+        address: ${ETH_CONTRACT}
+auth:
+    issuer: ${AUTH_ISSUER}
+    mandators: ${AUTH_MANDATORS}

@@ -1,0 +1,897 @@
+openapi: 3.0.1
+info:
+  title: EBSI-like Trusted Registry API
+  description: "This OpenAPI specification defines the REST API endpoints for interacting\
+    \ with the DOME EBSI-like Trusted Registry, including adapted JSON-RPC methods\
+    \ for blockchain transactions as REST API endpoints. "
+  version: 4.0.1
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: Trusted Access Node Registry
+  description: Accepted Access Node DLT addresses and their associations with public
+    keys
+- name: Trusted LEAR Credential Issuers Registry
+  description: Operations related to the LEAR Credential Issuers Registry
+- name: Trusted Participants Registry
+  description: Operations related to the Participants Registry
+- name: Trusted Schemas Registry
+  description: Operations related to the Schemas Registry
+- name: Trusted Services Registry
+  description: Operations related to the Services Registry
+paths:
+  /v4/services/{clientId}:
+    get:
+      tags:
+      - Trusted Services Registry
+      summary: Get details of a specific registered Service
+      operationId: getService
+      parameters:
+      - name: clientId
+        in: path
+        description: The Client ID of the Service to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Details of the Service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDetails'
+        "404":
+          description: No Service has the requested Client ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+    put:
+      tags:
+      - Trusted Services Registry
+      summary: Update an already registered Service
+      operationId: updateService
+      parameters:
+      - name: clientId
+        in: path
+        description: The Client ID of the Service to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceDetails'
+        required: true
+      responses:
+        "200":
+          description: Service updated successfully.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+        "404":
+          description: No Service has the requested Client ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+  /v4/schemas/{schemaId}:
+    get:
+      tags:
+      - Trusted Schemas Registry
+      summary: Get details of a specific registered Schema
+      operationId: getSchema
+      parameters:
+      - name: SchemaId
+        in: path
+        description: The ID of the Schema to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Details of the Schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaDetails'
+        "404":
+          description: No Schema has the requested ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+    put:
+      tags:
+      - Trusted Schemas Registry
+      summary: Update an already registered Schema
+      operationId: updateSchema
+      parameters:
+      - name: SchemaId
+        in: path
+        description: The ID of the Schema to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaDetails'
+        required: true
+      responses:
+        "200":
+          description: Schema updated successfully.
+        "404":
+          description: No Schema has the requested ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+    delete:
+      tags:
+      - Trusted Schemas Registry
+      summary: Deletes a specific registered Schema
+      operationId: deleteSchema
+      parameters:
+      - name: schemaId
+        in: path
+        description: The ID of the schema to delete.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The Schema was deleted succesfully
+  /v4/participants/{participantId}:
+    get:
+      tags:
+      - Trusted Participants Registry
+      summary: Get details of a specific participant
+      operationId: getParticipant
+      parameters:
+      - name: participantId
+        in: path
+        description: The DID of the participant to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Participant details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantDetails'
+        "404":
+          description: No participant has the requested ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+    put:
+      tags:
+      - Trusted Participants Registry
+      summary: Update an existing participant
+      operationId: updateParticipant
+      parameters:
+      - name: participantId
+        in: path
+        description: The DID of the participant to update.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantDetails'
+        required: true
+      responses:
+        "200":
+          description: Transaction built successfully.
+        "400":
+          description: No participant has the requested ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+    delete:
+      tags:
+      - Trusted Participants Registry
+      summary: Deletes a specific registered Participant
+      operationId: deleteParticipant
+      parameters:
+      - name: participantId
+        in: path
+        description: The DID of the participant to delete.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The Participant was deleted succesfully
+  /v4/issuers/{issuerId}:
+    get:
+      tags:
+      - Trusted LEAR Credential Issuers Registry
+      summary: Get details of a specific LEAR Credential Issuer
+      operationId: getIssuer
+      parameters:
+      - name: issuerId
+        in: path
+        description: The DID of the LEAR Credential Issuer to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: LEAR Credential Issuer details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LEARCredentialIssuerDetails'
+        "404":
+          description: No LEAR Credential Issuer has the requested DID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+    put:
+      tags:
+      - Trusted LEAR Credential Issuers Registry
+      summary: Update an existing LEAR Credential Issuer
+      operationId: updateIssuer
+      parameters:
+      - name: issuerId
+        in: path
+        description: The DID of the LEAR Credential Issuer to update.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LEARCredentialIssuerDetails'
+        required: true
+      responses:
+        "200":
+          description: LEAR Credential Issuer was updated successfully.
+        "404":
+          description: No LEAR Credential Issuer has the requested DID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+  /v4/accessNodes/{accessNodeDLTAddress}:
+    get:
+      tags:
+      - Trusted Access Node Registry
+      summary: Get details of a specific registered Access Node
+      operationId: getAccessNode
+      parameters:
+      - name: accessNodeDLTAddress
+        in: path
+        description: The DLT address of the access node to retrieve.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Details of the Access Node
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessNodeDetails'
+        "404":
+          description: No Access Node has the requested DLT address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+    put:
+      tags:
+      - Trusted Access Node Registry
+      summary: Update an already registered Access Node
+      operationId: updateAccessNode
+      parameters:
+      - name: accessNodeDLTAddress
+        in: path
+        description: The address of the Access Node to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessNodeDetails'
+        required: true
+      responses:
+        "200":
+          description: Access Node updated successfully.
+        "404":
+          description: No Access Node has the requested address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongRequest'
+  /v4/services:
+    get:
+      tags:
+      - Trusted Services Registry
+      summary: List all registered Services
+      operationId: listServices
+      parameters:
+      - name: "page[after]"
+        in: query
+        description: Cursor for pagination (starting point)
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: "page[size]"
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: A list of registered Services
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListServices200Response'
+    post:
+      tags:
+      - Trusted Services Registry
+      summary: Register a new Service associated with a public key
+      operationId: registerService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceDetails'
+        required: true
+      responses:
+        "200":
+          description: Service registered successfully.
+  /v4/schemas:
+    get:
+      tags:
+      - Trusted Schemas Registry
+      summary: List all registered Schemas
+      operationId: listSchemas
+      parameters:
+      - name: "page[after]"
+        in: query
+        description: Cursor for pagination (starting point)
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: "page[size]"
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: A list of registered Schemas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSchemas200Response'
+    post:
+      tags:
+      - Trusted Schemas Registry
+      summary: Register a new Schema associated with a public key
+      operationId: registerSchema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaDetails'
+        required: true
+      responses:
+        "200":
+          description: Schema registered successfully.
+  /v4/participants:
+    get:
+      tags:
+      - Trusted Participants Registry
+      summary: List all trusted participants
+      operationId: listParticipants
+      parameters:
+      - name: "page[after]"
+        in: query
+        description: Cursor for pagination (starting point)
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: "page[size]"
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: A list of trusted participants with pagination details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListParticipants200Response'
+    post:
+      tags:
+      - Trusted Participants Registry
+      summary: Insert a new participant
+      operationId: insertParticipant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantDetails'
+        required: true
+      responses:
+        "200":
+          description: Participant was registered successfully.
+  /v4/issuers:
+    get:
+      tags:
+      - Trusted LEAR Credential Issuers Registry
+      summary: List all trusted LEAR Credential Issuers
+      operationId: listLEAR Credential Issuers
+      parameters:
+      - name: "page[after]"
+        in: query
+        description: Cursor for pagination (starting point)
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: "page[size]"
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: A list of trusted LEAR Credential Issuers with pagination details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListIssuers200Response'
+    post:
+      tags:
+      - Trusted LEAR Credential Issuers Registry
+      summary: Insert a new LEAR Credential Issuer
+      operationId: insertIssuer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LEARCredentialIssuerDetails'
+        required: true
+      responses:
+        "200":
+          description: Transaction executed successfully.
+  /v4/accessNodes:
+    get:
+      tags:
+      - Trusted Access Node Registry
+      summary: List all registered Access Nodes
+      operationId: listAccessNodes
+      parameters:
+      - name: "page[after]"
+        in: query
+        description: Cursor for pagination (starting point)
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: "page[size]"
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: A list of registered Access Nodes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAccessNodes200Response'
+    post:
+      tags:
+      - Trusted Access Node Registry
+      summary: Register a new Access Node associated with a public key
+      operationId: registerAccessNode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessNodeDetails'
+        required: true
+      responses:
+        "200":
+          description: Access Node registered successfully.
+components:
+  schemas:
+    WrongRequest:
+      required:
+      - errCode
+      - errMessage
+      type: object
+      properties:
+        errCode:
+          type: integer
+          description: The HTTP status code
+          format: int32
+        errMessage:
+          type: string
+          description: A message describing the error
+    ServiceDetails:
+      required:
+      - authorizationGrantTypes
+      - clientAuthenticationMethods
+      - client_id
+      - jwkSetUrl
+      - postLogoutRedirectUris
+      - redirectUris
+      - requireAuthorizationConsent
+      - requireProofKey
+      - scopes
+      - tokenEndpointAuthenticationSigningAlgorithm
+      type: object
+      properties:
+        client_id:
+          type: string
+          description: A unique identifier of this trusted service's client.
+        redirectUris:
+          type: array
+          description: Must include all the URLs where you expect to receive authentication
+            responses. These should be HTTPS URLs to ensure secure communication.
+          items:
+            type: string
+            description: Must include all the URLs where you expect to receive authentication
+              responses. These should be HTTPS URLs to ensure secure communication.
+        scopes:
+          type: array
+          description: "Currently, only openid_learcredential is accepted. This scope\
+            \ allows your service to request the necessary credentials."
+          items:
+            type: string
+            description: "Currently, only openid_learcredential is accepted. This\
+              \ scope allows your service to request the necessary credentials."
+        clientAuthenticationMethods:
+          type: array
+          description: "Must be set to [\"client_secret_jwt\"], as this is the only\
+            \ supported authentication method."
+          items:
+            type: string
+            description: "Must be set to [\"client_secret_jwt\"], as this is the only\
+              \ supported authentication method."
+        postLogoutRedirectUris:
+          type: array
+          description: Include URLs where users should be redirected after they log
+            out from your service.
+          items:
+            type: string
+            description: Include URLs where users should be redirected after they
+              log out from your service.
+        requireAuthorizationConsent:
+          type: boolean
+          description: Set to false because explicit user consent is not required
+            in this flow.
+        requireProofKey:
+          type: boolean
+          description: Set to false as PKCE is not utilized.
+        jwkSetUrl:
+          type: string
+          description: "If you're using a did:key for your clientId, you do not need\
+            \ to provide a jwkSetUrl because the verifier can derive your JWKS directly\
+            \ from the did:key. However, if you're not using a unique identifier,\
+            \ you must provide the jwkSetUrl where your public keys can be fetched."
+        tokenEndpointAuthenticationSigningAlgorithm:
+          type: string
+          description: "Must be set to ES256, as this is the only supported algorithm."
+        authorizationGrantTypes:
+          type: string
+          description: "Must be set to [\"authorization_code\"], as this is the only\
+            \ supported grant type."
+    SchemaDetails:
+      required:
+      - id
+      - schemaData
+      type: object
+      properties:
+        id:
+          type: string
+          description: The identifier of this item.
+        schemaData:
+          type: string
+          description: The JSON representation of the Schema
+    Attribute:
+      required:
+      - body
+      - hash
+      - issuerType
+      type: object
+      properties:
+        hash:
+          type: string
+        issuerType:
+          type: string
+        body:
+          $ref: '#/components/schemas/AttributeBody'
+      description: LEAR Credential Issuer's attributes
+    AttributeBody:
+      required:
+      - claims
+      - credentialsType
+      - validFor
+      type: object
+      properties:
+        credentialsType:
+          type: string
+        validFor:
+          $ref: '#/components/schemas/AttributeValidity'
+        claims:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeClaim'
+    AttributeClaim:
+      required:
+      - allowedValues
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        allowedValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeClaimAllowedValue'
+    AttributeClaimAllowedValue:
+      required:
+      - description
+      - value
+      type: object
+      properties:
+        value:
+          type: string
+        description:
+          type: string
+    AttributeValidity:
+      required:
+      - from
+      - to
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    ParticipantDetails:
+      required:
+      - did
+      type: object
+      properties:
+        did:
+          type: string
+          description: The Decentralized Identifier (DID) of this participant.
+        attributes:
+          type: array
+          description: Empty list
+          items:
+            $ref: '#/components/schemas/Attribute'
+          default: []
+        hasAttributes:
+          type: boolean
+          description: Whether the attributes list is empty or not
+          default: false
+    LEARCredentialIssuerDetails:
+      required:
+      - did
+      type: object
+      properties:
+        did:
+          type: string
+          description: The Decentralized Identifier (DID) of this LEAR Credential
+            Issuer.
+        attributes:
+          type: array
+          description: A list of attributes for this LEAR Credential Issuer
+          items:
+            $ref: '#/components/schemas/Attribute'
+        hasAttributes:
+          type: boolean
+          description: A flag indicating whether this LEAR Credential Issuer has attributes
+            or not
+    AccessNodeDetails:
+      required:
+      - dlt_address
+      - name
+      type: object
+      properties:
+        dlt_address:
+          type: string
+          description: The DLT address of the Access Node.
+        name:
+          type: string
+          description: The name of the Access Node.
+    List200ResponseLinks:
+      required:
+      - first
+      - last
+      - next
+      - prev
+      type: object
+      properties:
+        first:
+          type: string
+        prev:
+          type: string
+        next:
+          type: string
+        last:
+          type: string
+    ListServices200Response:
+      required:
+      - items
+      - links
+      - pageSize
+      - self
+      - total
+      type: object
+      properties:
+        self:
+          type: string
+          description: The URL of the current page of results.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustedRegistrySummary'
+        total:
+          type: integer
+          description: The total number of access nodes in the registry.
+          format: int32
+        pageSize:
+          type: integer
+          description: The number of items per page.
+          format: int32
+        links:
+          $ref: '#/components/schemas/List200ResponseLinks'
+    TrustedRegistrySummary:
+      required:
+      - did
+      - href
+      type: object
+      properties:
+        did:
+          type: string
+          description: The Decentralized Identifier (DID) of this item.
+        href:
+          type: string
+          description: The link to the details of this item.
+    ListSchemas200Response:
+      required:
+      - items
+      - links
+      - pageSize
+      - self
+      - total
+      type: object
+      properties:
+        self:
+          type: string
+          description: The URL of the current page of results.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustedRegistrySummary'
+        total:
+          type: integer
+          description: The total number of access nodes in the registry.
+          format: int32
+        pageSize:
+          type: integer
+          description: The number of items per page.
+          format: int32
+        links:
+          $ref: '#/components/schemas/List200ResponseLinks'
+    ListParticipants200Response:
+      required:
+      - items
+      - links
+      - pageSize
+      - self
+      - total
+      type: object
+      properties:
+        self:
+          type: string
+          description: The URL of the current page of results.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustedRegistrySummary'
+        total:
+          type: integer
+          description: The total number of access nodes in the registry.
+          format: int32
+        pageSize:
+          type: integer
+          description: The number of items per page.
+          format: int32
+        links:
+          $ref: '#/components/schemas/List200ResponseLinks'
+    ListIssuers200Response:
+      required:
+      - items
+      - links
+      - pageSize
+      - self
+      - total
+      type: object
+      properties:
+        self:
+          type: string
+          description: The URL of the current page of results.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustedRegistrySummary'
+        total:
+          type: integer
+          description: The total number of access nodes in the registry.
+          format: int32
+        pageSize:
+          type: integer
+          description: The number of items per page.
+          format: int32
+        links:
+          $ref: '#/components/schemas/List200ResponseLinks'
+    ListAccessNodes200Response:
+      required:
+      - items
+      - links
+      - pageSize
+      - self
+      - total
+      type: object
+      properties:
+        self:
+          type: string
+          description: The URL of the current page of results.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustedRegistrySummary'
+        total:
+          type: integer
+          description: The total number of access nodes in the registry.
+          format: int32
+        pageSize:
+          type: integer
+          description: The number of items per page.
+          format: int32
+        links:
+          $ref: '#/components/schemas/List200ResponseLinks'
